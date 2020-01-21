@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/constraintLayout"
+    android:id="@+id/constraint_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -10,85 +10,85 @@
 
 
     <TextView
-        android:id="@+id/inicioSesionLbl"
+        android:id="@+id/inicio_sesion_lbl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="50sp"
         android:paddingBottom="20sp"
-        android:text="@string/inicioSesion"
+        android:text="@string/inicio_sesion"
         android:textAlignment="center"
         android:textColor="@color/colorTextPrimary"
         android:textSize="35sp"
+        app:layout_constraintEnd_toEndOf="@+id/iniciar_sesion_google_btn"
+        app:layout_constraintStart_toStartOf="@+id/iniciar_sesion_google_btn"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/iniciarSesionBtn"
+        android:id="@+id/iniciar_sesion_btn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:insetLeft="10dp"
         android:insetRight="10dp"
         android:paddingTop="20dp"
         android:paddingBottom="20dp"
-        android:text="@string/iniciarSesionBtn"
+        android:text="@string/iniciar_sesion_btn"
         android:textColor="@color/colorTextPrimary"
-        app:cornerRadius="@dimen/loginButtonsRadius"
+        app:cornerRadius="@dimen/login_buttons_radius"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout2">
+        app:layout_constraintTop_toBottomOf="@+id/login_password_layout"/>
 
-    </com.google.android.material.button.MaterialButton>
+
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/iniciarSesionGoogleBtn"
+        android:id="@+id/iniciar_sesion_google_btn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:insetLeft="10dp"
         android:insetRight="10dp"
         android:paddingTop="20dp"
         android:paddingBottom="20dp"
-        android:text="@string/iniciarSesionGoogleBtn"
+        android:text="@string/iniciar_sesion_google_btn"
         android:textColor="@color/colorTextPrimary"
-        app:cornerRadius="@dimen/loginButtonsRadius"
+        app:cornerRadius="@dimen/login_buttons_radius"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iniciarSesionBtn">
+        app:layout_constraintTop_toBottomOf="@+id/iniciar_sesion_btn" />
 
-    </com.google.android.material.button.MaterialButton>
+
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/crearCuentaBtn"
+        android:id="@+id/crear_cuenta_btn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:insetLeft="10dp"
         android:insetRight="10dp"
         android:paddingTop="20dp"
         android:paddingBottom="20dp"
-        android:text="@string/crearCuentaBtn"
+        android:text="@string/crear_cuenta_btn"
         android:textColor="@color/colorTextPrimary"
-        app:cornerRadius="@dimen/loginButtonsRadius"
+        app:cornerRadius="@dimen/login_buttons_radius"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iniciarSesionGoogleBtn"></com.google.android.material.button.MaterialButton>
+        app:layout_constraintTop_toBottomOf="@+id/iniciar_sesion_google_btn"/>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout2"
+        android:id="@+id/login_password_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        app:boxStrokeColor="@color/colorPrimary"
-        app:boxStrokeWidth="20dp"
-        android:hint="@string/loginPassword"
+        android:hint="@string/login_password"
         android:paddingBottom="40dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout"
+        app:layout_constraintTop_toBottomOf="@+id/login_usuario_layout"
         app:endIconMode="password_toggle"
 
        >
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/loginPasswordEdit"
+            android:id="@+id/login_password_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
@@ -98,24 +98,22 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout"
+        android:id="@+id/login_usuario_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="15dp"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:hint="@string/loginUsuario"
+        android:layout_margin="10dp"
+        android:hint="@string/login_usuario"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/inicioSesionLbl"
-        app:errorEnabled="true">
+        app:layout_constraintTop_toBottomOf="@+id/inicio_sesion_lbl">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/loginUsuarioEdit"
+            android:id="@+id/login_usuario_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
-            android:maxLines="1"
-            />
+            android:maxLines="1" />
     </com.google.android.material.textfield.TextInputLayout>
 
 

@@ -1,10 +1,10 @@
 <resources>
     <string name="app_name">MiAgenda</string>
-    <string name="inicioSesion">Inicio de sesión</string>
-    <string name="loginUsuario">Correo electrónico</string>
-    <string name="loginPassword">Contraseña</string>
-    <string name="iniciarSesionBtn">Iniciar sesión</string>
-    <string name="iniciarSesionGoogleBtn">Iniciar con Google</string>
-    <string name="crearCuentaBtn">Crear Cuenta</string>
-    <string name="datosLoginNoValidos">Datos no válidos</string>
+    <string name="inicio_sesion">Inicio de sesión</string>
+    <string name="login_usuario">Correo electrónico</string>
+    <string name="login_password">Contraseña</string>
+    <string name="iniciar_sesion_btn">Iniciar sesión</string>
+    <string name="iniciar_sesion_google_btn">Iniciar con Google</string>
+    <string name="crear_cuenta_btn">Crear Cuenta</string>
+    <string name="datos_login_no_validos">Datos no válidos</string>
 </resources>
