@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".interfaces.LoginActivity">
+
+
+    <TextView
+        android:id="@+id/inicioSesionLbl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="50sp"
+        android:paddingBottom="20sp"
+        android:text="@string/inicioSesion"
+        android:textAlignment="center"
+        android:textColor="@color/colorTextPrimary"
+        android:textSize="35sp"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/iniciarSesionBtn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:insetLeft="10dp"
+        android:insetRight="10dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:text="@string/iniciarSesionBtn"
+        android:textColor="@color/colorTextPrimary"
+        app:cornerRadius="@dimen/loginButtonsRadius"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout2">
+
+    </com.google.android.material.button.MaterialButton>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/iniciarSesionGoogleBtn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:insetLeft="10dp"
+        android:insetRight="10dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:text="@string/iniciarSesionGoogleBtn"
+        android:textColor="@color/colorTextPrimary"
+        app:cornerRadius="@dimen/loginButtonsRadius"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iniciarSesionBtn">
+
+    </com.google.android.material.button.MaterialButton>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/crearCuentaBtn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:insetLeft="10dp"
+        android:insetRight="10dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:text="@string/crearCuentaBtn"
+        android:textColor="@color/colorTextPrimary"
+        app:cornerRadius="@dimen/loginButtonsRadius"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iniciarSesionGoogleBtn"></com.google.android.material.button.MaterialButton>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        app:boxStrokeColor="@color/colorPrimary"
+        app:boxStrokeWidth="20dp"
+        android:hint="@string/loginPassword"
+        android:paddingBottom="40dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout"
+        app:endIconMode="password_toggle"
+
+       >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/loginPasswordEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:maxLines="1"
+
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:hint="@string/loginUsuario"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/inicioSesionLbl"
+        app:errorEnabled="true">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/loginUsuarioEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:maxLines="1"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

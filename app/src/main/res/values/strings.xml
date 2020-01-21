@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">MiAgenda</string>
+    <string name="inicioSesion">Inicio de sesión</string>
+    <string name="loginUsuario">Correo electrónico</string>
+    <string name="loginPassword">Contraseña</string>
+    <string name="iniciarSesionBtn">Iniciar sesión</string>
+    <string name="iniciarSesionGoogleBtn">Iniciar con Google</string>
+    <string name="crearCuentaBtn">Crear Cuenta</string>
+    <string name="datosLoginNoValidos">Datos no válidos</string>
 </resources>
