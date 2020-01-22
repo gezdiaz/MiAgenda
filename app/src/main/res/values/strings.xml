@@ -18,7 +18,7 @@
     <string name="menu_mi_agenda">Mi Agenda</string>
     <string name="menu_mis_pacientes">Mis Pacientes</string>
     <string name="fecha_hoy_default">Martes 19 de Noviembre de 2019</string>
-    <string name="hora_turno_libre_default">14:00 hs</string>
+    <string name="hora_turno_default">14:00 hs</string>
     <string name="turno_disponible">Turno disponible</string>
     <string name="reservar_turno">Reservar</string>
 

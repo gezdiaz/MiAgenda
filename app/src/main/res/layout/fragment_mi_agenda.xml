@@ -11,12 +11,12 @@
 
         <TextView
             android:id="@+id/txt_fecha_hoy"
+            style="@style/TextAppearance.AppCompat.Title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/fecha_hoy_default"
-            style="@style/TextAppearance.AppCompat.Title"
+            android:layout_margin="5dp"
             android:gravity="center"
-            android:layout_margin="5dp"/>
+            android:text="@string/fecha_hoy_default" />
 
         <!-- <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_turnos"
@@ -26,7 +26,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/> -->
 
-        <include layout="@layout/fila_turno_libre"/>
+        <include layout="@layout/fila_turno_libre" />
 
 
     </LinearLayout>
