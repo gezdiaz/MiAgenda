@@ -8,4 +8,5 @@
     <dimen name="nav_header_height">176dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="fila_turno_height">72dp</dimen>
+    <dimen name="fila_paciente_height">120dp</dimen>
 </resources>
