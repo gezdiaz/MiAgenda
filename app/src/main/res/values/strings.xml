@@ -7,4 +7,11 @@
     <string name="iniciar_sesion_google_btn">Iniciar con Google</string>
     <string name="crear_cuenta_btn">Crear Cuenta</string>
     <string name="datos_login_no_validos">Datos no válidos</string>
+    <string name="cerrar_sesion_option_item">Cerrar sesión</string>
+    <string name="dni_paciente_lbl">DNI:</string>
+    <string name="domicilio_paciente_lbl">Domicilio:</string>
+    <string name="obra_social_paciente_lbl">Obra social:</string>
+    <string name="edad_paciente_lbl">Edad:</string>
+    <string name="ver_historia_btn">Ver historia clinica</string>
+    <string name="telefono_paciente_lbl">Telefono:</string>
 </resources>
