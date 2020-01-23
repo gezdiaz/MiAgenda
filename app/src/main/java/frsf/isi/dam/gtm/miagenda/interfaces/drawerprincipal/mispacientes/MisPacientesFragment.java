@@ -1,4 +1,4 @@
-package frsf.isi.dam.gtm.miagenda.interfaces.ui.gallery;
+package frsf.isi.dam.gtm.miagenda.interfaces.drawerprincipal.mispacientes;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

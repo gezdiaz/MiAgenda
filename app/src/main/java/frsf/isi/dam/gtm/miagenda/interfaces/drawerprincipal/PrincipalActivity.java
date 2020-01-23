@@ -1,11 +1,6 @@
-package frsf.isi.dam.gtm.miagenda.interfaces;
+package frsf.isi.dam.gtm.miagenda.interfaces.drawerprincipal;
 
 import android.os.Bundle;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
-import android.view.View;
 
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
