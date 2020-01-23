@@ -18,7 +18,7 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="Button.ReservarTurno" parent="Widget.MaterialComponents.Button.UnelevatedButton">
-        <item name="backgroundTint">#F3FBEC</item>
+        <item name="backgroundTint">@color/fondoReservarTurnoBtn</item>
         <item name="android:textColor">@color/colorAceptar</item>
     </style>
 
@@ -29,5 +29,16 @@
     <style name="Text.HoraTurnos" parent="TextAppearance.MaterialComponents.Subtitle1">
         <item name="android:textColor">#DE000000</item>
     </style>
+
+    <style name="Button.TurnoOcupado.Quitar" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="backgroundTint">@color/fondoQuitarTurnoBtn</item>
+        <item name="android:textColor">@color/colorCancelar</item>
+    </style>
+
+    <style name="Button.TurnoOcupado.Modificar" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="backgroundTint">@color/fondoModificarTurnoBtn</item>
+        <item name="android:textColor">@color/colorNeutral</item>
+    </style>
+
 
 </resources>

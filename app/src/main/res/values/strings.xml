@@ -21,5 +21,8 @@
     <string name="hora_turno_default">14:00 hs</string>
     <string name="turno_disponible">Turno disponible</string>
     <string name="reservar_turno">Reservar</string>
+    <string name="turno_ocupado">Turno Ocupado</string>
+    <string name="modificar_turno">Modificar</string>
+    <string name="quitar_turno">Quitar</string>
 
 </resources>
