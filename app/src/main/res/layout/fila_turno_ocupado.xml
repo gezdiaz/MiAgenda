@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/fila_turno_height">
+
+
+    <ImageView
+        android:id="@+id/turno_ocupado_img"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/ic_remove_circle_outline_24px"
+        android:tint="#C4C4C4"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/guideline"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="@dimen/fila_turno_height" />
+
+
+    <TextView
+        android:id="@+id/hora_turno_ocupado_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:layout_marginTop="16dp"
+        android:text="@string/hora_turno_default"
+        app:layout_constraintStart_toStartOf="@id/turno_ocupado_lbl"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/turno_ocupado_lbl"
+        style="@style/TextAppearance.MaterialComponents.Subtitle1"/>
+
+    <TextView
+        android:id="@+id/turno_ocupado_lbl"
+        style="@style/Text.SubtituloTurnos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:text="@string/turno_ocupado"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toBottomOf="@+id/hora_turno_ocupado_txt" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/modificar_turno_btn"
+        style="@style/Button.TurnoOcupado.Modificar"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginEnd="10dp"
+        android:text="@string/modificar_turno"
+        app:layout_constraintBottom_toTopOf="@id/quitar_turno_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/quitar_turno_btn"
+        style="@style/Button.TurnoOcupado.Quitar"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="10dp"
+        android:text="@string/quitar_turno"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/modificar_turno_btn"
+        app:layout_constraintTop_toBottomOf="@id/modificar_turno_btn" />
+
+    <View
+        android:layout_height="1dp"
+        android:layout_width="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/guideline"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="#e0e0e0"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

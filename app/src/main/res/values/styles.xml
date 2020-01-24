@@ -8,4 +8,37 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Light" />
+
+    <style name="Button.ReservarTurno" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="backgroundTint">@color/fondoReservarTurnoBtn</item>
+        <item name="android:textColor">@color/colorAceptar</item>
+    </style>
+
+    <style name="Text.SubtituloTurnos" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="android:textColor">#99000000</item>
+    </style>
+
+    <style name="Text.HoraTurnos" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="android:textColor">#DE000000</item>
+    </style>
+
+    <style name="Button.TurnoOcupado.Quitar" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="backgroundTint">@color/fondoQuitarTurnoBtn</item>
+        <item name="android:textColor">@color/colorCancelar</item>
+    </style>
+
+    <style name="Button.TurnoOcupado.Modificar" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="backgroundTint">@color/fondoModificarTurnoBtn</item>
+        <item name="android:textColor">@color/colorNeutral</item>
+    </style>
+
+
 </resources>
