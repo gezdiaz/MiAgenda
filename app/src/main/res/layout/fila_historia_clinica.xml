@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/historia_clinica_card_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    app:cardBackgroundColor="@color/lightGrey"
+    app:cardElevation="10dp"
+    app:state_dragged="true">
+
+    <LinearLayout
+        android:id="@+id/hc_linear_layout_card_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/fecha_atencion_paciente_lbl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorTextPrimary"
+            android:layout_margin="5dp"
+            android:textSize="15sp"
+            />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/descripcion_atencion_paciente_lbl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorTextPrimary"
+            android:maxLines="2"
+            android:layout_margin="5dp"
+            android:textSize="15sp"/>
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

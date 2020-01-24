@@ -7,4 +7,9 @@
     <string name="iniciar_sesion_google_btn">Iniciar con Google</string>
     <string name="crear_cuenta_btn">Crear Cuenta</string>
     <string name="datos_login_no_validos">Datos no válidos</string>
+    <string name="historia_clinica_toolbar">Historia Clínica</string>
+    <string name="paciente_lbl">Paciente</string>
+    <string name="generar_pdf_btn">Generar PDF</string>
+    <string name="cerrar_sesion_option_item">Cerrar sesión</string>
+    <string name="ok_option">OK</string>
 </resources>
