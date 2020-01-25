@@ -29,4 +29,9 @@
     <string name="edad_paciente_lbl">Edad:</string>
     <string name="ver_historia_btn">Ver historia clinica</string>
     <string name="telefono_paciente_lbl">Telefono:</string>
+    <string name="historia_clinica_toolbar">Historia Clínica</string>
+    <string name="paciente_lbl">Paciente</string>
+    <string name="generar_pdf_btn">Generar PDF</string>
+    <string name="cerrar_sesion_option_item">Cerrar sesión</string>
+    <string name="ok_option">OK</string>
 </resources>

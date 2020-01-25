@@ -17,12 +17,16 @@
         <activity android:name=".interfaces.VerPacienteActivity">
         </activity>
         <activity android:name=".interfaces.LoginActivity">
+        <activity android:name=".interfaces.listahistoriaclinica.HistoriaClinicaActivity">
+        </activity>
+        <activity android:name=".interfaces.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".MainActivity"></activity>
     </application>
 
 </manifest>
