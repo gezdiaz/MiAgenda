@@ -15,4 +15,7 @@
     <color name="colorCancelar">#ED1C24</color>
     <color name="colorNeutral">#3F48CC</color>
     <color name="lightGrey">#F5F5F5</color>
+    <color name="fondoReservarTurnoBtn">#F3FBEC</color>
+    <color name="fondoQuitarTurnoBtn">#FDEFEF</color>
+    <color name="fondoModificarTurnoBtn">#F0F0F8</color>
 </resources>

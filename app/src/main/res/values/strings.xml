@@ -32,4 +32,22 @@
     <string name="paciente_lbl">Paciente</string>
     <string name="generar_pdf_btn">Generar PDF</string>
     <string name="ok_option">OK</string>
+    <string name="title_activity_principal">PrincipalActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_mi_agenda">Mi Agenda</string>
+    <string name="menu_mis_pacientes">Mis Pacientes</string>
+    <string name="fecha_hoy_default">Martes 19 de Noviembre de 2019</string>
+    <string name="hora_turno_default">14:00 hs</string>
+    <string name="turno_disponible">Turno disponible</string>
+    <string name="reservar_turno">Reservar</string>
+    <string name="turno_ocupado">Turno Ocupado</string>
+    <string name="modificar_turno">Modificar</string>
+    <string name="quitar_turno">Quitar</string>
+    <string name="paciente_default">Tobias Villa</string>
 </resources>
