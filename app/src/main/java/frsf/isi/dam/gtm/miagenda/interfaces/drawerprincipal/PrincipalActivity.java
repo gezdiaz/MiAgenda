@@ -1,5 +1,6 @@
 package frsf.isi.dam.gtm.miagenda.interfaces.drawerprincipal;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.navigation.NavController;
@@ -15,8 +16,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
+import android.view.MenuItem;
 
 import frsf.isi.dam.gtm.miagenda.R;
+import frsf.isi.dam.gtm.miagenda.interfaces.LoginActivity;
 
 public class PrincipalActivity extends AppCompatActivity {
 
@@ -51,7 +54,20 @@ public class PrincipalActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.principal, menu);
+        getMenuInflater().inflate(R.menu.menu_opcion, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.cerrar_sesion_option_item:{
+                Intent i1 = new Intent(this, LoginActivity.class);
+                //TODO cerrar sesión
+                startActivity(i1);
+                break;
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

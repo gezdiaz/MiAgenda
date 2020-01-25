@@ -2,6 +2,7 @@ package frsf.isi.dam.gtm.miagenda.interfaces.listahistoriaclinica;
 
 
 // ESTA CLASE SE CREO SOLO PARA PROBAR EL RECYCLER VIEW DE LA HISTORIA CLINICA
+//TODO hacer una entidad turno bien
 
 public class Turno {
 

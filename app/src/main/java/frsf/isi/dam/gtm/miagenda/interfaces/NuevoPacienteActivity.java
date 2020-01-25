@@ -240,7 +240,7 @@ public class NuevoPacienteActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_nuevo_paciente, menu);
+        getMenuInflater().inflate(R.menu.menu_opcion, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -249,6 +249,7 @@ public class NuevoPacienteActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.cerrar_sesion_option_item:{
                 Intent i1 = new Intent(this, LoginActivity.class);
+                //TODO cerrar sesión
                 startActivity(i1);
                 break;
             }

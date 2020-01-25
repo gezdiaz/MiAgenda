@@ -45,8 +45,15 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 else{
                     Intent i1 = new Intent(getApplicationContext(), PrincipalActivity.class);
+                    //TODO iniciar sesión con mail y contraseña
                     startActivity(i1);
                 }
+            }
+        });
+        iniciarConGoogleBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO iniciar sesión con google
             }
         });
 

@@ -14,18 +14,19 @@
         <activity
             android:name=".interfaces.drawerprincipal.PrincipalActivity"
             android:label="@string/title_activity_principal"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter></activity>
         <activity android:name=".interfaces.NuevoPacienteActivity"></activity>
         <activity android:name=".interfaces.VerPacienteActivity">
         </activity>
         <activity android:name=".interfaces.listahistoriaclinica.HistoriaClinicaActivity">
         </activity>
         <activity android:name=".interfaces.LoginActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
     </application>
