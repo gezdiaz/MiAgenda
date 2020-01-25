@@ -243,40 +243,12 @@
                     android:maxLength="30" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <RelativeLayout
-                android:id="@+id/image_view_paciente_relative_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/eliminar_foto_btn"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
-                    android:layout_width="41dp"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentBottom="false"
-                    android:layout_centerVertical="true"
-                    android:textAlignment="viewStart"
-                    app:icon="@drawable/ic_cancel" />
-
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/foto_paciente_image_view"
-                    android:layout_width="250dp"
-                    android:layout_height="250dp"
-                    android:layout_centerVertical="false"
-                    android:layout_marginEnd="-1dp"
-                    android:layout_toStartOf="@+id/eliminar_foto_btn"
-                    android:elevation="5dp"></com.google.android.material.imageview.ShapeableImageView>
-
-            </RelativeLayout>
-
             <LinearLayout
                 android:id="@+id/nuevo_paciente_botones_linear_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                >
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/tomar_foto_btn"
@@ -284,9 +256,9 @@
                     android:layout_height="match_parent"
                     android:layout_marginStart="7dp"
                     android:layout_marginBottom="5dp"
-                    android:layout_weight="1"
                     android:paddingTop="12dp"
                     android:paddingBottom="12dp"
+                    android:layout_weight="1"
                     android:text="@string/tomar_foto_btn"
                     android:textColor="@color/colorTextPrimary"
                     app:cornerRadius="@dimen/login_buttons_radius" />
@@ -295,13 +267,13 @@
                     android:id="@+id/registrar_paciente_btn"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="10dp"
                     android:layout_marginEnd="7dp"
+                    android:layout_marginStart="10dp"
                     android:layout_marginBottom="5dp"
-                    android:layout_weight="1"
                     android:elegantTextHeight="false"
                     android:paddingTop="12dp"
                     android:paddingBottom="12dp"
+                    android:layout_weight="1"
                     android:text="@string/registrar_paciente_btn"
                     android:textColor="@color/colorTextPrimary"
                     app:cornerRadius="@dimen/login_buttons_radius" />
