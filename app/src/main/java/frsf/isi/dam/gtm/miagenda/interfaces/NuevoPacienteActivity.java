@@ -1,13 +1,19 @@
 package frsf.isi.dam.gtm.miagenda.interfaces;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.DialogFragment;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
@@ -21,16 +27,24 @@ import frsf.isi.dam.gtm.miagenda.R;
 
 public class NuevoPacienteActivity extends AppCompatActivity {
 
+    private final int REQUEST_IMAGE_CAPTURE = 1;
+
     private Toolbar myToolBar;
     private Calendar fechaNacimiento;
+    private RelativeLayout fotoPacienteRelativeLayout;
     private TextInputEditText nombrePacienteEdit, apellidoPacienteEdit, fechaNacimientoEdit,dniEdit, telefonoEdit, provinciaEdit, ciudadEdit, calleEdit, numeroDireccionEdit,obraSocialEdit;
-    private MaterialButton tomarFotoBtn, registrarPacBtn;
+    private MaterialButton tomarFotoBtn, registrarPacBtn, eliminarFotoBtn;
+    private ImageView fotoPacienteImageView;
     private  boolean[] validaciones = {false,false,false,false,false,false,false,false,false,false};
     private boolean datosValidos = true;
     private int contadorWhile = 0;
 
     private MaterialDatePicker.Builder<Long> builder;
     private MaterialDatePicker<Long> datePicker;
+
+    private  Bitmap imageBitmap;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,8 +67,11 @@ public class NuevoPacienteActivity extends AppCompatActivity {
         calleEdit = findViewById(R.id.calle_edit);
         numeroDireccionEdit  = findViewById(R.id.numero_direccion_edit);
         obraSocialEdit = findViewById(R.id.obra_social_edit);
+        fotoPacienteImageView = findViewById(R.id.foto_paciente_image_view);
         tomarFotoBtn = findViewById(R.id.tomar_foto_btn);
         registrarPacBtn = findViewById(R.id.registrar_paciente_btn);
+        fotoPacienteRelativeLayout = findViewById(R.id.image_view_paciente_relative_layout);
+        eliminarFotoBtn = findViewById(R.id.eliminar_foto_btn);
 
         fechaNacimientoEdit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -198,31 +215,31 @@ public class NuevoPacienteActivity extends AppCompatActivity {
         registrarPacBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                contadorWhile = 0;
-                datosValidos = true;
+            contadorWhile = 0;
+            datosValidos = true;
 
-                nombrePacienteEdit.clearFocus();
-                apellidoPacienteEdit.clearFocus();
-                fechaNacimientoEdit.requestFocus();
-                fechaNacimientoEdit.clearFocus();
-                dniEdit.clearFocus();
-                telefonoEdit.clearFocus();
-                provinciaEdit.clearFocus();
-                ciudadEdit.clearFocus();
-                calleEdit.clearFocus();
-                numeroDireccionEdit.clearFocus();
-                obraSocialEdit.clearFocus();
+            nombrePacienteEdit.clearFocus();
+            apellidoPacienteEdit.clearFocus();
+            fechaNacimientoEdit.requestFocus();
+            fechaNacimientoEdit.clearFocus();
+            dniEdit.clearFocus();
+            telefonoEdit.clearFocus();
+            provinciaEdit.clearFocus();
+            ciudadEdit.clearFocus();
+            calleEdit.clearFocus();
+            numeroDireccionEdit.clearFocus();
+            obraSocialEdit.clearFocus();
 
-                if(fechaNacimientoEdit.getText().toString().isEmpty()){
-                    validaciones[2] = false;
-                }
-                else{
-                    validaciones[2] = true;
-                }
+            if(fechaNacimientoEdit.getText().toString().isEmpty()){
+                validaciones[2] = false;
+            }
+            else{
+                validaciones[2] = true;
+            }
 
-                while(contadorWhile<validaciones.length && datosValidos){
-                    if(validaciones[contadorWhile] == false){
-                        datosValidos = false;
+            while(contadorWhile<validaciones.length && datosValidos){
+                if(validaciones[contadorWhile] == false){
+                    datosValidos = false;
                     }
                     contadorWhile++;
                 }
@@ -234,6 +251,27 @@ public class NuevoPacienteActivity extends AppCompatActivity {
                     t.show();
                 }
 
+            }
+        });
+
+
+        tomarFotoBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if(takePictureIntent.resolveActivity(getPackageManager()) != null){
+                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                }
+
+
+            }
+        });
+
+        eliminarFotoBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fotoPacienteImageView.setImageBitmap(null);
+                fotoPacienteRelativeLayout.setVisibility(View.GONE);
             }
         });
     }
@@ -267,6 +305,7 @@ public class NuevoPacienteActivity extends AppCompatActivity {
         builder =  MaterialDatePicker.Builder.datePicker();
         builder.setInputMode(MaterialDatePicker.INPUT_MODE_TEXT);
         builder.setTitleText(R.string.fecha_nacimiento_calendario);
+        //builder.setTheme(R.style.MaterialDatePickerEditado);
         //builder.setSelection(Calendar.getInstance().getTimeInMillis());
         datePicker = builder.build();
         datePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
@@ -279,5 +318,16 @@ public class NuevoPacienteActivity extends AppCompatActivity {
                 fechaNacimientoEdit.setText(fechaSeleccionada);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            imageBitmap = (Bitmap) extras.get("data");
+            fotoPacienteImageView.setImageBitmap(imageBitmap);
+            fotoPacienteRelativeLayout.setVisibility(View.VISIBLE);
+        }
     }
 }
