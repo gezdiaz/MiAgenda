@@ -22,7 +22,6 @@
     <string name="obra_social_paciente">Obra social</string>
     <string name="campo_vacio_error">Campo vacio</string>
     <string name="dni_paciente">DNI</string>
-    <string name="cerrar_sesion_option_item">Cerrar sesión</string>
     <string name="dni_paciente_lbl">DNI:</string>
     <string name="domicilio_paciente_lbl">Domicilio:</string>
     <string name="obra_social_paciente_lbl">Obra social:</string>
@@ -32,6 +31,5 @@
     <string name="historia_clinica_toolbar">Historia Clínica</string>
     <string name="paciente_lbl">Paciente</string>
     <string name="generar_pdf_btn">Generar PDF</string>
-    <string name="cerrar_sesion_option_item">Cerrar sesión</string>
     <string name="ok_option">OK</string>
 </resources>
