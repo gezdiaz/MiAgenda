@@ -38,27 +38,13 @@ public class LoginActivity extends AppCompatActivity {
                 correoEdit.clearFocus();
                 contraseniaEdit.clearFocus();
                 if(correoEdit.getText().toString().isEmpty() || contraseniaEdit.getText().toString().isEmpty()){
-                    mostrarToastError();
+
+                    Toast t = Toast.makeText(getApplicationContext(),getString(R.string.datos_login_no_validos), Toast.LENGTH_LONG);
+                    t.show();
                 }
             }
         });
     }
 
-    private void mostrarToastError(){
-        //Tuve que hacer un Layout a parte para poder cambiar el color del fondo del toast ya que no se distinguia por el fondo blanco.
-        //Ademas del layout a parte se creo tambien un drawable para poder agregar bordes redondeados a dicho Layout
 
-        LayoutInflater inflater = getLayoutInflater();
-        View layout = inflater.inflate(R.layout.toast_error_login,
-                (ViewGroup) findViewById(R.id.linear_layout_toast));
-
-        TextView text = layout.findViewById(R.id.error_text_lbl);
-        text.setText(getString(R.string.datos_login_no_validos));
-
-        Toast toast = new Toast(getApplicationContext());
-        toast.setGravity(Gravity.BOTTOM, 0, 50);
-        toast.setDuration(Toast.LENGTH_LONG);
-        toast.setView(layout);
-        toast.show();
-    }
 }

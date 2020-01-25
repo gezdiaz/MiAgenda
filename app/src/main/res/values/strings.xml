@@ -7,4 +7,19 @@
     <string name="iniciar_sesion_google_btn">Iniciar con Google</string>
     <string name="crear_cuenta_btn">Crear Cuenta</string>
     <string name="datos_login_no_validos">Datos no válidos</string>
+    <string name="nuevo_paciente_name">Nuevo paciente</string>
+    <string name="cerrar_sesion_option_item">Cerrar sesión</string>
+    <string name="fecha_nacimiento_calendario">Fecha de nacimiento</string>
+    <string name="tomar_foto_btn">Tomar foto</string>
+    <string name="registrar_paciente_btn">Registrar</string>
+    <string name="nombre_paciente">Nombre</string>
+    <string name="apellido_paciente">Apellido</string>
+    <string name="telefono_paciente">Telefono</string>
+    <string name="provincia_paciente">Provincia</string>
+    <string name="ciudad_paciente">Ciudad</string>
+    <string name="calle_paciente">Calle</string>
+    <string name="numero_direccion_paciente">Numero</string>
+    <string name="obra_social_paciente">Obra social</string>
+    <string name="campo_vacio_error">Campo vacio</string>
+    <string name="dni_paciente">DNI</string>
 </resources>
