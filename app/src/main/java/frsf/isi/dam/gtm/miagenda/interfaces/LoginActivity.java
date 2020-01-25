@@ -2,6 +2,7 @@ package frsf.isi.dam.gtm.miagenda.interfaces;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
 import frsf.isi.dam.gtm.miagenda.R;
+import frsf.isi.dam.gtm.miagenda.interfaces.drawerprincipal.PrincipalActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -41,6 +43,10 @@ public class LoginActivity extends AppCompatActivity {
 
                     Toast t = Toast.makeText(getApplicationContext(),getString(R.string.datos_login_no_validos), Toast.LENGTH_LONG);
                     t.show();
+                }
+                else{
+                    Intent i1 = new Intent(getApplicationContext(), PrincipalActivity.class);
+                    startActivity(i1);
                 }
             }
         });

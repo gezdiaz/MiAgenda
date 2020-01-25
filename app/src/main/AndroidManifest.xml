@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="frsf.isi.dam.gtm.miagenda">
 
     <application
@@ -13,8 +14,7 @@
         <activity
             android:name=".interfaces.drawerprincipal.PrincipalActivity"
             android:label="@string/title_activity_principal"
-            android:theme="@style/AppTheme.NoActionBar">
-        android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".interfaces.NuevoPacienteActivity"></activity>
         <activity android:name=".interfaces.VerPacienteActivity">
         </activity>
@@ -22,16 +22,13 @@
         </activity>
         <activity android:name=".interfaces.LoginActivity">
             <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN" />
 
-            <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity"></activity>
-        <activity android:name=".interfaces.LoginActivity">
 
-        </activity>
-        <activity android:name=".MainActivity"></activity>
     </application>
 
 </manifest>
