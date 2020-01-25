@@ -22,4 +22,11 @@
     <string name="obra_social_paciente">Obra social</string>
     <string name="campo_vacio_error">Campo vacio</string>
     <string name="dni_paciente">DNI</string>
+    <string name="cerrar_sesion_option_item">Cerrar sesión</string>
+    <string name="dni_paciente_lbl">DNI:</string>
+    <string name="domicilio_paciente_lbl">Domicilio:</string>
+    <string name="obra_social_paciente_lbl">Obra social:</string>
+    <string name="edad_paciente_lbl">Edad:</string>
+    <string name="ver_historia_btn">Ver historia clinica</string>
+    <string name="telefono_paciente_lbl">Telefono:</string>
 </resources>
