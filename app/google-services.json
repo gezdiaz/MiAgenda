@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "599209928062",
+    "firebase_url": "https://miagenda-6ed0d.firebaseio.com",
+    "project_id": "miagenda-6ed0d",
+    "storage_bucket": "miagenda-6ed0d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:599209928062:android:ccea060d332dcb80e3bf2f",
+        "android_client_info": {
+          "package_name": "frsf.isi.dam.gtm.miagenda"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "599209928062-2kb8kuvhtrqd1bhemcvmivtv9q80pgfu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "frsf.isi.dam.gtm.miagenda",
+            "certificate_hash": "a27bf9c9a86dabcaa2850d280996523ec31964d6"
+          }
+        },
+        {
+          "client_id": "599209928062-q5hnn0871vnff82v6jp2pgmh8pr546mt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9usSxrvRJXO_pWjlsOOMl50gHImerlIQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "599209928062-q5hnn0871vnff82v6jp2pgmh8pr546mt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
