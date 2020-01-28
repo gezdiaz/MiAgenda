@@ -11,6 +11,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -30,6 +31,10 @@ import frsf.isi.dam.gtm.miagenda.interfaces.LoginActivity;
 
 public class PrincipalActivity extends AppCompatActivity {
 
+    public static final String LOGIN = "login";
+    public static final String LOGINGOOGLE = "loginGoogle";
+    public static final String NEWUSER = "newUser";
+
     private AppBarConfiguration mAppBarConfiguration;
     private FirebaseAuth mAuth;
     private TextView userNameTxt, userEmailTxt;
@@ -45,11 +50,11 @@ public class PrincipalActivity extends AppCompatActivity {
         //verificar si hay una sesión iniciada.
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
-        if(user == null){
+        if (user == null) {
             //No hay cuenta iniciada
             startActivity(new Intent(this, LoginActivity.class));
             finish();
-        }else {
+        } else {
             //Hay una cuenta iniciada
             DrawerLayout drawer = findViewById(R.id.drawer_layout);
             NavigationView navigationView = findViewById(R.id.nav_view);
@@ -62,9 +67,9 @@ public class PrincipalActivity extends AppCompatActivity {
 
             //nombre se usuario
             String userName = user.getDisplayName();
-            if(userName != null && !userName.isEmpty()){
+            if (userName != null && !userName.isEmpty()) {
                 userNameTxt.setText(userName);
-            }else{
+            } else {
                 //Si el usuario no tiene nombre (inicio con mail)
                 userNameTxt.setText(R.string.usuario_default);
             }
@@ -72,12 +77,12 @@ public class PrincipalActivity extends AppCompatActivity {
             userEmailTxt.setText(user.getEmail());
             //Foto de perfil
             Uri photoUrl = user.getPhotoUrl();
-            if(photoUrl != null){
+            if (photoUrl != null) {
                 //Si tiene foto la cargo con Glide
                 Glide.with(headerView)
                         .load(photoUrl)
                         .into(userImageView);
-            }else{
+            } else {
                 //Si no tiene foto pongo la default
                 userImageView.setImageResource(R.drawable.perfil_default);
             }
@@ -92,6 +97,23 @@ public class PrincipalActivity extends AppCompatActivity {
             NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
             NavigationUI.setupWithNavController(navigationView, navController);
         }
+
+        Intent i = getIntent();
+        if (i.getBooleanExtra(LOGIN, false)) {
+            Snackbar s;
+            if(i.getBooleanExtra(NEWUSER, false)){
+                s = Snackbar.make(findViewById(R.id.coordinator_layout), R.string.exito_creacion_cuenta, Snackbar.LENGTH_LONG);
+            }else {
+                if(i.getBooleanExtra(LOGINGOOGLE, false)){
+                    s = Snackbar.make(findViewById(R.id.coordinator_layout), R.string.exito_inicio_sesion_google, Snackbar.LENGTH_LONG);
+                }else {
+                    s = Snackbar.make(findViewById(R.id.coordinator_layout), R.string.exito_inicio_sesion, Snackbar.LENGTH_LONG);
+                }
+            }
+            s.setBackgroundTint(getResources().getColor(R.color.colorPrimary));
+            s.show();
+        }
+
     }
 
     @Override
@@ -111,7 +133,7 @@ public class PrincipalActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.cerrar_sesion_option_item:{
+            case R.id.cerrar_sesion_option_item: {
                 Intent i1 = new Intent(this, LoginActivity.class);
                 //Le digo a LogInActivity que cierre sesión
                 i1.putExtra(LoginActivity.SignOut, true);
@@ -127,7 +149,7 @@ public class PrincipalActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         FirebaseUser user = mAuth.getCurrentUser();
-        if(user == null){
+        if (user == null) {
             //No hay cuenta iniciada
             startActivity(new Intent(this, LoginActivity.class));
             finish();

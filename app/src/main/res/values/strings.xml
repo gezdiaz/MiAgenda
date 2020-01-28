@@ -56,7 +56,7 @@
     <string name="descripcion_lbl">Descripción</string>
     <string name="aceptar">Aceptar</string>
     <string name="cancelar">Cancelar</string>
-    <string name="fallo_creacion_cuenta">Se produjo un error al crear la cuenta</string>
+    <string name="error_creacion_cuenta">Se produjo un error al crear la cuenta</string>
     <string name="exito_creacion_cuenta">Se creó la cuenta correctamente</string>
     <string name="error_clave_6_caracteres">La contraseña debe tener almenos 6 caracteres</string>
     <string name="error_inicio_sesion">Se produjo un error al iniciar sesión</string>
@@ -64,4 +64,5 @@
     <string name="error_inicio_sesion_google">No se pudo iniciar sesión con Google</string>
     <string name="usuario_default">Usuario</string>
     <string name="exito_inicio_sesion_google">Se inció sesión con Google</string>
+    <string name="bienvenido">Bienvenido</string>
 </resources>
