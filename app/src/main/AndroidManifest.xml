@@ -3,6 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="frsf.isi.dam.gtm.miagenda">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -14,20 +17,18 @@
         <activity
             android:name=".interfaces.drawerprincipal.PrincipalActivity"
             android:label="@string/title_activity_principal"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".interfaces.NuevoPacienteActivity"/>
+        <activity android:name=".interfaces.VerPacienteActivity"/>
+        <activity android:name=".interfaces.listahistoriaclinica.HistoriaClinicaActivity"/>
+        <activity android:name=".interfaces.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter></activity>
-        <activity android:name=".interfaces.NuevoPacienteActivity"></activity>
-        <activity android:name=".interfaces.VerPacienteActivity">
+            </intent-filter>
         </activity>
-        <activity android:name=".interfaces.listahistoriaclinica.HistoriaClinicaActivity">
-        </activity>
-        <activity android:name=".interfaces.LoginActivity">
 
-        </activity>
 
     </application>
 

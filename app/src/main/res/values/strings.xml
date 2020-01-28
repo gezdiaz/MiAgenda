@@ -6,7 +6,7 @@
     <string name="iniciar_sesion_btn">Iniciar sesión</string>
     <string name="iniciar_sesion_google_btn">Iniciar con Google</string>
     <string name="crear_cuenta_btn">Crear Cuenta</string>
-    <string name="datos_login_no_validos">Datos no válidos</string>
+    <string name="datos_login_no_validos">Por favor ingrese correo y contraseña</string>
     <string name="nuevo_paciente_name">Nuevo paciente</string>
     <string name="cerrar_sesion_option_item">Cerrar sesión</string>
     <string name="fecha_nacimiento_calendario">Fecha de nacimiento</string>
@@ -56,4 +56,10 @@
     <string name="descripcion_lbl">Descripción</string>
     <string name="aceptar">Aceptar</string>
     <string name="cancelar">Cancelar</string>
+    <string name="fallo_creacion_cuenta">Hubo un error al crear la cuenta</string>
+    <string name="exito_creacion_cuenta">Se creó la cuenta correctamente</string>
+    <string name="error_clave_6_caracteres">La contraseña debe tener almenos 6 caracteres</string>
+    <string name="error_inicio_sesion">Se produjo un error al iniciar sesión</string>
+    <string name="exito_inicio_sesion">Se inició sesión correctamente</string>
+    <string name="error_inicio_sesion_google">No se pudo iniciar sesión con Google</string>
 </resources>
