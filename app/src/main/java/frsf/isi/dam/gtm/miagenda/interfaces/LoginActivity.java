@@ -32,7 +32,7 @@ import frsf.isi.dam.gtm.miagenda.interfaces.drawerprincipal.PrincipalActivity;
 public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "LoginActivity";
-    private static final int RC_SIGN_IN_GOOGLE = -1;
+    private static final int RC_SIGN_IN_GOOGLE = 1;
     private TextInputEditText correoEdit;
     private TextInputEditText claveEdit;
     private MaterialButton iniciarSesionBtn;
@@ -84,7 +84,7 @@ public class LoginActivity extends AppCompatActivity {
                     Toast t = Toast.makeText(getApplicationContext(),getString(R.string.datos_login_no_validos), Toast.LENGTH_LONG);
                     t.show();
                 }else{
-                    if(claveEdit.getText().length() > 6){
+                    if(claveEdit.getText().length() < 6){
                         Toast.makeText(LoginActivity.this, R.string.error_clave_6_caracteres, Toast.LENGTH_LONG).show();
                     }else{
                         crearCuenta(correoEdit.getText().toString(), claveEdit.getText().toString());
@@ -100,7 +100,6 @@ public class LoginActivity extends AppCompatActivity {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
-                .requestProfile()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
@@ -108,39 +107,35 @@ public class LoginActivity extends AppCompatActivity {
 //        FirebaseUser user = mAuth.getCurrentUser();
 //        if(user != null){
 //            Log.d(TAG, "Signing out. UserEmail: "+user.getEmail());
-//            mAuth.signOut();
+//            startActivity(new Intent(this, PrincipalActivity.class));
+//            finish();
 //        }
 
     }
 
     private void iniciarSesionConGoogle() {
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        Log.d(TAG, "Llama startActivityForResult");
-        startActivityForResult(signInIntent, RC_SIGN_IN_GOOGLE);
+        Intent signinIntent = mGoogleSignInClient.getSignInIntent();
+        startActivityForResult(signinIntent, RC_SIGN_IN_GOOGLE);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG, "onActivityResult");
+
         if(requestCode == RC_SIGN_IN_GOOGLE){
-            Log.d(TAG, "Entra al if");
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
-                // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-                Log.d(TAG, "Llama a firebaseAuthWhitGoogle()");
-                firebaseAuthWithGoogle(account);
-            } catch (ApiException e) {
-                // Google Sign In failed, update UI appropriately
-                Log.w(TAG, "Google sign in failed", e);
-                Toast.makeText(this, R.string.error_inicio_sesion_google, Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Correcto inicio de sesión con google.", Toast.LENGTH_LONG).show();
+                firebaseAuthWhitGoogle(account);
+            }catch (ApiException e){
+                Log.d(TAG, "Google sign in failed", e);
+                Toast.makeText(this, "Falló inicio de sesión con google.", Toast.LENGTH_LONG).show();
             }
         }
-
     }
 
-    private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
+    private void firebaseAuthWhitGoogle(GoogleSignInAccount account) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + account.getId());
 
         AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
@@ -148,21 +143,16 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
-                    // Sign in success
                     Log.d(TAG, "signInWithCredential:success");
-                    Toast.makeText(LoginActivity.this, R.string.exito_inicio_sesion, Toast.LENGTH_LONG).show();
-//                    Snackbar.make(findViewById(R.id.login_activity_layout), R.string.exito_inicio_sesion, Snackbar.LENGTH_LONG).show();
+                    Toast.makeText(LoginActivity.this, "Inicio de sesión con Google completado", Toast.LENGTH_LONG).show();
                     startActivity(new Intent(LoginActivity.this, PrincipalActivity.class));
                     finish();
                 }else{
-                    // If sign in fails, display a message to the user.
                     Log.w(TAG, "signInWithCredential:failure", task.getException());
-                    Toast.makeText(LoginActivity.this, R.string.error_inicio_sesion_google, Toast.LENGTH_LONG).show();
-//                    Snackbar.make(findViewById(R.id.login_activity_layout), R.string.error_inicio_sesion_google, Snackbar.LENGTH_LONG).show();
+                    Toast.makeText(LoginActivity.this, "Fallo en firebase sign in", Toast.LENGTH_LONG).show();
                 }
             }
         });
-
     }
 
     private void iniciarSesion(String email, String clave) {

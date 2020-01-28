@@ -9,6 +9,8 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -24,6 +26,7 @@ import frsf.isi.dam.gtm.miagenda.interfaces.LoginActivity;
 public class PrincipalActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
+    FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +36,13 @@ public class PrincipalActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         //TODO verificar si está iniciada una sesión.
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+        if(user == null){
+            //No hay cuenta iniciada
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+        }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -67,10 +77,23 @@ public class PrincipalActivity extends AppCompatActivity {
             case R.id.cerrar_sesion_option_item:{
                 Intent i1 = new Intent(this, LoginActivity.class);
                 //TODO cerrar sesión
+                mAuth.signOut();
                 startActivity(i1);
+                finish();
                 break;
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FirebaseUser user = mAuth.getCurrentUser();
+        if(user == null){
+            //No hay cuenta iniciada
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+        }
     }
 }
