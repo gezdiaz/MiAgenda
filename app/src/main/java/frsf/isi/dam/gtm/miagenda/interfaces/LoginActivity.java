@@ -62,7 +62,7 @@ public class LoginActivity extends AppCompatActivity {
                     t.show();
                 }else{
                     Intent i1 = new Intent(getApplicationContext(), PrincipalActivity.class);
-                    //TODO iniciar sesión con mail y contraseña
+                    //iniciar sesión con mail y contraseña
                     iniciarSesion(email, clave);
                 }
             }
@@ -70,7 +70,7 @@ public class LoginActivity extends AppCompatActivity {
         iniciarConGoogleBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO iniciar sesión con google
+                //iniciar sesión con google
                 iniciarSesionConGoogle();
             }
         });
@@ -96,21 +96,20 @@ public class LoginActivity extends AppCompatActivity {
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
 
+        //Verificar si ya hay una cuenta iniciada.
+        FirebaseUser user = mAuth.getCurrentUser();
+        if(user != null){
+            Log.d(TAG, "Cuenta ya inicada: "+user.getEmail());
+            startActivity(new Intent(this, PrincipalActivity.class));
+            finish();
+        }
+
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-
-
-//        FirebaseUser user = mAuth.getCurrentUser();
-//        if(user != null){
-//            Log.d(TAG, "Signing out. UserEmail: "+user.getEmail());
-//            startActivity(new Intent(this, PrincipalActivity.class));
-//            finish();
-//        }
-
     }
 
     private void iniciarSesionConGoogle() {

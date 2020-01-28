@@ -35,7 +35,7 @@ public class PrincipalActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //TODO verificar si está iniciada una sesión.
+        //verificar si hay una sesión iniciada.
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         if(user == null){
@@ -76,7 +76,7 @@ public class PrincipalActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.cerrar_sesion_option_item:{
                 Intent i1 = new Intent(this, LoginActivity.class);
-                //TODO cerrar sesión
+                //cerrar sesión
                 mAuth.signOut();
                 startActivity(i1);
                 finish();
