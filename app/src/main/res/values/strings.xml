@@ -62,4 +62,5 @@
     <string name="error_inicio_sesion">Se produjo un error al iniciar sesión</string>
     <string name="exito_inicio_sesion">Se inició sesión correctamente</string>
     <string name="error_inicio_sesion_google">No se pudo iniciar sesión con Google</string>
+    <string name="usuario_default">Usuario</string>
 </resources>

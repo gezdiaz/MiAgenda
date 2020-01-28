@@ -1,6 +1,7 @@
 package frsf.isi.dam.gtm.miagenda.interfaces.drawerprincipal;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.navigation.NavController;
@@ -8,6 +9,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -19,6 +21,9 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import frsf.isi.dam.gtm.miagenda.R;
 import frsf.isi.dam.gtm.miagenda.interfaces.LoginActivity;
@@ -26,7 +31,9 @@ import frsf.isi.dam.gtm.miagenda.interfaces.LoginActivity;
 public class PrincipalActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
-    FirebaseAuth mAuth;
+    private FirebaseAuth mAuth;
+    private TextView userNameTxt, userEmailTxt;
+    private ImageView userImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,19 +49,49 @@ public class PrincipalActivity extends AppCompatActivity {
             //No hay cuenta iniciada
             startActivity(new Intent(this, LoginActivity.class));
             finish();
-        }
+        }else {
+            //Hay una cuenta iniciada
+            DrawerLayout drawer = findViewById(R.id.drawer_layout);
+            NavigationView navigationView = findViewById(R.id.nav_view);
 
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_mi_agenda, R.id.nav_mis_pacientes)
-                .setDrawerLayout(drawer)
-                .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
-        NavigationUI.setupWithNavController(navigationView, navController);
+            //Seteo el perfil del usuario logueado en el header del drawer
+            View headerView = navigationView.getHeaderView(0);
+            userNameTxt = headerView.findViewById(R.id.user_name_txt);
+            userEmailTxt = headerView.findViewById(R.id.user_email_txt);
+            userImageView = headerView.findViewById(R.id.user_image_view);
+
+            //nombre se usuario
+            String userName = user.getDisplayName();
+            if(userName != null && !userName.isEmpty()){
+                userNameTxt.setText(userName);
+            }else{
+                //Si el usuario no tiene nombre (inicio con mail)
+                userNameTxt.setText(R.string.usuario_default);
+            }
+            //Email siempre tiene
+            userEmailTxt.setText(user.getEmail());
+            //Foto de perfil
+            Uri photoUrl = user.getPhotoUrl();
+            if(photoUrl != null){
+                //Si tiene foto la cargo con Glide
+                Glide.with(headerView)
+                        .load(photoUrl)
+                        .into(userImageView);
+            }else{
+                //Si no tiene foto pongo la default
+                userImageView.setImageResource(R.drawable.perfil_default);
+            }
+
+            // Passing each menu ID as a set of Ids because each
+            // menu should be considered as top level destinations.
+            mAppBarConfiguration = new AppBarConfiguration.Builder(
+                    R.id.nav_mi_agenda, R.id.nav_mis_pacientes)
+                    .setDrawerLayout(drawer)
+                    .build();
+            NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+            NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
+            NavigationUI.setupWithNavController(navigationView, navController);
+        }
     }
 
     @Override
@@ -78,6 +115,7 @@ public class PrincipalActivity extends AppCompatActivity {
                 Intent i1 = new Intent(this, LoginActivity.class);
                 //cerrar sesión
                 mAuth.signOut();
+
                 startActivity(i1);
                 finish();
                 break;
