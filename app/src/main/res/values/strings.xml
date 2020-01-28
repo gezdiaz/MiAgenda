@@ -57,5 +57,7 @@
     <string name="aceptar">Aceptar</string>
     <string name="cancelar">Cancelar</string>
     <string name="directorio_destino_pdf">/HistoriasClinicasPDF/</string>
-    <string name="error_guardar_pdf">Error al guardar PDF</string>
+    <string name="error_guardar_pdf">Error al guardar historia clínica.</string>
+    <string name="exito_guardar_pdf">Éxito al guardar historia clínica.</string>
+    <string name="crear_pdf_progress_dialog">Guardando historia clínica</string>
 </resources>

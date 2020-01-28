@@ -8,18 +8,30 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.pdf.PdfDocument;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textview.MaterialTextView;
 
 import java.io.File;
@@ -34,15 +46,19 @@ import frsf.isi.dam.gtm.miagenda.interfaces.LoginActivity;
 public class HistoriaClinicaActivity extends AppCompatActivity {
 
     private List<Turno> mockTurnos;
+
+    private View contextView;
     private RecyclerView historiaClinicaRecyclerView;
     private RecyclerView.Adapter historiaClinicaAdapter;
     private  RecyclerView.LayoutManager historiaClinicaLayoutManager;
     private MaterialButton generarPdfBtn;
+    private ProgressBar creacionPdfProgressBar;
 
     private Toolbar toolbar;
     private MaterialTextView pacienteLbl;
+    private Snackbar creacionPdfSnackbarExito, creacionPdfSnackbarError;
 
-    private final int anchoPagina = 595, largoPagina = 842;
+    private final int anchoPagina = 595, largoPagina = 842, PDF_ERROR_CODIGO=-1, PDF_EXITO_CODIGO=1;
     private int numeroPagina, margenX, margenY;
     private String paciente;
     private  PdfDocument documentoPdf;
@@ -52,16 +68,55 @@ public class HistoriaClinicaActivity extends AppCompatActivity {
     private Paint paint;
     private final int maxCantCaracteresXRenglon = 45;
 
+    private Handler myHandler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_historia_clinica);
+
+        myHandler = new Handler(Looper.getMainLooper()){
+            @Override
+            public void handleMessage(Message inputMessage) {
+                int codigoHiloSecundario = inputMessage.what;
+
+                switch (codigoHiloSecundario){
+                    case (PDF_EXITO_CODIGO):{
+                        //Termino de crear exitosamente el pdf
+
+                        creacionPdfProgressBar.setVisibility(View.GONE);
+                        generarPdfBtn.setEnabled(true);
+                        creacionPdfSnackbarExito.show();
+
+                        break;
+                    }
+                    case (PDF_ERROR_CODIGO):{
+                        //Error al crear PDF
+                        creacionPdfProgressBar.setVisibility(View.GONE);
+                        generarPdfBtn.setEnabled(true);
+                        creacionPdfSnackbarError.show();
+                        break;
+                    }
+                }
+            }
+        };
 
         toolbar = findViewById(R.id.historia_clinica_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         generarPdfBtn = findViewById(R.id.generar_pdf_btn);
+
+        creacionPdfProgressBar = findViewById(R.id.crear_pdf_progress_bar);
+
+        contextView = findViewById(R.id.historia_clinica_linear_layout);
+        creacionPdfSnackbarExito = Snackbar.make(contextView,R.string.exito_guardar_pdf, BaseTransientBottomBar.LENGTH_LONG);
+        creacionPdfSnackbarExito.setTextColor(Color.WHITE);
+        creacionPdfSnackbarExito.setBackgroundTint(getResources().getColor(R.color.colorPrimary));
+
+        creacionPdfSnackbarError = Snackbar.make(contextView,R.string.error_guardar_pdf, BaseTransientBottomBar.LENGTH_LONG);
+        creacionPdfSnackbarError.setBackgroundTint(Color.RED);
+        creacionPdfSnackbarError.setTextColor(Color.WHITE);
 
         ActivityCompat.requestPermissions(HistoriaClinicaActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PackageManager.PERMISSION_GRANTED);
 
@@ -84,11 +139,32 @@ public class HistoriaClinicaActivity extends AppCompatActivity {
         generarPdfBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                generarPdf();
+
+                creacionPdfProgressBar.setVisibility(View.VISIBLE);
+                generarPdfBtn.setEnabled(false);
+
+                final Message msg = new Message();
+
+                //Hilo secundario para crear el PDF
+                Runnable r = new Runnable() {
+
+                    @Override
+                    public void run() {
+
+                        try {
+                            generarPdf(msg);
+                            myHandler.sendMessage(msg);
+                        }
+                        catch (Exception e){
+                            msg.what=PDF_ERROR_CODIGO;
+                            myHandler.sendMessage(msg);
+                        }
+                    }
+                };
+                Thread hiloSecundario = new Thread(r);
+                hiloSecundario.start();
             }
         });
-
-
 
     }
 
@@ -115,7 +191,7 @@ public class HistoriaClinicaActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void generarPdf(){
+    private void generarPdf(Message msg){
 
         documentoPdf = new PdfDocument();
         paint = new Paint();
@@ -194,10 +270,10 @@ public class HistoriaClinicaActivity extends AppCompatActivity {
         //Se guarda el pdf en el archivo(File) "archivoPDF"
         try {
             documentoPdf.writeTo(new FileOutputStream(archivoPDF));
+            msg.what=PDF_EXITO_CODIGO;
         }
         catch (IOException e){
-            Toast t = Toast.makeText(getApplicationContext(), R.string.error_guardar_pdf,Toast.LENGTH_LONG);
-            t.show();
+           msg.what = PDF_ERROR_CODIGO;
         }
     }
 
@@ -251,7 +327,6 @@ public class HistoriaClinicaActivity extends AppCompatActivity {
             lineasARetornar.add(linea);
         }
     }
-
 
 }
 
