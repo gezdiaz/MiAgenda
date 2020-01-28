@@ -68,9 +68,8 @@ public class HistoriaClinicaActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.cerrar_sesion_option_item:{
                 Intent i1 = new Intent(this, LoginActivity.class);
-                //cerrar sesión con firebase auth;
-                //TODO probar si funciona.
-                FirebaseAuth.getInstance().signOut();
+                //Le digo a LogInActivity que cierre sesión
+                i1.putExtra(LoginActivity.SignOut, true);
                 startActivity(i1);
                 break;
             }

@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.method.BaseKeyListener;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -18,7 +19,6 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -31,6 +31,7 @@ import frsf.isi.dam.gtm.miagenda.interfaces.drawerprincipal.PrincipalActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
+    public static final String SignOut = "hasToSignOut";
     private static final String TAG = "LoginActivity";
     private static final int RC_SIGN_IN_GOOGLE = 1;
     private TextInputEditText correoEdit;
@@ -44,7 +45,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login_avtivity);
+        setContentView(R.layout.activity_login);
         correoEdit = findViewById(R.id.login_usuario_edit);
         claveEdit = findViewById(R.id.login_password_edit);
         iniciarSesionBtn = findViewById(R.id.iniciar_sesion_btn);
@@ -57,10 +58,10 @@ public class LoginActivity extends AppCompatActivity {
                 claveEdit.clearFocus();
                 String email = correoEdit.getText().toString();
                 String clave = claveEdit.getText().toString();
-                if(email.isEmpty() || clave.isEmpty()){
-                    Toast t = Toast.makeText(getApplicationContext(),getString(R.string.datos_login_no_validos), Toast.LENGTH_LONG);
+                if (email.isEmpty() || clave.isEmpty()) {
+                    Toast t = Toast.makeText(getApplicationContext(), getString(R.string.datos_login_no_validos), Toast.LENGTH_SHORT);
                     t.show();
-                }else{
+                } else {
                     Intent i1 = new Intent(getApplicationContext(), PrincipalActivity.class);
                     //iniciar sesión con mail y contraseña
                     iniciarSesion(email, clave);
@@ -79,27 +80,28 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 correoEdit.clearFocus();
                 claveEdit.clearFocus();
-                if(correoEdit.getText().toString().isEmpty() || claveEdit.getText().toString().isEmpty()){
+                if (correoEdit.getText().toString().isEmpty() || claveEdit.getText().toString().isEmpty()) {
 
-                    Toast t = Toast.makeText(getApplicationContext(),getString(R.string.datos_login_no_validos), Toast.LENGTH_LONG);
+                    Toast t = Toast.makeText(getApplicationContext(), getString(R.string.datos_login_no_validos), Toast.LENGTH_SHORT);
                     t.show();
-                }else{
-                    if(claveEdit.getText().length() < 6){
-                        Toast.makeText(LoginActivity.this, R.string.error_clave_6_caracteres, Toast.LENGTH_LONG).show();
-                    }else{
+                } else {
+                    if (claveEdit.getText().length() < 6) {
+                        Toast.makeText(LoginActivity.this, R.string.error_clave_6_caracteres, Toast.LENGTH_SHORT).show();
+                    } else {
                         crearCuenta(correoEdit.getText().toString(), claveEdit.getText().toString());
                     }
                 }
             }
         });
 
+
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
 
         //Verificar si ya hay una cuenta iniciada.
         FirebaseUser user = mAuth.getCurrentUser();
-        if(user != null){
-            Log.d(TAG, "Cuenta ya inicada: "+user.getEmail());
+        if (user != null) {
+            Log.d(TAG, "Cuenta ya inicada: " + user.getEmail());
             startActivity(new Intent(this, PrincipalActivity.class));
             finish();
         }
@@ -110,6 +112,12 @@ public class LoginActivity extends AppCompatActivity {
                 .requestEmail()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+        if (getIntent().getBooleanExtra(SignOut, false)) {
+            mAuth.signOut();
+            mGoogleSignInClient.signOut();
+        }
+
     }
 
     private void iniciarSesionConGoogle() {
@@ -121,15 +129,14 @@ public class LoginActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == RC_SIGN_IN_GOOGLE){
+        if (requestCode == RC_SIGN_IN_GOOGLE) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-                Toast.makeText(this, "Correcto inicio de sesión con google.", Toast.LENGTH_LONG).show();
                 firebaseAuthWhitGoogle(account);
-            }catch (ApiException e){
+            } catch (ApiException e) {
                 Log.d(TAG, "Google sign in failed", e);
-                Toast.makeText(this, "Falló inicio de sesión con google.", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.error_inicio_sesion_google, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -141,14 +148,14 @@ public class LoginActivity extends AppCompatActivity {
         mAuth.signInWithCredential(credential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()){
+                if (task.isSuccessful()) {
                     Log.d(TAG, "signInWithCredential:success");
-                    Toast.makeText(LoginActivity.this, "Inicio de sesión con Google completado", Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoginActivity.this, R.string.exito_inicio_sesion_google, Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(LoginActivity.this, PrincipalActivity.class));
                     finish();
-                }else{
+                } else {
                     Log.w(TAG, "signInWithCredential:failure", task.getException());
-                    Toast.makeText(LoginActivity.this, "Fallo en firebase sign in", Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoginActivity.this, R.string.error_inicio_sesion_google, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -162,7 +169,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
-                            Toast.makeText(LoginActivity.this, getString(R.string.exito_inicio_sesion), Toast.LENGTH_LONG).show();
+                            Toast.makeText(LoginActivity.this, R.string.exito_inicio_sesion, Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(LoginActivity.this, PrincipalActivity.class));
                             finish();
                         } else {
@@ -183,13 +190,13 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
-                            Toast.makeText(LoginActivity.this, getString(R.string.exito_creacion_cuenta), Toast.LENGTH_LONG).show();
+                            Toast.makeText(LoginActivity.this, R.string.exito_creacion_cuenta, Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(LoginActivity.this, PrincipalActivity.class));
                             finish();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, getString(R.string.fallo_creacion_cuenta), Toast.LENGTH_LONG).show();
+                            Toast.makeText(LoginActivity.this, R.string.fallo_creacion_cuenta, Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
