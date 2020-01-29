@@ -24,7 +24,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="@dimen/fila_turno_height" />
+        app:layout_constraintGuide_begin="@dimen/guideline_pos"
+        app:layout_constraintGuide_end="356dp" />
 
 
     <TextView
@@ -54,7 +55,7 @@
         android:id="@+id/modificar_turno_btn"
         style="@style/Button.TurnoOcupado.Modificar"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
         android:text="@string/modificar_turno"
         app:layout_constraintBottom_toTopOf="@id/quitar_turno_btn"
@@ -65,7 +66,7 @@
         android:id="@+id/quitar_turno_btn"
         style="@style/Button.TurnoOcupado.Quitar"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
         android:text="@string/quitar_turno"
         app:layout_constraintBottom_toBottomOf="parent"

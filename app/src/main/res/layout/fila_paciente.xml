@@ -17,6 +17,7 @@
             android:layout_height="120dp"
             app:cardCornerRadius="60dp"
             android:elevation="12dp">
+
             <ImageView
                 android:id="@+id/paciente_img"
                 android:layout_width="120dp"

@@ -7,6 +7,14 @@
     android:layout_height="@dimen/fila_turno_height">
 
 
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="#e0e0e0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/guideline" />
+
     <ImageView
         android:id="@+id/turno_libre_img"
         android:layout_width="30dp"
@@ -24,7 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="@dimen/fila_turno_height" />
+        app:layout_constraintGuide_begin="@dimen/guideline_pos" />
 
 
     <TextView
@@ -60,13 +68,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <View
-        android:layout_height="1dp"
-        android:layout_width="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/guideline"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:background="#e0e0e0"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
