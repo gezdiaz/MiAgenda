@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -39,6 +40,7 @@ public class LoginActivity extends AppCompatActivity {
     private MaterialButton crearCuentaBtn;
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
+    private ProgressBar iniciarSesionProgress, iniciarConGoogleProgress, crearCuentaProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +97,9 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        iniciarSesionProgress = findViewById(R.id.iniciar_sesion_progress);
+        iniciarConGoogleProgress = findViewById(R.id.iniciar_sesion_google_progress);
+        crearCuentaProgress = findViewById(R.id.crear_cuenta_progress);
 
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
@@ -122,6 +127,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void iniciarSesionConGoogle() {
+        iniciarConGoogleProgress.setVisibility(View.VISIBLE);
         Intent signinIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signinIntent, RC_SIGN_IN_GOOGLE);
     }
@@ -156,6 +162,7 @@ public class LoginActivity extends AppCompatActivity {
                     Intent i = new Intent(LoginActivity.this, PrincipalActivity.class);
                     i.putExtra(PrincipalActivity.LOGIN, true);
                     i.putExtra(PrincipalActivity.LOGINGOOGLE, true);
+                    iniciarConGoogleProgress.setVisibility(View.INVISIBLE);
                     startActivity(i);
                     finish();
                 } else {
@@ -163,12 +170,14 @@ public class LoginActivity extends AppCompatActivity {
                     Snackbar s = Snackbar.make(findViewById(R.id.login_activity_layout), R.string.error_inicio_sesion_google, Snackbar.LENGTH_LONG);
                     s.setBackgroundTint(getResources().getColor(R.color.colorCancelar));
                     s.show();
+                    iniciarConGoogleProgress.setVisibility(View.INVISIBLE);
                 }
             }
         });
     }
 
     private void iniciarSesion(String email, String clave) {
+        iniciarSesionProgress.setVisibility(View.VISIBLE);
         mAuth.signInWithEmailAndPassword(email, clave)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -181,6 +190,7 @@ public class LoginActivity extends AppCompatActivity {
 //                            s.show();
                             Intent i = new Intent(LoginActivity.this, PrincipalActivity.class);
                             i.putExtra(PrincipalActivity.LOGIN, true);
+                            iniciarSesionProgress.setVisibility(View.INVISIBLE);
                             startActivity(i);
                             finish();
                         } else {
@@ -189,13 +199,14 @@ public class LoginActivity extends AppCompatActivity {
                             Snackbar s = Snackbar.make(findViewById(R.id.login_activity_layout), R.string.error_inicio_sesion, Snackbar.LENGTH_LONG);
                             s.setBackgroundTint(getResources().getColor(R.color.colorCancelar));
                             s.show();
+                            iniciarSesionProgress.setVisibility(View.INVISIBLE);
                         }
                     }
                 });
     }
 
     private void crearCuenta(String email, String clave) {
-
+        crearCuentaProgress.setVisibility(View.VISIBLE);
         mAuth.createUserWithEmailAndPassword(email, clave)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -206,6 +217,7 @@ public class LoginActivity extends AppCompatActivity {
                             Intent i = new Intent(LoginActivity.this, PrincipalActivity.class);
                             i.putExtra(PrincipalActivity.LOGIN, true);
                             i.putExtra(PrincipalActivity.NEWUSER, true);
+                            crearCuentaProgress.setVisibility(View.INVISIBLE);
                             startActivity(i);
                             finish();
                         } else {
@@ -214,6 +226,7 @@ public class LoginActivity extends AppCompatActivity {
                             Snackbar s = Snackbar.make(findViewById(R.id.login_activity_layout), R.string.error_creacion_cuenta, Snackbar.LENGTH_LONG);
                             s.setBackgroundTint(getResources().getColor(R.color.colorCancelar));
                             s.show();
+                            crearCuentaProgress.setVisibility(View.INVISIBLE);
                         }
                     }
                 });

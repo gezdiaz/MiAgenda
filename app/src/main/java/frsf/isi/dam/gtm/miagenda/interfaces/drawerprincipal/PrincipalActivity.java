@@ -98,6 +98,7 @@ public class PrincipalActivity extends AppCompatActivity {
             NavigationUI.setupWithNavController(navigationView, navController);
         }
 
+        //Mostrar mensaje de inicio de sesión si recién ingresa.
         Intent i = getIntent();
         if (i.getBooleanExtra(LOGIN, false)) {
             Snackbar s;
