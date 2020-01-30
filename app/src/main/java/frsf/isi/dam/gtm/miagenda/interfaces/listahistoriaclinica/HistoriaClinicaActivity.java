@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.google.android.material.textview.MaterialTextView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +68,8 @@ public class HistoriaClinicaActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.cerrar_sesion_option_item:{
                 Intent i1 = new Intent(this, LoginActivity.class);
-                //TODO cerrar sesión
+                //Le digo a LogInActivity que cierre sesión
+                i1.putExtra(LoginActivity.SignOut, true);
                 startActivity(i1);
                 break;
             }

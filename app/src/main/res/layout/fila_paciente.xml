@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_margin="10dp">
 
     <LinearLayout
@@ -12,19 +12,12 @@
         android:layout_margin="5dp"
         android:orientation="horizontal">
 
-        <androidx.cardview.widget.CardView
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/paciente_img"
             android:layout_width="120dp"
             android:layout_height="120dp"
-            app:cardCornerRadius="60dp"
-            android:elevation="12dp">
-
-            <ImageView
-                android:id="@+id/paciente_img"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:src="@drawable/paciente_default_img"
-                tools:ignore="ContentDescription" />
-        </androidx.cardview.widget.CardView>
+            android:src="@drawable/paciente_default_hombre"
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/nombre_paciente_txt"

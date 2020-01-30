@@ -11,6 +11,7 @@ import android.view.View;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textview.MaterialTextView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import frsf.isi.dam.gtm.miagenda.R;
 import frsf.isi.dam.gtm.miagenda.interfaces.listahistoriaclinica.HistoriaClinicaActivity;
@@ -67,7 +68,8 @@ public class VerPacienteActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.cerrar_sesion_option_item:{
                 Intent i1 = new Intent(this, LoginActivity.class);
-                //TODO cerrar sesión
+                //Le digo a LogInActivity que cierre sesión
+                i1.putExtra(LoginActivity.SignOut, true);
                 startActivity(i1);
                 break;
             }

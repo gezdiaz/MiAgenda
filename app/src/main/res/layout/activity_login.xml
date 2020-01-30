@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/login_activity_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".interfaces.LoginActivity">
+
+
+    <TextView
+        android:id="@+id/inicio_sesion_lbl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="50sp"
+        android:paddingBottom="20sp"
+        android:text="@string/inicio_sesion"
+        android:textAlignment="center"
+        android:textColor="@color/colorTextPrimary"
+        android:textSize="35sp"
+        app:layout_constraintEnd_toEndOf="@+id/iniciar_sesion_google_btn"
+        app:layout_constraintStart_toStartOf="@+id/iniciar_sesion_google_btn"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/login_usuario_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:hint="@string/login_usuario"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/inicio_sesion_lbl">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/login_usuario_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:maxLines="1" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/login_password_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:hint="@string/login_password"
+        android:paddingBottom="40dp"
+        app:endIconMode="password_toggle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_usuario_layout"
+
+        >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/login_password_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:maxLines="1"
+
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/iniciar_sesion_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:insetLeft="10dp"
+        android:insetRight="10dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:text="@string/iniciar_sesion_btn"
+        android:textColor="@color/colorTextPrimary"
+        app:cornerRadius="@dimen/login_buttons_radius"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_password_layout" />
+
+    <ProgressBar
+        android:id="@+id/iniciar_sesion_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintBottom_toBottomOf="@id/iniciar_sesion_btn"
+        app:layout_constraintEnd_toEndOf="@id/iniciar_sesion_btn"
+        app:layout_constraintTop_toTopOf="@id/iniciar_sesion_btn"
+        android:elevation="7dp"
+        android:indeterminate="true"
+        android:indeterminateTintMode="src_atop"
+        android:indeterminateTint="@color/colorPrimaryDark"
+        android:visibility="invisible"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/iniciar_sesion_google_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:insetLeft="10dp"
+        android:insetRight="10dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:text="@string/iniciar_sesion_google_btn"
+        android:textColor="@color/colorTextPrimary"
+        app:cornerRadius="@dimen/login_buttons_radius"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iniciar_sesion_btn" />
+
+    <ProgressBar
+        android:id="@+id/iniciar_sesion_google_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintBottom_toBottomOf="@id/iniciar_sesion_google_btn"
+        app:layout_constraintEnd_toEndOf="@id/iniciar_sesion_google_btn"
+        app:layout_constraintTop_toTopOf="@id/iniciar_sesion_google_btn"
+        android:elevation="7dp"
+        android:indeterminate="true"
+        android:indeterminateTintMode="src_atop"
+        android:indeterminateTint="@color/colorPrimaryDark"
+        android:visibility="invisible"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/crear_cuenta_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:insetLeft="10dp"
+        android:insetRight="10dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:text="@string/crear_cuenta_btn"
+        android:textColor="@color/colorTextPrimary"
+        app:cornerRadius="@dimen/login_buttons_radius"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iniciar_sesion_google_btn" />
+
+    <ProgressBar
+        android:id="@+id/crear_cuenta_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintBottom_toBottomOf="@id/crear_cuenta_btn"
+        app:layout_constraintEnd_toEndOf="@id/crear_cuenta_btn"
+        app:layout_constraintTop_toTopOf="@id/crear_cuenta_btn"
+        android:elevation="7dp"
+        android:indeterminate="true"
+        android:indeterminateTintMode="src_atop"
+        android:indeterminateTint="@color/colorPrimaryDark"
+        android:visibility="invisible"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
