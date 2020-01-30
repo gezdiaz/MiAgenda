@@ -145,7 +145,7 @@ public class LoginActivity extends AppCompatActivity {
                 Log.d(TAG, "Google sign in failed", e);
                 Snackbar s = Snackbar.make(findViewById(R.id.login_activity_layout), R.string.error_inicio_sesion_google, Snackbar.LENGTH_LONG);
                 s.setBackgroundTint(getResources().getColor(R.color.colorCancelar));
-                s.show();
+                s.show();iniciarConGoogleProgress.setVisibility(View.INVISIBLE);
             }
         }
     }
