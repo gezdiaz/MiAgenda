@@ -4,11 +4,13 @@ package frsf.isi.dam.gtm.miagenda.interfaces.listahistoriaclinica;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -16,11 +18,14 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.pdf.PdfDocument;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.os.StrictMode;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -51,7 +56,7 @@ public class HistoriaClinicaActivity extends AppCompatActivity {
     private RecyclerView historiaClinicaRecyclerView;
     private RecyclerView.Adapter historiaClinicaAdapter;
     private  RecyclerView.LayoutManager historiaClinicaLayoutManager;
-    private MaterialButton generarPdfBtn;
+    private MaterialButton generarPdfBtn, verPdfBtn;
     private ProgressBar creacionPdfProgressBar;
 
     private Toolbar toolbar;
@@ -67,6 +72,7 @@ public class HistoriaClinicaActivity extends AppCompatActivity {
     private Canvas canvas;
     private Paint paint;
     private final int maxCantCaracteresXRenglon = 45;
+    private String directorioDestinoPdf;
 
     private Handler myHandler;
 
@@ -85,7 +91,8 @@ public class HistoriaClinicaActivity extends AppCompatActivity {
                         //Termino de crear exitosamente el pdf
 
                         creacionPdfProgressBar.setVisibility(View.GONE);
-                        generarPdfBtn.setEnabled(true);
+                        generarPdfBtn.setVisibility(View.GONE);
+                        verPdfBtn.setVisibility(View.VISIBLE);
                         creacionPdfSnackbarExito.show();
 
                         break;
@@ -106,6 +113,7 @@ public class HistoriaClinicaActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         generarPdfBtn = findViewById(R.id.generar_pdf_btn);
+        verPdfBtn = findViewById(R.id.ver_pdf_btn);
 
         creacionPdfProgressBar = findViewById(R.id.crear_pdf_progress_bar);
 
@@ -118,7 +126,7 @@ public class HistoriaClinicaActivity extends AppCompatActivity {
         creacionPdfSnackbarError.setBackgroundTint(Color.RED);
         creacionPdfSnackbarError.setTextColor(Color.WHITE);
 
-        ActivityCompat.requestPermissions(HistoriaClinicaActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PackageManager.PERMISSION_GRANTED);
+        ActivityCompat.requestPermissions(HistoriaClinicaActivity.this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE}, PackageManager.PERMISSION_GRANTED);
 
         //prueba con turnos falsos
         mockTurnos= new ArrayList<>();
@@ -166,6 +174,51 @@ public class HistoriaClinicaActivity extends AppCompatActivity {
             }
         });
 
+        verPdfBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                File file =  new File(directorioDestinoPdf + mockTurnos.get(0).getPaciente() + ".pdf");
+                Uri contentUri = Uri.fromFile(file);
+                Intent verPdfIntent = new Intent(Intent.ACTION_VIEW);
+                Intent intent;
+
+                if(file.exists()){
+
+                    //Dependiendo del numero de version hay que usar FILEPROVIDER.
+                    if(Build.VERSION.SDK_INT >= 24){
+                        Uri apkURI = FileProvider.getUriForFile(HistoriaClinicaActivity.this,HistoriaClinicaActivity.this.getApplicationContext().getPackageName() + ".provider", file);
+                        verPdfIntent.setDataAndType(apkURI, "application/pdf");
+                        verPdfIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        intent = Intent.createChooser(verPdfIntent, "Open File");
+
+                    }
+                    else{
+
+                        verPdfIntent.setDataAndType(contentUri, "application/pdf");
+                        verPdfIntent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                        intent = Intent.createChooser(verPdfIntent, "Open File");
+
+                     }
+                    try {
+                        startActivity(intent);
+                        Toast.makeText(getApplicationContext(), file.toString() , Toast.LENGTH_LONG).show();
+                    } catch (ActivityNotFoundException e) {
+                        // Instruct the user to install a PDF reader here, or something
+
+                        Toast.makeText(getApplicationContext(), getString(R.string.instalar_aplicacion_pdf) , Toast.LENGTH_LONG).show();
+                    }
+                }
+                else{
+                    Snackbar snackbar = Snackbar.make(findViewById(R.id.historia_clinica_linear_layout),getString(R.string.archivo_inexistente_snackbar),BaseTransientBottomBar.LENGTH_LONG);
+                    snackbar.setBackgroundTint(getResources().getColor(R.color.colorCancelar));
+                    snackbar.show();
+                }
+
+
+            }
+        });
+
     }
 
     @Override
@@ -203,7 +256,8 @@ public class HistoriaClinicaActivity extends AppCompatActivity {
 
         for(Turno t : mockTurnos){
 
-            if((margenY >= largoPagina)){
+            //Aca le sumo cinco al margenY para que no quede un fecha colgada en una hoja y la respectiva descripcon en una hoja nueva.
+            if(( (margenY+5+ paint.descent() - paint.ascent() )>= largoPagina)){
                 numeroPagina++;
                 documentoPdf.finishPage(contenidoPagina);
                 crearNuevaPagina();
@@ -256,16 +310,16 @@ public class HistoriaClinicaActivity extends AppCompatActivity {
 
         documentoPdf.finishPage(contenidoPagina);
 
-        String directorioDestino = Environment.getExternalStorageDirectory() +  getString(R.string.directorio_destino_pdf);
+       directorioDestinoPdf = Environment.getExternalStorageDirectory() +  getString(R.string.directorio_destino_pdf);
 
         //Directorio de los PDFs
-        File f = new File(directorioDestino);
+        File f = new File(directorioDestinoPdf);
 
         if(!f.exists()){
             f.mkdir();
         }
 
-        File archivoPDF = new File(directorioDestino + mockTurnos.get(0).getPaciente() + ".pdf");
+        File archivoPDF = new File(directorioDestinoPdf + mockTurnos.get(0).getPaciente() + ".pdf");
 
         //Se guarda el pdf en el archivo(File) "archivoPDF"
         try {

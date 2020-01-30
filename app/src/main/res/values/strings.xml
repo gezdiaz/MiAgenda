@@ -60,4 +60,7 @@
     <string name="error_guardar_pdf">Error al guardar historia clínica.</string>
     <string name="exito_guardar_pdf">Éxito al guardar historia clínica.</string>
     <string name="crear_pdf_progress_dialog">Guardando historia clínica</string>
+    <string name="ver_pdf_btn">Ver PDF</string>
+    <string name="archivo_inexistente_snackbar">No existe el archivo.</string>
+    <string name="instalar_aplicacion_pdf">Instalar una aplicacion para visualizar PDF.</string>
 </resources>
