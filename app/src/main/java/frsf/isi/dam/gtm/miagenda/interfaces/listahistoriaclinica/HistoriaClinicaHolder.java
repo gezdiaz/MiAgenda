@@ -15,11 +15,11 @@ public class HistoriaClinicaHolder extends RecyclerView.ViewHolder {
     public MaterialTextView descripcionLbl;
     public MaterialCardView historiaClinicaCardView;
 
-    public HistoriaClinicaHolder (View base) {
+    public HistoriaClinicaHolder(View base) {
 
         super(base);
         fechaLbl = base.findViewById(R.id.fecha_atencion_paciente_lbl);
         descripcionLbl = base.findViewById(R.id.descripcion_atencion_paciente_lbl);
-        historiaClinicaCardView =base.findViewById(R.id.historia_clinica_card_view);
+        historiaClinicaCardView = base.findViewById(R.id.historia_clinica_card_view);
     }
 }
