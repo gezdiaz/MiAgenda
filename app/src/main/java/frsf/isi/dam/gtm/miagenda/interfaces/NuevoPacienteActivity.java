@@ -106,19 +106,6 @@ public class NuevoPacienteActivity extends AppCompatActivity {
             }
         });
 
-//        fechaNacimientoEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//            @Override
-//            public void onFocusChange(View view, boolean hasFocus) {
-//                if(!hasFocus && fechaNacimientoEdit.getText().toString().isEmpty()){
-//                    fechaNacimientoEdit.setError(getString(R.string.campo_vacio_error));
-//                    validaciones[2] = false;
-//                }
-//                else {
-//                    validaciones[2] = true;
-//                }
-//            }
-//        });
-
         telefonoEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {

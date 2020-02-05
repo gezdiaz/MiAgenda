@@ -22,4 +22,6 @@
     <string name="obra_social_paciente">Obra social</string>
     <string name="campo_vacio_error">Campo vacio</string>
     <string name="dni_paciente">DNI</string>
+    <string name="direccion">Dirección</string>
+    <string name="departamento_direccion_paciente">Departamento</string>
 </resources>

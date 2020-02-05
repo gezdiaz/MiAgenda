@@ -138,6 +138,36 @@
                     />
             </com.google.android.material.textfield.TextInputLayout>
 
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/obra_social_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:hint="@string/obra_social_paciente"
+                app:counterMaxLength="30"
+                app:counterEnabled="true"
+                app:helperTextEnabled="false">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/obra_social_edit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:maxLength="30" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/direccion"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="15dp"
+                style="@style/TextAppearance.MaterialComponents.Subtitle1"
+                android:textStyle="bold"/>
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/provincia_layout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -223,24 +253,24 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/obra_social_layout"
+                android:id="@+id/departamento_direccion_layout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:hint="@string/obra_social_paciente"
-                app:counterMaxLength="30"
+                android:hint="@string/departamento_direccion_paciente"
+                app:counterMaxLength="10"
                 app:counterEnabled="true"
                 app:helperTextEnabled="false"
                 >
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/obra_social_edit"
+                    android:id="@+id/departamento_direccion_edit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="text"
+                    android:inputType="number"
                     android:maxLines="1"
-                    android:maxLength="30" />
+                    android:maxLength="10"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <RelativeLayout
@@ -267,7 +297,7 @@
                     android:layout_centerVertical="false"
                     android:layout_marginEnd="-1dp"
                     android:layout_toStartOf="@+id/eliminar_foto_btn"
-                    android:elevation="5dp"></com.google.android.material.imageview.ShapeableImageView>
+                    android:elevation="5dp"/>
 
             </RelativeLayout>
 
