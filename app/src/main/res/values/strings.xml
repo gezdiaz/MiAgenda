@@ -77,4 +77,6 @@
     <string name="instalar_aplicacion_pdf">Instalar una aplicacion para visualizar PDF.</string>
     <string name="direccion">Dirección</string>
     <string name="departamento_direccion_paciente">Departamento</string>
+    <string name="pais_paciente">País</string>
+    <string name="pais_default">Argentina</string>
 </resources>
