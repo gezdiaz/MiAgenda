@@ -28,10 +28,13 @@
     <string name="edad_paciente_lbl">Edad:</string>
     <string name="ver_historia_btn">Ver historia clinica</string>
     <string name="telefono_paciente_lbl">Telefono:</string>
+    <string name="ubicacion_no_encontrada">Ubicacion paciente no encontrada.</string>
+    <string name="peticion_permiso_localizacion">Para tener una mejor experiencia, debes permitir que la aplicacion use tu localizacion.</string>
+    <string name="ok_option">OK</string>
+    <string name="mapa_mas_info">Para mas info, click en la ubicacion.</string>
     <string name="historia_clinica_toolbar">Historia Clínica</string>
     <string name="paciente_lbl">Paciente:</string>
     <string name="generar_pdf_btn">Generar PDF</string>
-    <string name="ok_option">OK</string>
     <string name="title_activity_principal">PrincipalActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
