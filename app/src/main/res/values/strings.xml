@@ -75,4 +75,6 @@
     <string name="ver_pdf_btn">Ver PDF</string>
     <string name="archivo_inexistente_snackbar">No existe el archivo.</string>
     <string name="instalar_aplicacion_pdf">Instalar una aplicacion para visualizar PDF.</string>
+    <string name="direccion">Dirección</string>
+    <string name="departamento_direccion_paciente">Departamento</string>
 </resources>
