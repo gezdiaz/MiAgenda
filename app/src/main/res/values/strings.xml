@@ -33,7 +33,7 @@
     <string name="ok_option">OK</string>
     <string name="mapa_mas_info">Para mas info, click en la ubicacion.</string>
     <string name="historia_clinica_toolbar">Historia Clínica</string>
-    <string name="paciente_lbl">Paciente:</string>
+    <string name="paciente_lbl">Paciente</string>
     <string name="generar_pdf_btn">Generar PDF</string>
     <string name="title_activity_principal">PrincipalActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -68,4 +68,11 @@
     <string name="usuario_default">Usuario</string>
     <string name="exito_inicio_sesion_google">Se inció sesión con Google</string>
     <string name="bienvenido">Bienvenido</string>
+    <string name="directorio_destino_pdf">/HistoriasClinicasPDF/</string>
+    <string name="error_guardar_pdf">Error al guardar historia clínica.</string>
+    <string name="exito_guardar_pdf">Éxito al guardar historia clínica.</string>
+    <string name="crear_pdf_progress_dialog">Guardando historia clínica</string>
+    <string name="ver_pdf_btn">Ver PDF</string>
+    <string name="archivo_inexistente_snackbar">No existe el archivo.</string>
+    <string name="instalar_aplicacion_pdf">Instalar una aplicacion para visualizar PDF.</string>
 </resources>

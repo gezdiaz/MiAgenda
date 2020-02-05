@@ -17,7 +17,7 @@ public class HistoriaClinicaAdapter extends RecyclerView.Adapter<HistoriaClinica
 
     private List<Turno> listaHistoriaClinica;
 
-    public HistoriaClinicaAdapter(List<Turno> list){
+    public HistoriaClinicaAdapter(List<Turno> list) {
         //TODO ordenar lista por fecha
         listaHistoriaClinica = list;
     }
@@ -25,7 +25,7 @@ public class HistoriaClinicaAdapter extends RecyclerView.Adapter<HistoriaClinica
     @NonNull
     @Override
     public HistoriaClinicaHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = (View) LayoutInflater.from(parent.getContext()).inflate(R.layout.fila_historia_clinica,parent,false);
+        View v = (View) LayoutInflater.from(parent.getContext()).inflate(R.layout.fila_historia_clinica, parent, false);
         HistoriaClinicaHolder historiaClinicaHolder = new HistoriaClinicaHolder(v);
         return historiaClinicaHolder;
     }
@@ -33,8 +33,8 @@ public class HistoriaClinicaAdapter extends RecyclerView.Adapter<HistoriaClinica
     @Override
     public void onBindViewHolder(@NonNull HistoriaClinicaHolder historiaClinicaHolder, int position) {
         final Turno t = listaHistoriaClinica.get(position);
-        historiaClinicaHolder.fechaLbl.setText("Fecha: "+t.getFecha());
-        historiaClinicaHolder.descripcionLbl.setText("Descripcion: "+t.getDescripcion());
+        historiaClinicaHolder.fechaLbl.setText("Fecha: " + t.getFecha());
+        historiaClinicaHolder.descripcionLbl.setText("Descripcion: " + t.getDescripcion());
         historiaClinicaHolder.historiaClinicaCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
