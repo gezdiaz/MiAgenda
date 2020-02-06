@@ -1,10 +1,13 @@
 package frsf.isi.dam.gtm.miagenda.entidades;
 
+import android.os.Parcelable;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Paciente {
+public class Paciente implements Serializable {
 
     private String id;
     private String nombre;

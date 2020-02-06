@@ -33,7 +33,7 @@
     <string name="ok_option">OK</string>
     <string name="mapa_mas_info">Para mas info, click en la ubicacion.</string>
     <string name="historia_clinica_toolbar">Historia Clínica</string>
-    <string name="paciente_lbl">Paciente</string>
+    <string name="paciente_lbl">Paciente:</string>
     <string name="generar_pdf_btn">Generar PDF</string>
     <string name="title_activity_principal">PrincipalActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -79,4 +79,9 @@
     <string name="departamento_direccion_paciente">Departamento</string>
     <string name="pais_paciente">País</string>
     <string name="pais_default">Argentina</string>
+    <string name="fecha_ver_turno">SELECCIONE UNA FECHA PARA VER LOS TURNOS</string>
+    <string name="seleccionar_paciente">Seleccionar paciente</string>
+    <string name="listo_option">LISTO</string>
+    <string name="titulo_dialogo_quitar_turno">Quitar turno</string>
+    <string name="msg_dialogo_quitar_turno">¿Seguro deseas quitar el turno?</string>
 </resources>

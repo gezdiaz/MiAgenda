@@ -17,6 +17,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Calendar;
+import java.util.TimeZone;
 
 import frsf.isi.dam.gtm.miagenda.R;
 
@@ -262,9 +263,8 @@ public class NuevoPacienteActivity extends AppCompatActivity {
         datePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
             @Override
             public void onPositiveButtonClick(Long aLong) {
-                fechaNacimiento = Calendar.getInstance();
+                fechaNacimiento = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
                 fechaNacimiento.setTimeInMillis(aLong);
-                fechaNacimiento.add(Calendar.DATE,1);
                 String fechaSeleccionada = (fechaNacimiento.get(Calendar.DATE)) + "/"+(fechaNacimiento.get(Calendar.MONTH)+1) + "/"+fechaNacimiento.get(Calendar.YEAR);
                 fechaNacimientoEdit.setText(fechaSeleccionada);
             }

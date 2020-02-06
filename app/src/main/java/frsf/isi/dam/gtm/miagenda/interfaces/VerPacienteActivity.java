@@ -40,6 +40,7 @@ import com.google.android.material.textview.MaterialTextView;
 import java.util.List;
 
 import frsf.isi.dam.gtm.miagenda.R;
+import frsf.isi.dam.gtm.miagenda.entidades.Paciente;
 import frsf.isi.dam.gtm.miagenda.interfaces.listahistoriaclinica.HistoriaClinicaActivity;
 
 public class VerPacienteActivity extends AppCompatActivity implements OnMapReadyCallback {
