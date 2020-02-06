@@ -109,15 +109,15 @@ public class Paciente {
 
     @Override
     public String toString() {
-        return "Paciente{" +
-                "nombre='" + nombre + '\'' +
-                ", apellido='" + apellido + '\'' +
-                ", obraSocial='" + obraSocial + '\'' +
-                ", fechaNacimiento=" + fechaNacimiento +
-                ", dni=" + dni +
-                ", teléfono=" + telefono +
-                ", fotoURL='" + fotoURL + '\'' +
-                ", dirección=" + direccion +
+        return "Paciente{" + "'\n" +
+                "nombre='" + nombre + "'\n" +
+                ", apellido='" + apellido + "'\n" +
+                ", obraSocial='" + obraSocial + "'\n" +
+                ", fechaNacimiento=" + fechaNacimiento + '\n' +
+                ", dni=" + dni + '\n' +
+                ", teléfono=" + telefono + '\n' +
+                ", fotoURL='" + fotoURL + "'\n" +
+                ", dirección=" + direccion + "\n" +
                 '}';
     }
 
