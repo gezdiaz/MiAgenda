@@ -37,6 +37,7 @@ import java.util.logging.LogRecord;
 import frsf.isi.dam.gtm.miagenda.R;
 import frsf.isi.dam.gtm.miagenda.datos.DatosFirestore;
 import frsf.isi.dam.gtm.miagenda.entidades.Paciente;
+import frsf.isi.dam.gtm.miagenda.entidades.Turno;
 import frsf.isi.dam.gtm.miagenda.interfaces.LoginActivity;
 
 public class PrincipalActivity extends AppCompatActivity {
@@ -125,7 +126,6 @@ public class PrincipalActivity extends AppCompatActivity {
             }
             s.setBackgroundTint(getResources().getColor(R.color.colorPrimary));
             s.show();
-
         }
 
     }

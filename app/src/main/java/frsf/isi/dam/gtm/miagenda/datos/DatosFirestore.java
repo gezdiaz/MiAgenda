@@ -34,6 +34,8 @@ public class DatosFirestore {
     public static final int ERROR_GET_TURNOS_PACIENTE = -3;
     public static final int SAVE_PACIENTE = 4;
     public static final int ERROR_SAVE_PACIENTE = -4;
+    public static final int SAVE_TURNO = 5;
+    public static final int ERROR_SAVE_TURNO = -5;
 
 
     private static DatosFirestore instance;
@@ -46,30 +48,30 @@ public class DatosFirestore {
     private DocumentReference datosUsuario;
 
     public static DatosFirestore getInstance() {
-        if(instance == null){
+        if (instance == null) {
             instance = new DatosFirestore();
         }
-        Log.d(TAG, "id usuario actual: "+ (FirebaseAuth.getInstance().getCurrentUser() != null? FirebaseAuth.getInstance().getCurrentUser().getUid(): "Error usuario no logueado"));
-        Log.d(TAG, "datosUsuario Actual: "+instance.datosUsuario.getId());
+        Log.d(TAG, "id usuario actual: " + (FirebaseAuth.getInstance().getCurrentUser() != null ? FirebaseAuth.getInstance().getCurrentUser().getUid() : "Error usuario no logueado"));
+        Log.d(TAG, "datosUsuario Actual: " + instance.datosUsuario.getId());
         return instance;
     }
 
-    public static void resetInstance(){
+    public static void resetInstance() {
         instance = null;
     }
 
     private DatosFirestore() {
         FirebaseUser usuarioActual = FirebaseAuth.getInstance().getCurrentUser();
-        if(usuarioActual != null){
+        if (usuarioActual != null) {
             datosUsuario = FirebaseFirestore.getInstance().collection(idColeccionUsuarios).document(usuarioActual.getUid());
-            Log.d(TAG, "Base de datos inicializada para el usuario: "+usuarioActual.getEmail());
-            Log.d(TAG, "datosUsuario: "+datosUsuario.getId());
-        }else{
+            Log.d(TAG, "Base de datos inicializada para el usuario: " + usuarioActual.getEmail());
+            Log.d(TAG, "datosUsuario: " + datosUsuario.getId());
+        } else {
             Log.wtf(TAG, "Error, usuario no logueado. No debería llegar hasta acá");
         }
     }
 
-    public void getAllPacientes(final Handler handler){
+    public void getAllPacientes(final Handler handler) {
         //obtiene todos los pacientes del usuario actual
         CollectionReference pacientesCollection = datosUsuario.collection(idColeccionPacientes);
         pacientesCollection.get()
@@ -77,10 +79,10 @@ public class DatosFirestore {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         ArrayList<Paciente> listaPacientes = new ArrayList<>();
-                        for(QueryDocumentSnapshot document: queryDocumentSnapshots){
+                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                             Paciente p = document.toObject(Paciente.class);
                             listaPacientes.add(p);
-                            Log.d(TAG, "Paciente obtenido: "+p.toString());
+                            Log.d(TAG, "Paciente obtenido: " + p.toString());
                         }
                         Message m = Message.obtain();
                         m.what = GETALL_PACIENTES;
@@ -99,7 +101,7 @@ public class DatosFirestore {
                 });
     }
 
-    public void getPacienteById(String idPaciente, final Handler handler){
+    public void getPacienteById(String idPaciente, final Handler handler) {
         //Obtiene un paciente específico dado su id
         final CollectionReference pacientesCollection = datosUsuario.collection(idColeccionPacientes);
         pacientesCollection.document(idPaciente).get()
@@ -107,7 +109,7 @@ public class DatosFirestore {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         Paciente p = documentSnapshot.toObject(Paciente.class);
-                        Log.d(TAG,"getPacienteById: Paciente obtenido: "+p.toString());
+                        Log.d(TAG, "getPacienteById: Paciente obtenido: " + p.toString());
                         Message m = Message.obtain();
                         m.what = GET_PACIENTE;
                         m.obj = p;
@@ -117,7 +119,7 @@ public class DatosFirestore {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG,"getPacienteById: Error al obtener el paciente", e);
+                        Log.d(TAG, "getPacienteById: Error al obtener el paciente", e);
                         Message m = Message.obtain();
                         m.what = ERROR_GET_PACIENTE;
                         handler.sendMessage(m);
@@ -125,7 +127,7 @@ public class DatosFirestore {
                 });
     }
 
-    public void savePaciente(Paciente p, final Handler handler){
+    public void savePaciente(Paciente p, final Handler handler) {
         //Guarda el paciente en la base de datos
         CollectionReference collectionPacientes = datosUsuario.collection(idColeccionPacientes);
         collectionPacientes.document(String.valueOf(p.getDni())).set(p)
@@ -147,6 +149,70 @@ public class DatosFirestore {
                 });
     }
 
+    public void getAllTurnosDePaciente(String idPaciente, final Handler handler) {
+        //Obtiene todos los turnos de un paciente específico;
+        final DocumentReference documentPaciente = datosUsuario.collection(idColeccionPacientes).document(idPaciente);
+        final CollectionReference collectionTurnos = documentPaciente.collection(idColeccionTurnos);
 
+        collectionTurnos.get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        ArrayList<Turno> listaTurnos = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                            Turno t = document.toObject(Turno.class);
+                            listaTurnos.add(t);
+                            Log.d(TAG, "getAllTurnosDePaciente: Turno obtenido: " + t.toString());
+                        }
+                        Message m = Message.obtain();
+                        m.what = GET_TURNOS_PACIENTE;
+                        m.obj = listaTurnos;
+                        handler.sendMessage(m);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "getAllTurnosDePaciente: Error", e);
+                        Message m = Message.obtain();
+                        m.what = ERROR_GET_TURNOS_PACIENTE;
+                        handler.sendMessage(m);
+                    }
+                });
+
+    }
+
+    public void saveTurno(Turno t, String idPaciente, final Handler handler) {
+        //Guarda un turno en la colección turnos del paciente especificado.
+        final DocumentReference documentPaciente = datosUsuario.collection(idColeccionPacientes).document(idPaciente);
+        final CollectionReference collectionTurnos = documentPaciente.collection(idColeccionTurnos);
+
+        if (t.getId() == null || t.getId().isEmpty()) {
+            t.setId(collectionTurnos.document().getId());
+        }
+
+        collectionTurnos.document(t.getId()).set(t)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Message m = Message.obtain();
+                        m.what = SAVE_TURNO;
+                        handler.sendMessage(m);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Message m = Message.obtain();
+                        m.what = ERROR_SAVE_TURNO;
+                        handler.sendMessage(m);
+                    }
+                });
+
+    }
+
+    public void getAllTurnos(final Handler handler) {
+        //TODO Obtiene todos los turnos de todos los pacientes del usuario actual
+    }
 
 }
