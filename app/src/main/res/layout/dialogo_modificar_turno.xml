@@ -95,6 +95,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/divider2"
         android:layout_margin="5dp"
+        app:counterEnabled="true"
+        app:counterMaxLength="150"
         style="@style/Widget.Design.TextInputLayout">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -104,6 +106,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:hint="@string/descripcion_lbl"
+            android:maxLength="150"
             android:lines="5"/>
 
     </com.google.android.material.textfield.TextInputLayout>
