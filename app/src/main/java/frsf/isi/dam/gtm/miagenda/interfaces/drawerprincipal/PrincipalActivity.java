@@ -93,6 +93,7 @@ public class PrincipalActivity extends AppCompatActivity {
                     R.id.nav_mi_agenda, R.id.nav_mis_pacientes)
                     .setDrawerLayout(drawer)
                     .build();
+
             NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
             NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
             NavigationUI.setupWithNavController(navigationView, navController);

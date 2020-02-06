@@ -217,6 +217,7 @@ public class NuevoPacienteActivity extends AppCompatActivity {
                 }
                 if(datosValidos){
                     //TODO Registrar paciente
+                    finish();
                 }
                 else{
                     Toast t = Toast.makeText(getApplicationContext(),getString(R.string.datos_login_no_validos),Toast.LENGTH_LONG);
