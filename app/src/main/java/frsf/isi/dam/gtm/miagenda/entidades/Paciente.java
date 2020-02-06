@@ -2,7 +2,9 @@ package frsf.isi.dam.gtm.miagenda.entidades;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Paciente {
 
@@ -118,6 +120,7 @@ public class Paciente {
                 ", dirección=" + direccion +
                 '}';
     }
+
 
 //    Agregar y quitar turnos también se hace en firestore
 //    public boolean addTurno(Turno turno){

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -20,13 +21,22 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.Date;
+import java.util.logging.LogRecord;
+
 import frsf.isi.dam.gtm.miagenda.R;
+import frsf.isi.dam.gtm.miagenda.datos.DatosFirestore;
+import frsf.isi.dam.gtm.miagenda.entidades.Paciente;
 import frsf.isi.dam.gtm.miagenda.interfaces.LoginActivity;
 
 public class PrincipalActivity extends AppCompatActivity {
@@ -34,6 +44,7 @@ public class PrincipalActivity extends AppCompatActivity {
     public static final String LOGIN = "login";
     public static final String LOGINGOOGLE = "loginGoogle";
     public static final String NEWUSER = "newUser";
+    private static final String TAG = "PrincipalActivity";
 
     private AppBarConfiguration mAppBarConfiguration;
     private FirebaseAuth mAuth;
@@ -46,6 +57,7 @@ public class PrincipalActivity extends AppCompatActivity {
         setContentView(R.layout.activity_principal);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
 
         //verificar si hay una sesión iniciada.
         mAuth = FirebaseAuth.getInstance();
@@ -113,6 +125,7 @@ public class PrincipalActivity extends AppCompatActivity {
             }
             s.setBackgroundTint(getResources().getColor(R.color.colorPrimary));
             s.show();
+
         }
 
     }
