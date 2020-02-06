@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
 
     <TextView
         android:id="@+id/turno_tittle_txt"
@@ -12,60 +11,48 @@
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:text="@string/turno"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        />
 
     <TextView
         android:id="@+id/fecha_turno_editado_txt"
         style="@style/TextAppearance.MaterialComponents.Subtitle1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:text="Fecha: 19/11/2019 - 14:00 hs"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/turno_tittle_txt" />
+        android:layout_marginTop="5dp"
+        android:layout_marginHorizontal="10dp"
+        android:text="Fecha: 19/11/2019 - 14:00 hs"/>
 
     <View
         android:id="@+id/divider1"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_margin="5dp"
         android:background="#e0e0e0"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/fecha_turno_editado_txt" />
+        />
 
-    <TextView
-        android:id="@+id/turno_paciente_lbl"
-        style="@style/TextAppearance.MaterialComponents.Subtitle1"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="15dp"
-        android:text="@string/paciente_lbl"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/divider1" />
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/turno_paciente_lbl"
+            style="@style/TextAppearance.MaterialComponents.Subtitle1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="@string/paciente_lbl"
+            />
 
-    <TextView
-        android:id="@+id/turno_nombre_paciente_txt"
-        style="@style/TextAppearance.MaterialComponents.Subtitle1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="15dp"
-        android:text="@string/paciente_default"
-        app:layout_constraintStart_toEndOf="@id/turno_paciente_lbl"
-        app:layout_constraintTop_toBottomOf="@id/divider1" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/turno_cambiar_paciente_btn"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:text="@string/cambiar_paciente"
-        app:layout_constraintEnd_toStartOf="@id/turno_ver_paciente_btn"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/turno_paciente_lbl" />
+        <TextView
+            android:id="@+id/turno_nombre_paciente_txt"
+            style="@style/TextAppearance.MaterialComponents.Subtitle1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/paciente_default"
+            />
+    </LinearLayout>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/turno_ver_paciente_btn"
@@ -73,27 +60,31 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/ver_paciente"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/turno_cambiar_paciente_btn"
-        app:layout_constraintTop_toTopOf="@id/turno_cambiar_paciente_btn" />
+        android:layout_gravity="center_horizontal"
+        />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/turno_seleccionar_paciente_btn"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/seleccionar_paciente"
+
+        android:layout_gravity="center_horizontal"
+        />
 
     <View
         android:id="@+id/divider2"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_margin="5dp"
-        android:background="#e0e0e0"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/turno_cambiar_paciente_btn" />
+        android:background="#e0e0e0"/>
 
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/turno_descripcion_input_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/divider2"
         android:layout_margin="5dp"
         app:counterEnabled="true"
         app:counterMaxLength="150"
@@ -111,29 +102,29 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-<!--    <com.google.android.material.button.MaterialButton-->
-<!--        android:id="@+id/turno_aceptar_btn"-->
-<!--        style="@style/Widget.MaterialComponents.Button.TextButton"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="@string/aceptar"-->
-<!--        android:textColor="@color/colorAceptar"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@id/turno_descripcion_input_layout"-->
-<!--        android:layout_margin="20dp"/>-->
+    <!--    <com.google.android.material.button.MaterialButton-->
+    <!--        android:id="@+id/turno_aceptar_btn"-->
+    <!--        style="@style/Widget.MaterialComponents.Button.TextButton"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:text="@string/aceptar"-->
+    <!--        android:textColor="@color/colorAceptar"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@id/turno_descripcion_input_layout"-->
+    <!--        android:layout_margin="20dp"/>-->
 
-<!--    <com.google.android.material.button.MaterialButton-->
-<!--        android:id="@+id/turno_cancelar_btn"-->
-<!--        style="@style/Widget.MaterialComponents.Button.TextButton"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_margin="20dp"-->
-<!--        android:text="@string/cancelar"-->
-<!--        android:textColor="@color/colorCancelar"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toStartOf="@id/turno_aceptar_btn"-->
-<!--        app:layout_constraintTop_toBottomOf="@id/turno_descripcion_input_layout"/>-->
+    <!--    <com.google.android.material.button.MaterialButton-->
+    <!--        android:id="@+id/turno_cancelar_btn"-->
+    <!--        style="@style/Widget.MaterialComponents.Button.TextButton"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_margin="20dp"-->
+    <!--        android:text="@string/cancelar"-->
+    <!--        android:textColor="@color/colorCancelar"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintEnd_toStartOf="@id/turno_aceptar_btn"-->
+    <!--        app:layout_constraintTop_toBottomOf="@id/turno_descripcion_input_layout"/>-->
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

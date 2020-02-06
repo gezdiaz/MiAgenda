@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:gravity="center"
-            android:text="@string/fecha_hoy_default" />
+             />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_turnos"

@@ -39,6 +39,4 @@
         <item name="backgroundTint">@color/fondoModificarTurnoBtn</item>
         <item name="android:textColor">@color/colorNeutral</item>
     </style>
-
-
 </resources>

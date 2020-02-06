@@ -100,6 +100,7 @@
         android:indeterminateTint="@color/colorPrimaryDark"
         android:visibility="invisible"/>
 
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/iniciar_sesion_google_btn"
         android:layout_width="0dp"
@@ -113,7 +114,8 @@
         app:cornerRadius="@dimen/login_buttons_radius"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iniciar_sesion_btn" />
+        app:layout_constraintTop_toBottomOf="@+id/iniciar_sesion_btn"
+        />
 
     <ProgressBar
         android:id="@+id/iniciar_sesion_google_progress"
