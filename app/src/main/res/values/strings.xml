@@ -31,9 +31,9 @@
     <string name="ubicacion_no_encontrada">Ubicacion paciente no encontrada.</string>
     <string name="peticion_permiso_localizacion">Para tener una mejor experiencia, debes permitir que la aplicacion use tu localizacion.</string>
     <string name="ok_option">OK</string>
-    <string name="mapa_mas_info">Para mas info, click en la ubicacion.</string>
+    <string name="mapa_mas_info">Para mas info, toca en la ubicacion.</string>
     <string name="historia_clinica_toolbar">Historia Clínica</string>
-    <string name="paciente_lbl">Paciente:</string>
+    <string name="paciente_lbl">Paciente</string>
     <string name="generar_pdf_btn">Generar PDF</string>
     <string name="title_activity_principal">PrincipalActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -66,7 +66,7 @@
     <string name="exito_inicio_sesion">Se inició sesión correctamente</string>
     <string name="error_inicio_sesion_google">No se pudo iniciar sesión con Google</string>
     <string name="usuario_default">Usuario</string>
-    <string name="exito_inicio_sesion_google">Se inció sesión con Google</string>
+    <string name="exito_inicio_sesion_google">Se inició sesión con Google</string>
     <string name="bienvenido">Bienvenido</string>
     <string name="directorio_destino_pdf">/HistoriasClinicasPDF/</string>
     <string name="error_guardar_pdf">Error al guardar historia clínica.</string>
@@ -84,4 +84,5 @@
     <string name="listo_option">LISTO</string>
     <string name="titulo_dialogo_quitar_turno">Quitar turno</string>
     <string name="msg_dialogo_quitar_turno">¿Seguro deseas quitar el turno?</string>
+    <string name="nombre_ver_paciente">Nombre:</string>
 </resources>

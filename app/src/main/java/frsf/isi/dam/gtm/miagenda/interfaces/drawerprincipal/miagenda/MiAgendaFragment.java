@@ -30,11 +30,13 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
 import frsf.isi.dam.gtm.miagenda.R;
+import frsf.isi.dam.gtm.miagenda.entidades.Turno;
 
 public class MiAgendaFragment extends Fragment {
 
@@ -58,6 +60,7 @@ public class MiAgendaFragment extends Fragment {
 
         recyclerView = view.findViewById(R.id.recycler_turnos);
         //TODO setear lista de turnos
+
         adapter = new MiAgendaAdapter();
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);

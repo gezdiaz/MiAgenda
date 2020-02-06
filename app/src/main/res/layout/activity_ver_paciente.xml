@@ -18,7 +18,8 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            android:elevation="4dp" />
+            android:elevation="4dp"
+            app:title="@string/paciente_lbl" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <ScrollView
@@ -32,75 +33,131 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/dni_paciente_lbl"
+            <HorizontalScrollView
+                android:id="@+id/horizontal_scroll_view_ver_paciente"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12sp"
-                android:layout_marginTop="12sp"
-                android:layout_marginEnd="5sp"
-                android:text="@string/dni_paciente_lbl"
-                android:textColor="@color/colorTextPrimary"
-                android:textSize="22sp"
-                android:textStyle="bold" />
+                android:layout_height="match_parent">
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/edad_paciente_lbl"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12sp"
-                android:layout_marginTop="12sp"
-                android:layout_marginEnd="5sp"
-                android:text="@string/edad_paciente_lbl"
-                android:textColor="@color/colorTextPrimary"
-                android:textSize="22sp"
-                android:textStyle="bold" />
+                <LinearLayout
+                    android:id="@+id/linear_layout_ver_pacente_inside"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:orientation="vertical">
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/obra_social_paciente_lbl"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12sp"
-                android:layout_marginTop="12sp"
-                android:layout_marginEnd="5sp"
-                android:text="@string/obra_social_paciente_lbl"
-                android:textColor="@color/colorTextPrimary"
-                android:textSize="22sp"
-                android:textStyle="bold" />
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/telefono_paciente_lbl"
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/nombre_paciente_lbl"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12sp"
+                        android:layout_marginTop="12sp"
+                        android:layout_marginEnd="5sp"
+                        android:text="@string/nombre_ver_paciente"
+                        android:textColor="@color/colorTextPrimary"
+                        android:textSize="22sp"
+                        android:textStyle="bold" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/dni_paciente_lbl"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12sp"
+                        android:layout_marginTop="12sp"
+                        android:layout_marginEnd="5sp"
+                        android:text="@string/dni_paciente_lbl"
+                        android:textColor="@color/colorTextPrimary"
+                        android:textSize="22sp"
+                        android:textStyle="bold" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/edad_paciente_lbl"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12sp"
+                        android:layout_marginTop="12sp"
+                        android:layout_marginEnd="5sp"
+                        android:text="@string/edad_paciente_lbl"
+                        android:textColor="@color/colorTextPrimary"
+                        android:textSize="22sp"
+                        android:textStyle="bold" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/obra_social_paciente_lbl"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12sp"
+                        android:layout_marginTop="12sp"
+                        android:layout_marginEnd="5sp"
+                        android:text="@string/obra_social_paciente_lbl"
+                        android:textColor="@color/colorTextPrimary"
+                        android:textSize="22sp"
+                        android:textStyle="bold" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/telefono_paciente_lbl"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12sp"
+                        android:layout_marginTop="12sp"
+                        android:layout_marginEnd="5sp"
+                        android:text="@string/telefono_paciente_lbl"
+                        android:textColor="@color/colorTextPrimary"
+                        android:textSize="22sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+            </HorizontalScrollView>
+
+            <View
+
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12sp"
-                android:layout_marginTop="12sp"
-                android:layout_marginEnd="5sp"
-                android:text="@string/telefono_paciente_lbl"
-                android:textColor="@color/colorTextPrimary"
-                android:textSize="22sp"
-                android:textStyle="bold" />
+                android:layout_height="3dp"
+                android:layout_margin="5dp"
+                android:background="#e0e0e0" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/domicilio_paciente_lbl"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12sp"
-                android:layout_marginTop="12sp"
+
                 android:layout_marginEnd="5sp"
                 android:text="@string/domicilio_paciente_lbl"
                 android:textColor="@color/colorTextPrimary"
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
-            <fragment
-                android:id="@+id/ver_paciente_map"
-                android:name="com.google.android.gms.maps.SupportMapFragment"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="5dp" />
+                android:layout_height="wrap_content">
+
+                <fragment
+                    android:id="@+id/ver_paciente_map"
+                    android:name="com.google.android.gms.maps.SupportMapFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="5dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/mapa_mas_info"
+                    android:textColor="@color/colorTextPrimary"
+                    android:layout_alignStart="@id/ver_paciente_map"
+                    android:layout_marginEnd="5dp"
+                    android:layout_alignEnd="@+id/ver_paciente_map"
+                    android:textStyle="bold"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="#B2E0E0E0"/>
+
+            </RelativeLayout>
 
             <LinearLayout
                 android:id="@+id/ver_paciente_botones_linear_layout"

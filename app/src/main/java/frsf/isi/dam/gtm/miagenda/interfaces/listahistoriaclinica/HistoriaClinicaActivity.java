@@ -48,12 +48,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import frsf.isi.dam.gtm.miagenda.R;
+import frsf.isi.dam.gtm.miagenda.entidades.Paciente;
 import frsf.isi.dam.gtm.miagenda.interfaces.LoginActivity;
 
 public class HistoriaClinicaActivity extends AppCompatActivity {
 
     private List<Turno> mockTurnos;
-
+    private Paciente p;
     private View contextView;
     private RecyclerView historiaClinicaRecyclerView;
     private RecyclerView.Adapter historiaClinicaAdapter;
@@ -82,6 +83,8 @@ public class HistoriaClinicaActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_historia_clinica);
+
+        p = (Paciente)getIntent().getSerializableExtra("paciente");
 
         myHandler = new Handler(Looper.getMainLooper()) {
             @Override
@@ -135,7 +138,9 @@ public class HistoriaClinicaActivity extends AppCompatActivity {
         for (int i = 0; i < 20; i++) {
             mockTurnos.add(new Turno(((i + 1) + "/2/2020"), "Problema x" + i, "Sin nombre"));
         }
-        mockTurnos.add(new Turno("21/2/2020", "Problema xasmdlkasmndlkas nd klnas  kldnasklndkalsndklas nldnasklndlaksndk lasndlkasnlkdnsklanqkndoqsndoqindProblema xasmdlkasmndlkas nd klnas  kldnasklndkalsndklas nldnasklndlaksndk lasndlkasnlkdnsklanqkndoqsndoqindProblema xasmdlkasmndlkas nd klnas  kldnasklndkalsndklas nldnasklndlaksndk lasndlkasnlkdnsklanqkndoqsndoqindProblema xasmdlkasmndlkas nd klnas  kldnasklndkalsndklas nldnasklndlaksndk lasndlkasnlkdnsklanqkndoqsndoqindProblema xasmdlkasmndlkas nd klnas  kldnasklndkalsndklas nldnasklndlaksndk lasndlkasnlkdnsklanqkndoqsndoqindProblema xasmdlkasmndlkas nd klnas  kldnasklndkalsndklas nldnasklndlaksndk lasndlkasnlkdnsklanqkndoqsndoqindProblema xasmdlkasmndlkas nd klnas  kldnasklndkalsndklas nldnasklndlaksndk lasndlkasnlkdnsklanqkndoqsndoqind", "Sin nombre"));
+        mockTurnos.add(new Turno("21/2/2020", "Problema aMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMaMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMaMMMMMMMMMaMMMMMMMMMaMMMMMMMMMaMMMMMMMMMaMMMMMMMMMaMMMMMMMMMaMMMMMMMMMa", "Sin nombre"));
+
+
         historiaClinicaRecyclerView = findViewById(R.id.historia_clinica_recyclerview);
         historiaClinicaLayoutManager = new LinearLayoutManager(this);
         historiaClinicaRecyclerView.setLayoutManager(historiaClinicaLayoutManager);
@@ -144,7 +149,8 @@ public class HistoriaClinicaActivity extends AppCompatActivity {
 
         pacienteLbl = findViewById(R.id.paciente_hist_clin_lbl);
 
-        pacienteLbl.append(": " + mockTurnos.get(0).getPaciente());
+        pacienteLbl.append(": " + p.getNombre()+" "+p.getApellido());
+        //TODO Buscar la lista de turnos en la DB
 
         generarPdfBtn.setOnClickListener(new View.OnClickListener() {
             @Override

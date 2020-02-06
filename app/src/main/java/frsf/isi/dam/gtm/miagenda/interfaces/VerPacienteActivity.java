@@ -46,7 +46,7 @@ import frsf.isi.dam.gtm.miagenda.interfaces.listahistoriaclinica.HistoriaClinica
 public class VerPacienteActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private Toolbar toolbar;
-    private MaterialTextView dniPacienteLbl, edadPacienteLbl, obraSocialPacienteLbl, telefonoPacienteLbl;
+    private MaterialTextView dniPacienteLbl, edadPacienteLbl, obraSocialPacienteLbl, telefonoPacienteLbl, nombrePacienteLbl;
     private MaterialButton verHistoriaClinicaBtn;
     private GoogleMap googleMap;
     //Variables para probar los datos del pacientes
@@ -62,7 +62,6 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
         p = (Paciente) getIntent().getSerializableExtra("paciente");
 
         toolbar = findViewById(R.id.ver_paciente_toolbar);
-        toolbar.setTitle("Nombre paciente");
         setSupportActionBar(toolbar);
 
         //getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_arrow);// set drawable icon
@@ -76,7 +75,9 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
         obraSocialPacienteLbl = findViewById(R.id.obra_social_paciente_lbl);
         telefonoPacienteLbl = findViewById(R.id.telefono_paciente_lbl);
         verHistoriaClinicaBtn = findViewById(R.id.ver_historia_btn);
+        nombrePacienteLbl = findViewById(R.id.nombre_paciente_lbl);
 
+        nombrePacienteLbl.append(" "+p.getNombre()+" "+p.getApellido());
         dniPacienteLbl.append(" " +p.getDni());
         edadPacienteLbl.append(" " +p.getEdad() + " años");
         obraSocialPacienteLbl.append(" " +p.getObraSocial());
@@ -86,6 +87,7 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
             @Override
             public void onClick(View view) {
                 Intent i1 = new Intent(getApplicationContext(), HistoriaClinicaActivity.class);
+                i1.putExtra("paciente",p);
                 startActivity(i1);
             }
         });
@@ -159,12 +161,11 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
     }
     private void inicializarMapa(){
 
-        Toast t1 = Toast.makeText(VerPacienteActivity.this, getString(R.string.mapa_mas_info),Toast.LENGTH_LONG);
-        t1.show();
-
         if(permisoLocalizacionAceptado){
             googleMap.setMyLocationEnabled(true);
         }
+        googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+        googleMap.getUiSettings().setAllGesturesEnabled(false);
 
         Geocoder geocoder = new Geocoder(this);
         List<Address> addressList = null;
@@ -185,6 +186,7 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
         Marker marker = googleMap.addMarker(new MarkerOptions()
                                                 .position(pacienteUbicacionLatLng)
                                                 .title((p.getDireccion().getStringToShow()).toUpperCase()));
+
 
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(pacienteUbicacionLatLng)
