@@ -22,7 +22,7 @@ import java.util.TimeZone;
 import frsf.isi.dam.gtm.miagenda.R;
 
 public class NuevoPacienteActivity extends AppCompatActivity {
-
+    //TODO ver los de la camara
     private Toolbar myToolBar;
     private Calendar fechaNacimiento;
     private TextInputEditText nombrePacienteEdit, apellidoPacienteEdit, fechaNacimientoEdit,dniEdit, telefonoEdit, provinciaEdit, ciudadEdit, calleEdit, numeroDireccionEdit,obraSocialEdit;

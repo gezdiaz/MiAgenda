@@ -4,8 +4,10 @@ import android.os.Parcelable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 public class Paciente implements Serializable {
 
@@ -120,6 +122,17 @@ public class Paciente implements Serializable {
                 ", fotoURL='" + fotoURL + '\'' +
                 ", dirección=" + direccion +
                 '}';
+    }
+
+    public String getEdad() {
+        Calendar fechaNacimiento = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        fechaNacimiento.setTime(this.fechaNacimiento);
+        Calendar today = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        int edad = today.get(Calendar.YEAR)-fechaNacimiento.get(Calendar.YEAR);
+        if(today.get(Calendar.DAY_OF_YEAR)<fechaNacimiento.get(Calendar.DAY_OF_YEAR)){
+            edad--;
+        }
+        return String.valueOf(edad);
     }
 
 //    Agregar y quitar turnos también se hace en firestore

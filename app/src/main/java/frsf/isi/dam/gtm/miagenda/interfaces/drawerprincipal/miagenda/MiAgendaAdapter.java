@@ -17,7 +17,9 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 import frsf.isi.dam.gtm.miagenda.R;
 import frsf.isi.dam.gtm.miagenda.entidades.Paciente;
@@ -173,7 +175,9 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             public void onClick(View view) {
                 //TODO ir a la pantallar para ver paciente
                 Intent i1 = new Intent(view.getContext(),VerPacienteActivity.class);
-                i1.putExtra("paciente", new Paciente("Intent ", "Ver paciente Btn", "OS", new Date(), 40905, 123456789L, "Argentina", "Santa fe","Escalada", "S/N", "493", "Sin dpto"));
+                Calendar pruebaCalendario = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+                pruebaCalendario.set(1998,4,13);
+                i1.putExtra("paciente", new Paciente("Intent ", "Ver paciente Btn", "OS", pruebaCalendario.getTime(), 40905, 123456789L, "Argentina", "Santa fe","Escalada", "S/N", "493", "Sin dpto"));
                 view.getContext().startActivity(i1);
             }
         });

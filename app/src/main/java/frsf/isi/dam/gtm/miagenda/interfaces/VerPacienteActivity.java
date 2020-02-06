@@ -52,12 +52,14 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
     //Variables para probar los datos del pacientes
     private String dni = "40905305", edad="21", obraSocial="IAPOS", telefono="15431193",provincia="Santa fe", ciudad="San justo", calle = "Belgrano", numero="200";
     private boolean permisoLocalizacionAceptado;
-
+    private Paciente p;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ver_paciente);
+
+        p = (Paciente) getIntent().getSerializableExtra("paciente");
 
         toolbar = findViewById(R.id.ver_paciente_toolbar);
         toolbar.setTitle("Nombre paciente");
@@ -75,10 +77,10 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
         telefonoPacienteLbl = findViewById(R.id.telefono_paciente_lbl);
         verHistoriaClinicaBtn = findViewById(R.id.ver_historia_btn);
 
-        dniPacienteLbl.append(" " +dni);
-        edadPacienteLbl.append(" " +edad + " años");
-        obraSocialPacienteLbl.append(" " +obraSocial);
-        telefonoPacienteLbl.append(" " +telefono);
+        dniPacienteLbl.append(" " +p.getDni());
+        edadPacienteLbl.append(" " +p.getEdad() + " años");
+        obraSocialPacienteLbl.append(" " +p.getObraSocial());
+        telefonoPacienteLbl.append(" " +p.getTelefono());
 
         verHistoriaClinicaBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -166,8 +168,8 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
 
         Geocoder geocoder = new Geocoder(this);
         List<Address> addressList = null;
-        String ubicacion = "Argentina, " + provincia+", " + ciudad+", " +calle+", "+numero;
-        ubicacion = ubicacion.toUpperCase();
+        String ubicacion = p.getDireccion().getStringForMap();
+
         try {
             addressList = geocoder.getFromLocationName(ubicacion,1);
         }
@@ -180,9 +182,9 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
 
         LatLng pacienteUbicacionLatLng = new LatLng(pacienteAddress.getLatitude(),pacienteAddress.getLongitude());
 
-          Marker marker = googleMap.addMarker(new MarkerOptions()
+        Marker marker = googleMap.addMarker(new MarkerOptions()
                                                 .position(pacienteUbicacionLatLng)
-                                                .title((ciudad+", "+calle + " " +numero).toUpperCase()));
+                                                .title((p.getDireccion().getStringToShow()).toUpperCase()));
 
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(pacienteUbicacionLatLng)

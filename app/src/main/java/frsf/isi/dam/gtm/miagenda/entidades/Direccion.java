@@ -1,6 +1,8 @@
 package frsf.isi.dam.gtm.miagenda.entidades;
 
-public class Direccion {
+import java.io.Serializable;
+
+public class Direccion implements Serializable {
 
     private String pais, provincia, ciudad, calle, numero, departamento = "";
 
