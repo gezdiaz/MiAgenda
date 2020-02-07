@@ -3,7 +3,6 @@ package frsf.isi.dam.gtm.miagenda.interfaces;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.DialogFragment;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -14,13 +13,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Calendar;
 import java.util.TimeZone;
@@ -199,8 +198,6 @@ public class NuevoPacienteActivity extends AppCompatActivity {
             }
         });
 
-
-
         registrarPacBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -237,8 +234,9 @@ public class NuevoPacienteActivity extends AppCompatActivity {
                     finish();
                 }
                 else{
-                    Toast t = Toast.makeText(getApplicationContext(),getString(R.string.datos_login_no_validos),Toast.LENGTH_LONG);
-                    t.show();
+                    Snackbar s = Snackbar.make(findViewById(R.id.nuevo_paciente_linear_lay), R.string.datos_paciente_no_validos, BaseTransientBottomBar.LENGTH_LONG);
+                    s.setBackgroundTint(getResources().getColor(R.color.colorCancelar));
+                    s.show();
                 }
 
             }

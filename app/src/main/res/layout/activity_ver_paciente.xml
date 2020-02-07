@@ -178,7 +178,7 @@
                     android:paddingBottom="15sp"
                     android:text="@string/ver_historia_btn"
                     android:textColor="@color/colorTextPrimary"
-                    app:cornerRadius="@dimen/login_buttons_radius" />
+                    app:cornerRadius="@dimen/buttons_radius" />
 
             </LinearLayout>
         </LinearLayout>

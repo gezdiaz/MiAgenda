@@ -77,7 +77,7 @@
         android:paddingBottom="15dp"
         android:text="@string/generar_pdf_btn"
         android:textColor="@color/colorTextPrimary"
-        app:cornerRadius="@dimen/login_buttons_radius" />
+        app:cornerRadius="@dimen/buttons_radius" />
         <com.google.android.material.button.MaterialButton
 
             android:id="@+id/ver_pdf_btn"
@@ -93,7 +93,7 @@
             android:paddingBottom="15dp"
             android:text="@string/ver_pdf_btn"
             android:textColor="@color/colorTextPrimary"
-            app:cornerRadius="@dimen/login_buttons_radius" />
+            app:cornerRadius="@dimen/buttons_radius" />
     </RelativeLayout>
 
 
