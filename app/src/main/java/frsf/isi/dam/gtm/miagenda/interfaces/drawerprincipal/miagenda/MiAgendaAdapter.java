@@ -177,7 +177,7 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 Intent i1 = new Intent(view.getContext(),VerPacienteActivity.class);
                 Calendar pruebaCalendario = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
                 pruebaCalendario.set(1998,4,13);
-                i1.putExtra("paciente", new Paciente("Intent ", "Ver paciente Btn", "OS", pruebaCalendario.getTime(), 40905, 123456789L, "Argentina", "Santa fe","Escalada", "S/N", "493", "Sin dpto"));
+                i1.putExtra("paciente", new Paciente("Intent ", "Ver paciente Btn", "OS", pruebaCalendario.getTime(), "40905", 123456789L, "Argentina", "Santa fe","Escalada", "S/N", "493", "Sin dpto"));
                 view.getContext().startActivity(i1);
             }
         });

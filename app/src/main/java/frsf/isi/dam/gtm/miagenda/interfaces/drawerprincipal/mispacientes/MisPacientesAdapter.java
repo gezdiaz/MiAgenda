@@ -41,7 +41,7 @@ public class MisPacientesAdapter extends RecyclerView.Adapter<PacienteHolder> {
                 Intent i = new Intent(view.getContext(), VerPacienteActivity.class);
                 Calendar pruebaCalendario = Calendar.getInstance();
                 pruebaCalendario.set(1997, 8,6);
-                i.putExtra("paciente", new Paciente("Intent ", "Ver paciente Btn", "Sancor Seguros", pruebaCalendario.getTime(), 40905, 123456789L, "Argentina", "Santa fe","Escalada", "S/N", "493", "Sin dpto"));
+                i.putExtra("paciente", new Paciente("Intent ", "Ver paciente Btn", "Sancor Seguros", pruebaCalendario.getTime(), "40905", 123456789L, "Argentina", "Santa fe","Escalada", "S/N", "493", "Sin dpto"));
                 view.getContext().startActivity(i);
             //TODO mostrar datos de paciente
             }

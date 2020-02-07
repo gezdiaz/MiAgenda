@@ -6,8 +6,10 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -21,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Map;
 
 import frsf.isi.dam.gtm.miagenda.entidades.Paciente;
 import frsf.isi.dam.gtm.miagenda.entidades.Turno;
@@ -265,6 +269,26 @@ public class DatosFirestore {
                         handler.sendMessage(m);
                     }
                 });
+    }
+
+    public void actualizarImagenDePaciente(String urlImagen, final String idPaciente) {
+        CollectionReference collectionPacientes = datosUsuario.collection(idColeccionPacientes);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("fotoURL", urlImagen);
+
+        collectionPacientes.document(idPaciente).update(map)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()){
+                            Log.d(TAG, "Se actualizó la url de la imagen del paciente "+idPaciente);
+                        }else{
+                            Log.d(TAG, "Se produjo un error al actualizar la url de la imagen del paciente "+idPaciente);
+                        }
+                    }
+                });
+
     }
 
 }
