@@ -9,6 +9,7 @@ public class Turno {
     private String descripcion;
     private String nombrePaciente;
     private Date fechaHora;
+    private String propietario;
 
     public Turno() {
     }
@@ -17,6 +18,22 @@ public class Turno {
         this.descripcion = descripcion;
         this.nombrePaciente = nombrePaciente;
         this.fechaHora = fechaHora;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getPropietario() {
+        return propietario;
+    }
+
+    public void setPropietario(String propietario) {
+        this.propietario = propietario;
     }
 
     public String getDescripcion() {
@@ -45,11 +62,12 @@ public class Turno {
 
     @Override
     public String toString() {
-        return "Turno{" +
-                "descripcion='" + descripcion + '\'' +
-                ", nombrePaciente='" + nombrePaciente + '\'' +
-                ", fechaHora=" + fechaHora +
+        return "Turno{" + '\n' +
+                "id='" + id + "'\n" +
+                ", descripcion='" + descripcion + "'\n" +
+                ", nombrePaciente='" + nombrePaciente + "'\n" +
+                ", fechaHora=" + fechaHora + '\n' +
+                ", propietario='" + propietario + "'\n" +
                 '}';
     }
-
 }

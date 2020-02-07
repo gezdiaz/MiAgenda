@@ -26,6 +26,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
 
 import frsf.isi.dam.gtm.miagenda.R;
+import frsf.isi.dam.gtm.miagenda.datos.DatosFirestore;
 import frsf.isi.dam.gtm.miagenda.interfaces.drawerprincipal.PrincipalActivity;
 
 public class LoginActivity extends AppCompatActivity {
@@ -122,6 +123,7 @@ public class LoginActivity extends AppCompatActivity {
         if (getIntent().getBooleanExtra(SignOut, false)) {
             mAuth.signOut();
             mGoogleSignInClient.signOut();
+            DatosFirestore.resetInstance();
         }
 
     }

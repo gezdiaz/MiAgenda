@@ -6,8 +6,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.Map;
 
 public class Paciente implements Serializable {
 
@@ -112,15 +114,15 @@ public class Paciente implements Serializable {
 
     @Override
     public String toString() {
-        return "Paciente{" +
-                "nombre='" + nombre + '\'' +
-                ", apellido='" + apellido + '\'' +
-                ", obraSocial='" + obraSocial + '\'' +
-                ", fechaNacimiento=" + fechaNacimiento +
-                ", dni=" + dni +
-                ", teléfono=" + telefono +
-                ", fotoURL='" + fotoURL + '\'' +
-                ", dirección=" + direccion +
+        return "Paciente{" + "'\n" +
+                "nombre='" + nombre + "'\n" +
+                ", apellido='" + apellido + "'\n" +
+                ", obraSocial='" + obraSocial + "'\n" +
+                ", fechaNacimiento=" + fechaNacimiento + '\n' +
+                ", dni=" + dni + '\n' +
+                ", teléfono=" + telefono + '\n' +
+                ", fotoURL='" + fotoURL + "'\n" +
+                ", dirección=" + direccion + "\n" +
                 '}';
     }
 
