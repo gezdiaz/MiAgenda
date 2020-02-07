@@ -32,11 +32,10 @@ public class MisPacientesFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recycler_mis_pacientes);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-
-
         adapter = new MisPacientesAdapter();
         recyclerView.setAdapter(adapter);
         fabMisPacientes = view.findViewById(R.id.fab_mis_pacientes);
+        fabMisPacientes.setColorFilter(getResources().getColor(R.color.colorTextSecondary));
         fabMisPacientes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

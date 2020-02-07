@@ -62,6 +62,7 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
         p = (Paciente) getIntent().getSerializableExtra("paciente");
 
         toolbar = findViewById(R.id.ver_paciente_toolbar);
+        toolbar.setTitleTextColor(getResources().getColor(R.color.colorTextSecondary));
         setSupportActionBar(toolbar);
 
         //getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_arrow);// set drawable icon

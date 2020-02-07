@@ -85,5 +85,7 @@
     <string name="titulo_dialogo_quitar_turno">Quitar turno</string>
     <string name="msg_dialogo_quitar_turno">¿Seguro deseas quitar el turno?</string>
     <string name="nombre_ver_paciente">Nombre:</string>
+    <string name="toque_para_reservar_lbl">Toque para reservar turno</string>
+    <string name="ver_pdf_snackbar">VER</string>
     <string name="datos_paciente_no_validos">Por favor ingrese datos válidos.</string>
 </resources>

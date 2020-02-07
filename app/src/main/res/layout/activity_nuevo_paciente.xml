@@ -339,7 +339,7 @@
                     android:paddingTop="12dp"
                     android:paddingBottom="12dp"
                     android:text="@string/tomar_foto_btn"
-                    android:textColor="@color/colorTextPrimary"
+                    android:textColor="@color/colorTextSecondary"
                     app:cornerRadius="@dimen/buttons_radius" />
 
                 <com.google.android.material.button.MaterialButton
@@ -354,7 +354,7 @@
                     android:paddingTop="12dp"
                     android:paddingBottom="12dp"
                     android:text="@string/registrar_paciente_btn"
-                    android:textColor="@color/colorTextPrimary"
+                    android:textColor="@color/colorTextSecondary"
                     app:cornerRadius="@dimen/buttons_radius" />
             </LinearLayout>
 

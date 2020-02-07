@@ -15,9 +15,10 @@
             style="@style/TextAppearance.AppCompat.Title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
+            android:background="@color/colorPrimary"
+            android:elevation="10dp"
             android:gravity="center"
-             />
+            android:textColor="@color/colorTextSecondary" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_turnos"

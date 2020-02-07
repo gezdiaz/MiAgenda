@@ -21,7 +21,8 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             android:elevation="4dp"
-            app:title="@string/historia_clinica_toolbar" />
+            app:title="@string/historia_clinica_toolbar"
+            />
     </com.google.android.material.appbar.AppBarLayout>
 
     <com.google.android.material.textview.MaterialTextView
@@ -64,27 +65,27 @@
 
         <com.google.android.material.button.MaterialButton
 
-        android:id="@+id/generar_pdf_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+            android:id="@+id/generar_pdf_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
 
-        android:layout_centerInParent="false"
-        android:layout_centerHorizontal="true"
-        android:paddingLeft="40dp"
-        android:paddingTop="15dp"
-        android:paddingRight="40dp"
-        android:paddingBottom="15dp"
-        android:text="@string/generar_pdf_btn"
-        android:textColor="@color/colorTextPrimary"
-        app:cornerRadius="@dimen/buttons_radius" />
+            android:layout_centerInParent="false"
+            android:layout_centerHorizontal="true"
+            android:paddingLeft="40dp"
+            android:paddingTop="15dp"
+            android:paddingRight="40dp"
+            android:paddingBottom="15dp"
+            android:text="@string/generar_pdf_btn"
+            android:textColor="@color/colorTextSecondary"
+            app:cornerRadius="@dimen/buttons_radius" />
+
         <com.google.android.material.button.MaterialButton
 
             android:id="@+id/ver_pdf_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:visibility="gone"
             android:layout_centerInParent="false"
             android:layout_centerHorizontal="true"
             android:paddingLeft="40dp"
@@ -92,7 +93,8 @@
             android:paddingRight="40dp"
             android:paddingBottom="15dp"
             android:text="@string/ver_pdf_btn"
-            android:textColor="@color/colorTextPrimary"
+            android:textColor="@color/colorTextSecondary"
+            android:visibility="gone"
             app:cornerRadius="@dimen/buttons_radius" />
     </RelativeLayout>
 
