@@ -2,6 +2,7 @@ package frsf.isi.dam.gtm.miagenda.interfaces.drawerprincipal.miagenda;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -69,11 +70,7 @@ public class MiAgendaFragment extends Fragment {
 
 
         verCalendarioFAB = view.findViewById(R.id.fab_mi_agenda);
-//        reservarBtn = view.findViewById(R.id.reservar_turno_btn);
-//        modificarBtn = view.findViewById(R.id.modificar_turno_btn);
-//        quitarBtn = view.findViewById(R.id.quitar_turno_btn);
-
-
+        verCalendarioFAB.setColorFilter(getResources().getColor(R.color.colorTextSecondary));
         verCalendarioFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

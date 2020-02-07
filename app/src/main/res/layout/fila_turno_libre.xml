@@ -4,10 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fila_turno_libre_layout"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/fila_turno_height">
+    android:layout_height="@dimen/fila_turno_height"
+    android:background="@color/fondoReservarTurnoBtn">
 
 
     <View
+        android:id="@+id/view"
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:background="#e0e0e0"
@@ -22,8 +24,8 @@
         android:src="@drawable/ic_add_circle_outline_24px"
         android:tint="@color/colorAceptar"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/guideline"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="ContentDescription" />
 
@@ -34,39 +36,37 @@
         android:orientation="vertical"
         app:layout_constraintGuide_begin="@dimen/guideline_pos" />
 
-
     <TextView
         android:id="@+id/hora_turno_libre_txt"
+        style="@style/TextAppearance.MaterialComponents.Subtitle1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="start"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:gravity="center"
         android:text="@string/hora_turno_default"
-        app:layout_constraintStart_toStartOf="@id/turno_libre_lbl"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/turno_libre_lbl"
-        style="@style/TextAppearance.MaterialComponents.Subtitle1"/>
+        app:layout_constraintBottom_toTopOf="@+id/reservar_turno_lbl"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/turno_libre_lbl"
         style="@style/Text.SubtituloTurnos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
+        android:layout_marginEnd="16dp"
+        android:gravity="end"
         android:text="@string/turno_disponible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guideline"
-        app:layout_constraintTop_toBottomOf="@+id/hora_turno_libre_txt" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/reservar_turno_btn"
-        style="@style/Button.ReservarTurno"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
-        android:text="@string/reservar_turno"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/reservar_turno_lbl"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/reservar_turno_lbl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/toque_para_reservar_lbl"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/hora_turno_libre_txt"
+        app:layout_constraintStart_toStartOf="@+id/hora_turno_libre_txt" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -46,14 +46,16 @@ public class NuevoPacienteActivity extends AppCompatActivity {
     private  Bitmap imageBitmap;
 
 
+    //TODO REVISAR LAS VALIDACIONES CUANDO SE UTILIZA TEXTO AUTOCOMPLETADO
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nuevo_paciente);
         myToolBar = findViewById(R.id.nuevo_paciente_toolbar);
+        myToolBar.setTitleTextColor(getResources().getColor(R.color.colorTextSecondary));
         setSupportActionBar(myToolBar);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_arrow);// set drawable icon
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         buildPickerDate();

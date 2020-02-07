@@ -74,8 +74,9 @@ public class HistoriaClinicaActivity extends AppCompatActivity {
     private PdfDocument.Page contenidoPagina;
     private Canvas canvas;
     private Paint paint;
-    private final int maxCantCaracteresXRenglon = 45;
+    private final int maxCantCaracteresXRenglon = 60;
     private String directorioDestinoPdf;
+
 
     private Handler myHandler;
 
@@ -114,6 +115,7 @@ public class HistoriaClinicaActivity extends AppCompatActivity {
         };
 
         toolbar = findViewById(R.id.historia_clinica_toolbar);
+        toolbar.setTitleTextColor(getResources().getColor(R.color.colorTextSecondary));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -125,6 +127,15 @@ public class HistoriaClinicaActivity extends AppCompatActivity {
         contextView = findViewById(R.id.historia_clinica_linear_layout);
         creacionPdfSnackbarExito = Snackbar.make(contextView, R.string.exito_guardar_pdf, BaseTransientBottomBar.LENGTH_LONG);
         creacionPdfSnackbarExito.setTextColor(Color.WHITE);
+        creacionPdfSnackbarExito.setActionTextColor(Color.WHITE);
+        creacionPdfSnackbarExito.setAction(R.string.ver_pdf_snackbar, new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                verPdf();
+            }
+        });
+
+
         creacionPdfSnackbarExito.setBackgroundTint(getResources().getColor(R.color.colorPrimary));
 
         creacionPdfSnackbarError = Snackbar.make(contextView, R.string.error_guardar_pdf, BaseTransientBottomBar.LENGTH_LONG);
@@ -138,7 +149,7 @@ public class HistoriaClinicaActivity extends AppCompatActivity {
         for (int i = 0; i < 20; i++) {
             mockTurnos.add(new Turno(((i + 1) + "/2/2020"), "Problema x" + i, "Sin nombre"));
         }
-        mockTurnos.add(new Turno("21/2/2020", "Problema aMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMaMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMaMMMMMMMMMaMMMMMMMMMaMMMMMMMMMaMMMMMMMMMaMMMMMMMMMaMMMMMMMMMaMMMMMMMMMa", "Sin nombre"));
+        mockTurnos.add(new Turno("21/2/2020", "Problema aMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMaMMMMMMMMMaMMMMMMMMMaMMMMMMMMMaMMMMMMMMMaMMMMMMMMMaMMMMMMMMMaMMMMMMMMMa", "Sin nombre"));
 
 
         historiaClinicaRecyclerView = findViewById(R.id.historia_clinica_recyclerview);
@@ -180,36 +191,12 @@ public class HistoriaClinicaActivity extends AppCompatActivity {
         verPdfBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                File file = new File(directorioDestinoPdf + mockTurnos.get(0).getPaciente() + ".pdf");
-                Uri contentUri = Uri.fromFile(file);
-                Intent verPdfIntent = new Intent(Intent.ACTION_VIEW);
-                if (file.exists()) {
-                    //Dependiendo del numero de version hay que usar FILEPROVIDER.
-                    if (Build.VERSION.SDK_INT >= 24) {
-                        Uri apkURI = FileProvider.getUriForFile(HistoriaClinicaActivity.this, HistoriaClinicaActivity.this.getApplicationContext().getPackageName() + ".provider", file);
-                        verPdfIntent.setDataAndType(apkURI, "application/pdf");
-                        verPdfIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                    } else {
-
-                        verPdfIntent.setDataAndType(contentUri, "application/pdf");
-                        verPdfIntent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                    }
-                    try {
-                        startActivity(verPdfIntent);
-                        Toast.makeText(getApplicationContext(), file.toString(), Toast.LENGTH_LONG).show();
-                    } catch (ActivityNotFoundException e) {
-                        // Instruct the user to install a PDF reader here, or something
-                        Toast.makeText(getApplicationContext(), getString(R.string.instalar_aplicacion_pdf), Toast.LENGTH_LONG).show();
-                    }
-                } else {
-                    Snackbar snackbar = Snackbar.make(findViewById(R.id.historia_clinica_linear_layout), getString(R.string.archivo_inexistente_snackbar), BaseTransientBottomBar.LENGTH_LONG);
-                    snackbar.setBackgroundTint(getResources().getColor(R.color.colorCancelar));
-                    snackbar.show();
-                }
+                verPdf();
             }
         });
 
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -240,8 +227,8 @@ public class HistoriaClinicaActivity extends AppCompatActivity {
         documentoPdf = new PdfDocument();
         paint = new Paint();
         numeroPagina = 1;
-        margenX = 40;
-        margenY = 50;
+        margenX = 25;
+        margenY = 45;
 
         crearNuevaPagina();
 
@@ -309,7 +296,7 @@ public class HistoriaClinicaActivity extends AppCompatActivity {
             f.mkdir();
         }
 
-        File archivoPDF = new File(directorioDestinoPdf + mockTurnos.get(0).getPaciente() + ".pdf");
+        File archivoPDF = new File(directorioDestinoPdf + p.getNombre()+"-"+p.getApellido()+"-" +p.getDni()+ ".pdf");
 
         //Se guarda el pdf en el archivo(File) "archivoPDF"
         try {
@@ -321,8 +308,8 @@ public class HistoriaClinicaActivity extends AppCompatActivity {
     }
 
     private void crearNuevaPagina() {
-        margenX = 40;
-        margenY = 50;
+        margenX = 25;
+        margenY = 45;
         //documentoPdf.finishPage(contenidoPagina);
         //Informacion del diseño de la pagina: ancho, largo y numero de pagina
         paginaDocumento = new PdfDocument.PageInfo.Builder(anchoPagina, largoPagina, numeroPagina).create();
@@ -334,15 +321,16 @@ public class HistoriaClinicaActivity extends AppCompatActivity {
         canvas = contenidoPagina.getCanvas();
 
         //Seteo de contenido en el Documento
-        paciente = pacienteLbl.getEditableText().toString();
+        paciente = p.getNombre() + " " + p.getApellido();
 
-        paint.setTextSize(30);
+        paint.setTextSize(18);
         paint.setFakeBoldText(true);
         paint.setUnderlineText(true);
-        canvas.drawText(paciente, margenX + 100, margenY, paint);
-        margenY += 55;
+        canvas.drawText("Paciente: " + paciente.toUpperCase(), margenX , margenY, paint);
+        margenY += 30;
 
-        paint.setTextSize(25);
+
+        paint.setTextSize(10);
         paint.setFakeBoldText(false);
         paint.setUnderlineText(false);
 
@@ -369,6 +357,37 @@ public class HistoriaClinicaActivity extends AppCompatActivity {
             lineasARetornar.add(linea);
         }
     }
+
+
+    private void verPdf() {
+
+        File file = new File(directorioDestinoPdf + p.getNombre() + "-"+ p.getApellido() + "-" + p.getDni() + ".pdf");
+        Uri contentUri = Uri.fromFile(file);
+        Intent verPdfIntent = new Intent(Intent.ACTION_VIEW);
+        if (file.exists()) {
+            //Dependiendo del numero de version hay que usar FILEPROVIDER.
+            if (Build.VERSION.SDK_INT >= 24) {
+                Uri apkURI = FileProvider.getUriForFile(HistoriaClinicaActivity.this, HistoriaClinicaActivity.this.getApplicationContext().getPackageName() + ".provider", file);
+                verPdfIntent.setDataAndType(apkURI, "application/pdf");
+                verPdfIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            } else {
+
+                verPdfIntent.setDataAndType(contentUri, "application/pdf");
+                verPdfIntent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            }
+            try {
+                startActivity(verPdfIntent);
+            } catch (ActivityNotFoundException e) {
+                // Instruct the user to install a PDF reader here, or something
+                Toast.makeText(getApplicationContext(), getString(R.string.instalar_aplicacion_pdf), Toast.LENGTH_LONG).show();
+            }
+        } else {
+            Snackbar snackbar = Snackbar.make(findViewById(R.id.historia_clinica_linear_layout), getString(R.string.archivo_inexistente_snackbar), BaseTransientBottomBar.LENGTH_LONG);
+            snackbar.setBackgroundTint(getResources().getColor(R.color.colorCancelar));
+            snackbar.show();
+        }
+    }
+
 
 }
 

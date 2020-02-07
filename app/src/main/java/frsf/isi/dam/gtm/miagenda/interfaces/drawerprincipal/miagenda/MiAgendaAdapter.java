@@ -3,32 +3,41 @@ package frsf.isi.dam.gtm.miagenda.interfaces.drawerprincipal.miagenda;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.AlertDialogLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.TimeZone;
 
 import frsf.isi.dam.gtm.miagenda.R;
 import frsf.isi.dam.gtm.miagenda.entidades.Paciente;
 import frsf.isi.dam.gtm.miagenda.interfaces.VerPacienteActivity;
+import io.opencensus.resource.Resource;
 
 public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public static final int TURNO_LIBRE = 0;
-    public static final int TURNO_OCUPADO = 2;
+    public static final int TURNO_OCUPADO = 1;
+
+    private final String cancelarDialogo = "x       ";
+
+    private ArrayList<Integer> pruebaLista = new ArrayList<>();
 
     private MaterialButton verPacienteDialogBtn, seleccionarPacienteDialogBtn;
     private AlertDialog modificarTurnoDialogo;
@@ -46,8 +55,10 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public int getItemViewType(int position) {
-        //TODO usar tipo de turno para definir tipo de view
-        return position % 2 * 2;
+        //TODO usar tipo de turno para definir tipo de view. Para esto hay que saber que tipo de turno esta en la posicion position de la lista de turnos.
+        int tipo = (int)((Math.random()*10)%2);
+        pruebaLista.add(tipo);
+        return pruebaLista.get(position);
     }
 
     @NonNull
@@ -70,66 +81,34 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         switch (getItemViewType(position)){
-            case TURNO_LIBRE:
+            case TURNO_LIBRE:{
                 //TODO mostrar turno libre
+
                 TurnoLibreHolder turnoLibreHolder = (TurnoLibreHolder) holder;
-                turnoLibreHolder.reservarTurnoBtn.setOnClickListener(new View.OnClickListener() {
+                turnoLibreHolder.turnoLibreConstraintLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        buildModificarDialog(view);
-                        verPacienteDialogBtn.setVisibility(View.GONE);
-                        seleccionarPacienteDialogBtn.setVisibility(View.VISIBLE);
-                        modificarTurnoDialogo.show();
+                        AlertDialog reservarDialog = buildReservarDialog(view);
+                        reservarDialog.show();
                     }
                 });
                 break;
+            }
+
             case TURNO_OCUPADO:
                 //TODO mostrar turno ocupado
                 TurnoOcupadoHolder turnoOcupadoHolder = (TurnoOcupadoHolder) holder;
-                turnoOcupadoHolder.modificarTurnoBtn.setOnClickListener(new View.OnClickListener() {
+                turnoOcupadoHolder.turnoOcupadoConstraint.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        buildModificarDialog(view);
-                        seleccionarPacienteDialogBtn.setVisibility(View.GONE);
-                        verPacienteDialogBtn.setVisibility(View.VISIBLE);
-                        modificarTurnoDialogo.show();
+                        AlertDialog verTurnoDialog = buildVerTurnoDialogo(view);
+                        verTurnoDialog.show();
                     }
                 });
-
-                turnoOcupadoHolder.quitarTurnoBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(final View view) {
-                        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(view.getContext())
-                                .setTitle(R.string.titulo_dialogo_quitar_turno)
-                                .setMessage(R.string.msg_dialogo_quitar_turno)
-                                .setPositiveButton(R.string.aceptar, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        //TODO borrar turno
-                                    }
-                                });
-
-                        builder.setNegativeButton(R.string.cancelar, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-
-                            }
-                        });
-                        final AlertDialog quitarTurnoDialog =  builder.create();
-                        quitarTurnoDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-                            View v = view;
-                            @Override
-                            public void onShow(DialogInterface dialogInterface) {
-                                quitarTurnoDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(v.getResources().getColor(R.color.colorCancelar));
-                            }
-                        });
-                        quitarTurnoDialog.show();
-                    }
-                });
-
                 break;
         }
     }
+
 
 
     @Override
@@ -137,36 +116,97 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return cant;
     }
 
-    private void buildModificarDialog(final View view) {
 
+    private AlertDialog buildReservarDialog(final View view) {
+
+        final AlertDialog reservarDialogo;
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(view.getContext());
         LayoutInflater inflater =  (LayoutInflater)view.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View dialogView = inflater.inflate(R.layout.dialogo_modificar_turno, null);
         builder.setView(dialogView);
+
         builder.setPositiveButton(R.string.listo_option, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                //TODO Guardar nuevo paciente o nuevos cambios.
+                //TODO Reservar turno
             }
         });
 
-        builder.setNegativeButton(R.string.cancelar, new DialogInterface.OnClickListener() {
+        builder.setNeutralButton(cancelarDialogo, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
             }
         });
 
-        modificarTurnoDialogo = builder.create();
-        verPacienteDialogBtn = dialogView.findViewById(R.id.turno_ver_paciente_btn);
-        seleccionarPacienteDialogBtn = dialogView.findViewById(R.id.turno_seleccionar_paciente_btn);
-        descripcionEdit = dialogView.findViewById(R.id.tuno_descripcion_edit_text);
+        reservarDialogo = builder.create();
 
-        modificarTurnoDialogo.setOnShowListener( new DialogInterface.OnShowListener() {
-            View view2 = view;
+        descripcionEdit = dialogView.findViewById(R.id.tuno_descripcion_edit_text);
+        seleccionarPacienteDialogBtn = dialogView.findViewById(R.id.turno_seleccionar_paciente_btn);
+        seleccionarPacienteDialogBtn.setVisibility(View.VISIBLE);
+        verPacienteDialogBtn = dialogView.findViewById(R.id.turno_ver_paciente_btn);
+        verPacienteDialogBtn.setVisibility(View.GONE);
+
+        reservarDialogo.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
-            public void onShow(DialogInterface arg0) {
-                modificarTurnoDialogo.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(view2.getResources().getColor(R.color.colorCancelar));
+            public void onShow(DialogInterface dialogInterface) {
+                reservarDialogo.getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(view.getResources().getColor(R.color.colorCancelar));
+            }
+        });
+
+        seleccionarPacienteDialogBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO ir a pantalla para seleccionar paciente
+            }
+        });
+        return reservarDialogo;
+    }
+
+    private AlertDialog buildVerTurnoDialogo(final View view){
+
+        final AlertDialog verTurnoDialogo;
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(view.getContext());
+
+        LayoutInflater inflater =  (LayoutInflater)view.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final View dialogView = inflater.inflate(R.layout.dialogo_modificar_turno, null);
+        builder.setView(dialogView);
+
+        builder.setPositiveButton(R.string.listo_option, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                //TODO Modificar turno
+            }
+        });
+
+        builder.setNegativeButton(R.string.quitar_turno, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                //TODO quitar turno
+            }
+        });
+
+        builder.setNeutralButton(cancelarDialogo, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+
+        verTurnoDialogo = builder.create();
+
+        descripcionEdit = dialogView.findViewById(R.id.tuno_descripcion_edit_text);
+        seleccionarPacienteDialogBtn = dialogView.findViewById(R.id.turno_seleccionar_paciente_btn);
+        seleccionarPacienteDialogBtn.setVisibility(View.GONE);
+        verPacienteDialogBtn = dialogView.findViewById(R.id.turno_ver_paciente_btn);
+        verPacienteDialogBtn.setVisibility(View.VISIBLE);
+
+        verTurnoDialogo.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+
+                verTurnoDialogo.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(view.getResources().getColor(R.color.colorCancelar));
+                verTurnoDialogo.getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(view.getResources().getColor(R.color.colorCancelar));
             }
         });
 
@@ -174,19 +214,15 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             @Override
             public void onClick(View view) {
                 //TODO ir a la pantallar para ver paciente
-                Intent i1 = new Intent(view.getContext(),VerPacienteActivity.class);
+                Intent i1 = new Intent(view.getContext(), VerPacienteActivity.class);
                 Calendar pruebaCalendario = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
                 pruebaCalendario.set(1998,4,13);
                 i1.putExtra("paciente", new Paciente("Intent ", "Ver paciente Btn", "OS", pruebaCalendario.getTime(), 40905, 123456789L, "Argentina", "Santa fe","Escalada", "S/N", "493", "Sin dpto"));
                 view.getContext().startActivity(i1);
             }
         });
-        seleccionarPacienteDialogBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //TODO ir a la pantallar para seleccionar un paciente
-            }
-        });
+
+        return verTurnoDialogo;
     }
 
 }

@@ -80,7 +80,7 @@
         android:paddingTop="20dp"
         android:paddingBottom="20dp"
         android:text="@string/iniciar_sesion_btn"
-        android:textColor="@color/colorTextPrimary"
+        android:textColor="@color/colorTextSecondary"
         app:cornerRadius="@dimen/buttons_radius"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -110,12 +110,11 @@
         android:paddingTop="20dp"
         android:paddingBottom="20dp"
         android:text="@string/iniciar_sesion_google_btn"
-        android:textColor="@color/colorTextPrimary"
+        android:textColor="@color/colorTextSecondary"
         app:cornerRadius="@dimen/buttons_radius"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iniciar_sesion_btn"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/iniciar_sesion_btn" />
 
     <ProgressBar
         android:id="@+id/iniciar_sesion_google_progress"
@@ -140,7 +139,7 @@
         android:paddingTop="20dp"
         android:paddingBottom="20dp"
         android:text="@string/crear_cuenta_btn"
-        android:textColor="@color/colorTextPrimary"
+        android:textColor="@color/colorTextSecondary"
         app:cornerRadius="@dimen/buttons_radius"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
