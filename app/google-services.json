@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "599209928062-dphbgc68qtptogsbp9tloo1mhdstodbc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "frsf.isi.dam.gtm.miagenda",
+            "certificate_hash": "6c3b8c1782d5e199cb903fe2aabc62f3a6ff8fa0"
+          }
+        },
+        {
           "client_id": "599209928062-rte96ludste652lbnfect4kcrse65glg.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
