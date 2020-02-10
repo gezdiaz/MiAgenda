@@ -50,12 +50,13 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
     private static final String TAG = "VerPacienteActivity";
     private Toolbar toolbar;
     private MaterialTextView dniPacienteLbl, edadPacienteLbl, obraSocialPacienteLbl, telefonoPacienteLbl, nombrePacienteLbl;
-    private MaterialButton verHistoriaClinicaBtn, llamarBtn;
+    private MaterialButton verHistoriaClinicaBtn;
     private GoogleMap googleMap;
     //Variables para probar los datos del pacientes
     private String dni = "40905305", edad = "21", obraSocial = "IAPOS", telefono = "15431193", provincia = "Santa fe", ciudad = "San justo", calle = "Belgrano", numero = "200";
     private boolean permisoLocalizacionAceptado;
     private Paciente p;
+    private Intent intentLlamada;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +81,7 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
         telefonoPacienteLbl = findViewById(R.id.telefono_paciente_lbl);
         verHistoriaClinicaBtn = findViewById(R.id.ver_historia_btn);
         nombrePacienteLbl = findViewById(R.id.nombre_paciente_lbl);
-        llamarBtn = findViewById(R.id.llamar_btn);
+
 
         nombrePacienteLbl.append(" " + p.getNombre() + " " + p.getApellido());
         dniPacienteLbl.append(" " + p.getDni());
@@ -96,35 +97,11 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
                 startActivity(i1);
             }
         });
-
-        llamarBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(Intent.ACTION_CALL);
-                i.setData(Uri.parse("tel:" + String.valueOf(p.getTelefono())));
-                //Esto lo pongo porque necesita API 23 y estamos usando 22
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                        // TODO: Consider calling
-                        //    Activity#requestPermissions
-                        // here to request the missing permissions, and then overriding
-                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                        //                                          int[] grantResults)
-                        // to handle the case where the user grants the permission. See the documentation
-                        // for Activity#requestPermissions for more details.
-                        ActivityCompat.requestPermissions(VerPacienteActivity.this, new String[]{Manifest.permission.CALL_PHONE}, 8888);
-                        Log.d(TAG, "Necesita Permisos");
-                        return;
-                    }
-                }
-                startActivity(i);
-            }
-        });
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_opcion, menu);
+        getMenuInflater().inflate(R.menu.menu_llamada, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -140,6 +117,27 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
             }
             case android.R.id.home: {
                 onBackPressed();
+                break;
+            }
+            case R.id.llamada_option_item:{
+                intentLlamada = new Intent(Intent.ACTION_CALL);
+                intentLlamada.setData(Uri.parse("tel:" + String.valueOf(p.getTelefono())));
+                //Esto lo pongo porque necesita API 23 y estamos usando 22
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                        // TODO: Consider calling
+                        //    Activity#requestPermissions
+                        // here to request the missing permissions, and then overriding
+                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                        //                                          int[] grantResults)
+                        // to handle the case where the user grants the permission. See the documentation
+                        // for Activity#requestPermissions for more details.
+                        ActivityCompat.requestPermissions(VerPacienteActivity.this, new String[]{Manifest.permission.CALL_PHONE}, 8888);
+                        Log.d(TAG, "Necesita Permisos");
+                        //return;
+                    }
+                }
+                startActivity(intentLlamada);
                 break;
             }
         }
@@ -188,7 +186,7 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
                 break;
             case 8888:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    llamarBtn.performClick();
+                    startActivity(intentLlamada);
                 }
         }
     }
