@@ -145,17 +145,18 @@
                     android:layout_marginBottom="5dp" />
 
                 <TextView
+                    android:id="@+id/mas_info_mapa_lbl"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/mapa_mas_info"
-                    android:textColor="@color/colorTextPrimary"
                     android:layout_alignStart="@id/ver_paciente_map"
-                    android:layout_marginEnd="5dp"
                     android:layout_alignEnd="@+id/ver_paciente_map"
-                    android:textStyle="bold"
                     android:layout_marginStart="5dp"
                     android:layout_marginTop="5dp"
-                    android:background="#B2E0E0E0"/>
+                    android:layout_marginEnd="5dp"
+                    android:background="#B2E0E0E0"
+                    android:text="@string/mapa_mas_info"
+                    android:textColor="@color/colorTextPrimary"
+                    android:textStyle="bold" />
 
             </RelativeLayout>
 

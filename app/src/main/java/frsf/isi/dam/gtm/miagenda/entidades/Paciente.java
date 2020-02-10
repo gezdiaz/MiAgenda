@@ -18,7 +18,7 @@ public class Paciente implements Serializable {
     private String apellido;
     private String obraSocial;
     private Date fechaNacimiento;
-    private int dni;
+    private String dni;
     private Long telefono;
     private String fotoURL;
     private Direccion direccion;
@@ -29,7 +29,7 @@ public class Paciente implements Serializable {
     public Paciente() {
     }
 
-    public Paciente(String nombre, String apellido, String obraSocial, Date fechaNacimiento, int dni, Long telefono, String pais, String provincia, String ciudad, String calle, String numero, String departamento) {
+    public Paciente(String nombre, String apellido, String obraSocial, Date fechaNacimiento, String dni, Long telefono, String pais, String provincia, String ciudad, String calle, String numero, String departamento) {
         //TODO la foto se setea después de que se guarde en Firebase Storage.
         this.nombre = nombre;
         this.apellido = apellido;
@@ -72,11 +72,11 @@ public class Paciente implements Serializable {
         this.fechaNacimiento = fechaNacimiento;
     }
 
-    public int getDni() {
+    public String getDni() {
         return dni;
     }
 
-    public void setDni(int dni) {
+    public void setDni(String dni) {
         this.dni = dni;
     }
 
