@@ -13,6 +13,7 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
@@ -47,10 +48,10 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
 
     private Toolbar toolbar;
     private MaterialTextView dniPacienteLbl, edadPacienteLbl, obraSocialPacienteLbl, telefonoPacienteLbl, nombrePacienteLbl;
-    private MaterialButton verHistoriaClinicaBtn;
+    private MaterialButton verHistoriaClinicaBtn, llamarBtn;
     private GoogleMap googleMap;
     //Variables para probar los datos del pacientes
-    private String dni = "40905305", edad="21", obraSocial="IAPOS", telefono="15431193",provincia="Santa fe", ciudad="San justo", calle = "Belgrano", numero="200";
+    private String dni = "40905305", edad = "21", obraSocial = "IAPOS", telefono = "15431193", provincia = "Santa fe", ciudad = "San justo", calle = "Belgrano", numero = "200";
     private boolean permisoLocalizacionAceptado;
     private Paciente p;
 
@@ -68,7 +69,7 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
         //getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_arrow);// set drawable icon
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        SupportMapFragment mapFragment = (SupportMapFragment)  getSupportFragmentManager().findFragmentById(R.id.ver_paciente_map);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.ver_paciente_map);
         mapFragment.getMapAsync(this);
 
         dniPacienteLbl = findViewById(R.id.dni_paciente_lbl);
@@ -77,19 +78,42 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
         telefonoPacienteLbl = findViewById(R.id.telefono_paciente_lbl);
         verHistoriaClinicaBtn = findViewById(R.id.ver_historia_btn);
         nombrePacienteLbl = findViewById(R.id.nombre_paciente_lbl);
+        llamarBtn = findViewById(R.id.llamar_btn);
 
-        nombrePacienteLbl.append(" "+p.getNombre()+" "+p.getApellido());
-        dniPacienteLbl.append(" " +p.getDni());
-        edadPacienteLbl.append(" " +p.getEdad() + " años");
-        obraSocialPacienteLbl.append(" " +p.getObraSocial());
-        telefonoPacienteLbl.append(" " +p.getTelefono());
+        nombrePacienteLbl.append(" " + p.getNombre() + " " + p.getApellido());
+        dniPacienteLbl.append(" " + p.getDni());
+        edadPacienteLbl.append(" " + p.getEdad() + " años");
+        obraSocialPacienteLbl.append(" " + p.getObraSocial());
+        telefonoPacienteLbl.append(" " + p.getTelefono());
 
         verHistoriaClinicaBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i1 = new Intent(getApplicationContext(), HistoriaClinicaActivity.class);
-                i1.putExtra("paciente",p);
+                i1.putExtra("paciente", p);
                 startActivity(i1);
+            }
+        });
+
+        llamarBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(Intent.ACTION_CALL);
+                i.setData(Uri.parse("tel:" + String.valueOf(p.getTelefono())));
+                //Esto lo pongo porque necesita API 23 y estamos usando 22
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                        // TODO: Consider calling
+                        //    Activity#requestPermissions
+                        // here to request the missing permissions, and then overriding
+                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                        //                                          int[] grantResults)
+                        // to handle the case where the user grants the permission. See the documentation
+                        // for Activity#requestPermissions for more details.
+                        return;
+                    }
+                }
+                startActivity(i);
             }
         });
     }
