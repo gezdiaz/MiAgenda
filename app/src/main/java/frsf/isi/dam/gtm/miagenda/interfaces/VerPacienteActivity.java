@@ -16,6 +16,7 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -46,6 +47,7 @@ import frsf.isi.dam.gtm.miagenda.interfaces.listahistoriaclinica.HistoriaClinica
 
 public class VerPacienteActivity extends AppCompatActivity implements OnMapReadyCallback {
 
+    private static final String TAG = "VerPacienteActivity";
     private Toolbar toolbar;
     private MaterialTextView dniPacienteLbl, edadPacienteLbl, obraSocialPacienteLbl, telefonoPacienteLbl, nombrePacienteLbl;
     private MaterialButton verHistoriaClinicaBtn, llamarBtn;
@@ -110,6 +112,8 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
                         //                                          int[] grantResults)
                         // to handle the case where the user grants the permission. See the documentation
                         // for Activity#requestPermissions for more details.
+                        ActivityCompat.requestPermissions(VerPacienteActivity.this, new String[]{Manifest.permission.CALL_PHONE}, 8888);
+                        Log.d(TAG, "Necesita Permisos");
                         return;
                     }
                 }
@@ -159,7 +163,7 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
-            case 9999: {
+            case 9999:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     permisoLocalizacionAceptado = true;
                 }
@@ -181,7 +185,11 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
 //                    }
                 }
                 inicializarMapa();
-            }
+                break;
+            case 8888:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    llamarBtn.performClick();
+                }
         }
     }
     private void inicializarMapa(){
