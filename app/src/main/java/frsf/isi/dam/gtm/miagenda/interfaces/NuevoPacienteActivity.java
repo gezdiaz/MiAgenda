@@ -5,9 +5,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.FileProvider;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -24,6 +27,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -61,6 +65,7 @@ public class NuevoPacienteActivity extends AppCompatActivity {
     private boolean[] validaciones = {false, false, false, false, false, false, false, false, false, false};
     private boolean datosValidos = true;
     private int contadorWhile = 0;
+    private ProgressDialog progressDialog;
 
     private MaterialDatePicker.Builder<Long> builder;
     private MaterialDatePicker<Long> datePicker;
@@ -68,16 +73,22 @@ public class NuevoPacienteActivity extends AppCompatActivity {
     private Bitmap imageBitmap;
     private String TAG = "NuevoPacienteActivity";
     private String rutaImagen;
-    private Handler handler = new Handler(Looper.myLooper()) {
+    private final Handler handler = new Handler(Looper.myLooper()) {
         @Override
         public void handleMessage(@NonNull Message msg) {
             switch (msg.what) {
                 case DatosFirestore.SAVE_PACIENTE:
                     Log.d(TAG, "Paciente guardado correctamente");
+                    if (progressDialog.isShowing()) {
+                        progressDialog.cancel();
+                    }
                     finish();
                     break;
                 case DatosFirestore.ERROR_SAVE_PACIENTE:
                     Log.d(TAG, "Error al guardar el paciente");
+                    if (progressDialog.isShowing()) {
+                        progressDialog.cancel();
+                    }
                     Snackbar.make(findViewById(R.id.nuevo_paciente_linear_lay), "Se produjo un error al guardar el nuevo paciente", BaseTransientBottomBar.LENGTH_LONG)
                             .setBackgroundTint(getResources().getColor(R.color.colorCancelar))
                             .show();
@@ -86,10 +97,10 @@ public class NuevoPacienteActivity extends AppCompatActivity {
                     Log.d(TAG, "Se completo la carga de la imagen");
                     Toast.makeText(getApplicationContext(), "Se cargó la imagen", Toast.LENGTH_LONG).show();
                     break;
-                    case ArchivosCloudStorage.ERROR_CARGA_IMAGEN:
-                        Log.d(TAG, "Error al cargar la imagen");
-                        Toast.makeText(getApplicationContext(), "No se pudo cargar la imagen", Toast.LENGTH_LONG).show();
-                        break;
+                case ArchivosCloudStorage.ERROR_CARGA_IMAGEN:
+                    Log.d(TAG, "Error al cargar la imagen");
+                    Toast.makeText(getApplicationContext(), "No se pudo cargar la imagen", Toast.LENGTH_LONG).show();
+                    break;
             }
         }
     };
@@ -284,8 +295,12 @@ public class NuevoPacienteActivity extends AppCompatActivity {
                             calleEdit.getText().toString(),
                             numeroDireccionEdit.getText().toString(),
                             departamentoEdit.getText().toString());
+                    progressDialog = ProgressDialog.show(NuevoPacienteActivity.this, getString(R.string.por_favor_espere), getString(R.string.guardando_paciente));
+                    progressDialog.setCancelable(false);
                     DatosFirestore.getInstance().savePaciente(p, handler);
-                    ArchivosCloudStorage.getInstance().saveImageEnPaciente(dniEdit.getText().toString(), imageBitmap, handler);
+                    if (imageBitmap != null) {
+                        ArchivosCloudStorage.getInstance().saveImageEnPaciente(dniEdit.getText().toString(), imageBitmap, handler, getApplicationContext());
+                    }
                     // finish();
                 } else {
                     Snackbar s = Snackbar.make(findViewById(R.id.nuevo_paciente_linear_lay), R.string.datos_paciente_no_validos, BaseTransientBottomBar.LENGTH_LONG);
@@ -303,22 +318,9 @@ public class NuevoPacienteActivity extends AppCompatActivity {
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 // Ensure that there's a camera activity to handle the intent
                 if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                    // Create the File where the photo should go
-                    File photoFile = null;
-                    try {
-                        photoFile = createImageFile();
-                    } catch (IOException ex) {
-                        // Error occurred while creating the File
-                        Snackbar.make(findViewById(R.id.nuevo_paciente_linear_lay), "Error al crear el archivo", BaseTransientBottomBar.LENGTH_LONG).show();
-                    }
-                    // Continue only if the File was successfully created
-                    if (photoFile != null) {
-                        Uri photoURI = FileProvider.getUriForFile(NuevoPacienteActivity.this,
-                                NuevoPacienteActivity.this.getApplicationContext().getPackageName() + ".provider",
-                                photoFile);
-                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                        startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-                    }
+
+                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+
                 }
 
             }
@@ -327,8 +329,7 @@ public class NuevoPacienteActivity extends AppCompatActivity {
         eliminarFotoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fotoPacienteImageView.setImageBitmap(null);
-                fotoPacienteRelativeLayout.setVisibility(View.GONE);
+                actualizarImagen(null);
             }
         });
     }
@@ -382,38 +383,62 @@ public class NuevoPacienteActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
+            //Muestro la miniatura pero después cargo la imagen completa
+            actualizarImagen((Bitmap) extras.get("data"));
             //imageBitmap = (Bitmap) extras.get("data");
-            try {
-                Bitmap uncompressedBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), Uri.parse("file:" + rutaImagen));
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                uncompressedBitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
-                byte[] bytes = baos.toByteArray();
-                imageBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                fotoPacienteImageView.setImageBitmap(imageBitmap);
-                fotoPacienteRelativeLayout.setVisibility(View.VISIBLE);
-            } catch (IOException e) {
-                Log.e(TAG, "Error al obtener la imagen desde archivo", e);
-            }
+//            new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    try {
+//                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(NuevoPacienteActivity.this.getContentResolver(), Uri.parse("file:" + rutaImagen));
+//                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//                        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
+//                        bitmap = null;
+//                        byte[] bytes = baos.toByteArray();
+//                        baos = null;
+//                        bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+//                        bytes = null;
+//                        Message m = Message.obtain();
+//                        m.what = IMAGEN_LISTA;
+//                        m.obj = bitmap;
+//                        handler.sendMessage(m);
+//                    } catch (IOException e) {
+//                        Log.e(TAG, "Error al obtener la imagen desde archivo", e);
+//                    }
+//                }
+//            }).run();
+
         }
     }
 
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = new File(Environment.getExternalStorageDirectory() + "/MiAgendaTemp/");
-        if (!storageDir.exists()) {
-            storageDir.mkdir();
-        }
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-//        File image = new File(storageDir+"/"+imageFileName+".jpg");
+//    private File createImageFile() throws IOException {
+//        // Create an image file name
+//        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+//        String imageFileName = "JPEG_" + timeStamp + "_";
+//        File storageDir = new File(Environment.getExternalStorageDirectory() + "/MiAgendaTemp/");
+//        if (!storageDir.exists()) {
+//            storageDir.mkdir();
+//        }
+//        File image = File.createTempFile(
+//                imageFileName,  /* prefix */
+//                ".jpg",         /* suffix */
+//                storageDir      /* directory */
+//        );
+////        File image = new File(storageDir+"/"+imageFileName+".jpg");
+//
+//        // Save a file: path for use with ACTION_VIEW intents
+//        rutaImagen = image.getAbsolutePath();
+//        return image;
+//    }
 
-        // Save a file: path for use with ACTION_VIEW intents
-        rutaImagen = image.getAbsolutePath();
-        return image;
+    private void actualizarImagen(Bitmap bitmap) {
+        imageBitmap = bitmap;
+        fotoPacienteImageView.setImageBitmap(bitmap);
+        if (bitmap != null) {
+            fotoPacienteRelativeLayout.setVisibility(View.VISIBLE);
+        } else {
+            fotoPacienteRelativeLayout.setVisibility(View.GONE);
+        }
     }
+
 }

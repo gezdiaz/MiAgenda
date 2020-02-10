@@ -86,4 +86,6 @@
     <string name="msg_dialogo_quitar_turno">¿Seguro deseas quitar el turno?</string>
     <string name="nombre_ver_paciente">Nombre:</string>
     <string name="datos_paciente_no_validos">Por favor ingrese datos válidos.</string>
+    <string name="por_favor_espere">Por favor espere</string>
+    <string name="guardando_paciente">Guardando paciente.</string>
 </resources>

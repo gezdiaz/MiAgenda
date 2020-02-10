@@ -1,6 +1,9 @@
 package frsf.isi.dam.gtm.miagenda.datos;
 
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Handler;
@@ -8,6 +11,8 @@ import android.os.Message;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -17,6 +22,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -25,6 +31,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+
+import frsf.isi.dam.gtm.miagenda.R;
 
 public class ArchivosCloudStorage {
 
@@ -89,7 +97,27 @@ public class ArchivosCloudStorage {
                     }
                 });
     }
-    public void saveImageEnPaciente(final String dniPaciente, Bitmap imagen, final Handler handler){
+    public void saveImageEnPaciente(final String dniPaciente, Bitmap imagen, final Handler handler, Context context){
+
+        final NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel("carga_imagen",
+                    "Carga imagen",
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            channel.setDescription("Canal de notificaciones de carga de imágenes de pacientes");
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, "carga_imagen");
+        notificationBuilder.setContentTitle("Cargando imagen")
+                .setContentText("Cargando imagen de perfil del paciente con dni: "+dniPaciente)
+                .setSmallIcon(R.drawable.ic_calendar_24px)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setOngoing(true)
+                .setProgress(100, 0, false);
+        final int notificationID = 123;
+        notificationManager.notify(notificationID, notificationBuilder.build());
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         imagen.compress(Bitmap.CompressFormat.JPEG, 50, baos);
@@ -114,6 +142,10 @@ public class ArchivosCloudStorage {
                                 });
                         Message m = Message.obtain();
                         m.what = CARGA_IMAGEN;
+                        notificationBuilder.setContentText("Se completó la carga de la imagen")
+                                .setProgress(0,0,false)
+                                .setOngoing(false);
+                        notificationManager.notify(notificationID, notificationBuilder.build());
                         handler.sendMessage(m);
                     }
                 })
@@ -123,7 +155,20 @@ public class ArchivosCloudStorage {
                         Log.d(TAG, "Error al cargar la imagen en el paciente con dni: "+dniPaciente, e);
                         Message m = Message.obtain();
                         m.what = ERROR_CARGA_IMAGEN;
+                        notificationBuilder.setContentText("Error al cargar la imagen")
+                                .setProgress(0,0,false)
+                                .setOngoing(false);
+                        notificationManager.notify(notificationID, notificationBuilder.build());
                         handler.sendMessage(m);
+                        handler.sendMessage(m);
+                    }
+                })
+                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
+                        int progress = (int)((taskSnapshot.getBytesTransferred()*1.0 / taskSnapshot.getTotalByteCount()*1.0) * 100);
+                        notificationBuilder.setProgress(100, progress, false);
+                        notificationManager.notify(notificationID, notificationBuilder.build());
                     }
                 });
     }
