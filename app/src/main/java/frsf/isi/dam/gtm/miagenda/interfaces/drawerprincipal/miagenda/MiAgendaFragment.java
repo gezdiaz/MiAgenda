@@ -34,6 +34,7 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import frsf.isi.dam.gtm.miagenda.R;
@@ -74,7 +75,7 @@ public class MiAgendaFragment extends Fragment {
         verCalendarioFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                datePicker.show(getFragmentManager(),datePicker.toString());
+                datePicker.show(getParentFragmentManager(),datePicker.toString());
             }
         });
         return view;
@@ -99,8 +100,6 @@ public class MiAgendaFragment extends Fragment {
     }
 
     private void mostrarFechaSeleccionada(Calendar fechaSeleccionada) {
-        SimpleDateFormat month_date = new SimpleDateFormat("MMMM");
-        String mesSeleccionado = month_date.format(fechaSeleccionada.getTime());
-        fecha.setText(fechaSeleccionada.get(Calendar.DATE)+" de " + mesSeleccionado + " de " + fechaSeleccionada.get(Calendar.YEAR));
+        fecha.setText(fechaSeleccionada.get(Calendar.DATE)+" de " + fechaSeleccionada.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault()) + " de " + fechaSeleccionada.get(Calendar.YEAR));
     }
 }
