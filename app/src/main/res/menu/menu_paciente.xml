@@ -3,12 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/cerrar_sesion_option_item"
-        android:orderInCategory="100"
-        android:title="@string/cerrar_sesion_option_item"
-        app:showAsAction="never" />
-
-    <item
         android:id="@+id/search_option_item"
         android:orderInCategory="100"
         android:icon="@drawable/ic_search_24px"
