@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.TimeZone;
 import java.util.Map;
 
+import io.opencensus.internal.StringUtils;
+
 public class Paciente implements Serializable {
 
     private String nombre;
@@ -29,9 +31,9 @@ public class Paciente implements Serializable {
     }
 
     public Paciente(String nombre, String apellido, String obraSocial, Date fechaNacimiento, String dni, Long telefono, String pais, String provincia, String ciudad, String calle, String numero, String departamento) {
-        //TODO la foto se setea después de que se guarde en Firebase Storage.
-        this.nombre = nombre;
-        this.apellido = apellido;
+        //la foto se setea después de que se guarde en Firebase Storage.
+        this.nombre = nombre.substring(0, 1).toUpperCase() + nombre.substring(1);
+        this.apellido = apellido.substring(0, 1).toUpperCase() + apellido.substring(1);
         this.obraSocial = obraSocial;
         this.fechaNacimiento = fechaNacimiento;
         this.dni = dni;
@@ -44,7 +46,7 @@ public class Paciente implements Serializable {
     }
 
     public void setNombre(String nombre) {
-        this.nombre = nombre;
+        this.nombre = nombre.substring(0, 1).toUpperCase() + nombre.substring(1);
     }
 
     public String getApellido() {
@@ -52,7 +54,7 @@ public class Paciente implements Serializable {
     }
 
     public void setApellido(String apellido) {
-        this.apellido = apellido;
+        this.apellido = apellido.substring(0, 1).toUpperCase() + apellido.substring(1);
     }
 
     public String getObraSocial() {
