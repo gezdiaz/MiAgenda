@@ -7,6 +7,9 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,12 +38,17 @@ import java.util.List;
 import frsf.isi.dam.gtm.miagenda.R;
 import frsf.isi.dam.gtm.miagenda.datos.DatosFirestore;
 import frsf.isi.dam.gtm.miagenda.entidades.Paciente;
+import frsf.isi.dam.gtm.miagenda.interfaces.LoginActivity;
 import frsf.isi.dam.gtm.miagenda.interfaces.NuevoPacienteActivity;
 
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class MisPacientesFragment extends Fragment {
     private static final String TAG = "MisPacientesFragment";
+
+    public MisPacientesFragment(){
+        setHasOptionsMenu(true);
+    }
 
     RecyclerView recyclerView;
     MisPacientesAdapter adapter;
@@ -73,12 +81,11 @@ public class MisPacientesFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mis_pacientes, container, false);
 
+        setHasOptionsMenu(true);
 
         recyclerView = view.findViewById(R.id.recycler_mis_pacientes);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-
-        //TODO obtener los datos de firestore
 
         datosFirestore = DatosFirestore.getInstance();
         FirestoreRecyclerOptions<Paciente> firestoreRecyclerOptions = new FirestoreRecyclerOptions.Builder<Paciente>().setQuery(datosFirestore.getAllPacientesQuery(),Paciente.class).build();
@@ -98,6 +105,30 @@ public class MisPacientesFragment extends Fragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_paciente,menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch(item.getItemId()){
+            case R.id.cerrar_sesion_option_item:{
+                Intent i1 = new Intent(getContext(), LoginActivity.class);
+                i1.putExtra(LoginActivity.SignOut, true);
+                startActivity(i1);
+                //aca iria el finish
+                break;
+            }
+            case R.id.search_option_item:{
+                //TODO Hacer la busqueda
+                break;
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
