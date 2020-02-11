@@ -38,6 +38,7 @@ dependencies {
     //Firebase
     implementation 'com.google.firebase:firebase-firestore:21.4.0'
     implementation 'com.google.firebase:firebase-auth:19.2.0'
+    implementation 'com.google.firebase:firebase-storage:19.1.1'
 
     //Play services, para iniciar con Google, usar mapas y ubicación
     implementation 'com.google.android.gms:play-services-auth:17.0.0'
@@ -45,9 +46,11 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:17.0.0'
 
     //Otras librerías Externas
-    implementation 'com.github.bumptech.glide:glide:4.8.0' //Glide para cargar imágenes desde una URL
+    implementation 'com.github.bumptech.glide:glide:4.8.0'
+    //Glide para cargar imágenes desde una URL
     annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
-    implementation 'de.hdodenhof:circleimageview:1.3.0' //CircleImageView para mostrar imágenes redondas
+    implementation 'de.hdodenhof:circleimageview:1.3.0'
+    //CircleImageView para mostrar imágenes redondas
 
     //Tests
     testImplementation 'junit:junit:4.12'

@@ -88,4 +88,6 @@
     <string name="toque_para_reservar_lbl">Toque para reservar turno</string>
     <string name="ver_pdf_snackbar">VER</string>
     <string name="datos_paciente_no_validos">Por favor ingrese datos válidos.</string>
+    <string name="por_favor_espere">Por favor espere</string>
+    <string name="guardando_paciente">Guardando paciente.</string>
 </resources>
