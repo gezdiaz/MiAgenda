@@ -13,8 +13,8 @@ import frsf.isi.dam.gtm.miagenda.R;
 
 public class TurnoOcupadoHolder extends RecyclerView.ViewHolder {
 
-    TextView horaTurno;
-   // MaterialButton modificarTurnoBtn, quitarTurnoBtn;
+    TextView horaTurno, nombrePaciente;
+
     ConstraintLayout turnoOcupadoConstraint;
 
     public TurnoOcupadoHolder(@NonNull View fila) {
@@ -22,8 +22,7 @@ public class TurnoOcupadoHolder extends RecyclerView.ViewHolder {
 
         horaTurno = fila.findViewById(R.id.hora_turno_ocupado_txt);
         turnoOcupadoConstraint = fila.findViewById(R.id.fila_turno_ocupado_layout);
-//        modificarTurnoBtn = fila.findViewById(R.id.modificar_turno_btn);
-//        quitarTurnoBtn = fila.findViewById(R.id.quitar_turno_btn);
+        nombrePaciente = fila.findViewById(R.id.nombre_paciente_turno_ocupado_lbl);
 
     }
 }

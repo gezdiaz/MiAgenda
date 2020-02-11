@@ -3,32 +3,31 @@ package frsf.isi.dam.gtm.miagenda.interfaces.drawerprincipal.miagenda;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.AlertDialogLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 import frsf.isi.dam.gtm.miagenda.R;
+import frsf.isi.dam.gtm.miagenda.datos.DatosFirestore;
 import frsf.isi.dam.gtm.miagenda.entidades.Paciente;
+import frsf.isi.dam.gtm.miagenda.entidades.Turno;
 import frsf.isi.dam.gtm.miagenda.interfaces.VerPacienteActivity;
-import io.opencensus.resource.Resource;
 
 public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -37,35 +36,47 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private final String cancelarDialogo = "x       ";
 
-    private ArrayList<Integer> pruebaLista = new ArrayList<>();
+    private MiAgendaFragment fragment;
 
     private MaterialButton verPacienteDialogBtn, seleccionarPacienteDialogBtn;
     private AlertDialog modificarTurnoDialogo;
     private TextInputEditText descripcionEdit;
+    private TextView nombrePaceinteTxt, fechaTurnoTxt;
 
     private String TAG = "MiAgendaActivity.MiAgendaAdapter";
 
-    //TODO tiene que tener una lista de turnos
-    int cant = 0;
+    private List<Turno> listTurnos;
+    private Calendar fechaSeleccionada;
 
-    public MiAgendaAdapter(){
-        //TODO recibe una lista de turnos
-        cant = 10;
+    public MiAgendaAdapter(List<Turno> listTurnos, Calendar fechaSeleccionada, MiAgendaFragment fragment) {
+        this.listTurnos = listTurnos;
+        this.fechaSeleccionada = fechaSeleccionada;
+        this.fragment = fragment;
+    }
+
+    public void setFecha(Calendar fecha) {
+        fechaSeleccionada = fecha;
+    }
+
+    public void setListaTurnos(List<Turno> listTurnos) {
+        this.listTurnos = listTurnos;
     }
 
     @Override
     public int getItemViewType(int position) {
-        //TODO usar tipo de turno para definir tipo de view. Para esto hay que saber que tipo de turno esta en la posicion position de la lista de turnos.
-        int tipo = (int)((Math.random()*10)%2);
-        pruebaLista.add(tipo);
-        return pruebaLista.get(position);
+        //TODO usar tipo de turno para definir tipo de view. Para esto hay que saber que tipo de turno esta en la posición position de la lista de turnos.
+        if (listTurnos.get(position).isDisponible()) {
+            return TURNO_LIBRE;
+        } else {
+            return TURNO_OCUPADO;
+        }
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
-        switch (viewType){
+        switch (viewType) {
             case TURNO_LIBRE:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fila_turno_libre, parent, false);
                 return new TurnoLibreHolder(view);
@@ -73,25 +84,27 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fila_turno_ocupado, parent, false);
                 return new TurnoOcupadoHolder(view);
             default:
-                Log.d(TAG, "Opción no válida en MiAgenda adapter.");
+                Log.wtf(TAG, "Opción no válida en MiAgenda adapter.");
                 return null;
         }
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        switch (getItemViewType(position)){
-            case TURNO_LIBRE:{
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
+        switch (getItemViewType(position)) {
+            case TURNO_LIBRE: {
                 //TODO mostrar turno libre
-
                 TurnoLibreHolder turnoLibreHolder = (TurnoLibreHolder) holder;
                 turnoLibreHolder.turnoLibreConstraintLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        AlertDialog reservarDialog = buildReservarDialog(view);
+                        AlertDialog reservarDialog = buildReservarDialog(view, position);
                         reservarDialog.show();
                     }
                 });
+                Calendar hora = (Calendar) fechaSeleccionada.clone();
+                hora.add(Calendar.MINUTE, MiAgendaFragment.tiempoTurno * position);
+                turnoLibreHolder.horaTurno.setText(hora.get(Calendar.HOUR_OF_DAY) + ":" + (hora.get(Calendar.MINUTE) == 0 ? "00" : hora.get(Calendar.MINUTE)) + " hs.");
                 break;
             }
 
@@ -101,27 +114,29 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 turnoOcupadoHolder.turnoOcupadoConstraint.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        AlertDialog verTurnoDialog = buildVerTurnoDialogo(view);
+                        AlertDialog verTurnoDialog = buildVerTurnoDialogo(view, position);
                         verTurnoDialog.show();
                     }
                 });
+                Calendar hora = Calendar.getInstance();
+                hora.setTime(listTurnos.get(position).getFecha());
+                turnoOcupadoHolder.horaTurno.setText(hora.get(Calendar.HOUR_OF_DAY) + ":" + (hora.get(Calendar.MINUTE) == 0 ? "00" : hora.get(Calendar.MINUTE)) + " hs.");
+                turnoOcupadoHolder.nombrePaciente.setText(listTurnos.get(position).getNombrePaciente());
                 break;
         }
     }
 
-
-
     @Override
     public int getItemCount() {
-        return cant;
+        return listTurnos.size();
     }
 
 
-    private AlertDialog buildReservarDialog(final View view) {
+    private AlertDialog buildReservarDialog(final View view, final int turnoPos) {
 
         final AlertDialog reservarDialogo;
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(view.getContext());
-        LayoutInflater inflater =  (LayoutInflater)view.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) view.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View dialogView = inflater.inflate(R.layout.dialogo_modificar_turno, null);
         builder.setView(dialogView);
 
@@ -129,6 +144,14 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 //TODO Reservar turno
+                //Paciente falso para probar
+                Paciente p = new Paciente("Gastón", "Díaz", "OSECAC", new Date(), "40267721", 155046210l, "Argentina", "fdgeg", "sgerg", "sfger", "fdbe", "fge");
+                Calendar fechaTurno = (Calendar)fechaSeleccionada.clone();
+                fechaTurno.add(Calendar.MINUTE, MiAgendaFragment.tiempoTurno*turnoPos);
+                Turno t = new Turno(descripcionEdit.getText().toString(), p.getApellido()+", "+p.getNombre(), fechaTurno.getTime());
+                t.setDisponible(false);
+                t.setPosicion(turnoPos);
+                DatosFirestore.getInstance().saveTurno(t, p.getDni(), fragment.handler);
             }
         });
 
@@ -142,10 +165,24 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         reservarDialogo = builder.create();
 
         descripcionEdit = dialogView.findViewById(R.id.tuno_descripcion_edit_text);
+        fechaTurnoTxt = dialogView.findViewById(R.id.fecha_turno_editado_txt);
+        nombrePaceinteTxt = dialogView.findViewById(R.id.turno_nombre_paciente_txt);
         seleccionarPacienteDialogBtn = dialogView.findViewById(R.id.turno_seleccionar_paciente_btn);
         seleccionarPacienteDialogBtn.setVisibility(View.VISIBLE);
         verPacienteDialogBtn = dialogView.findViewById(R.id.turno_ver_paciente_btn);
         verPacienteDialogBtn.setVisibility(View.GONE);
+
+
+        Calendar hora = (Calendar) fechaSeleccionada.clone();
+        hora.add(Calendar.MINUTE, 30 * turnoPos);
+        fechaTurnoTxt.setText("Fecha: "
+                + hora.get(Calendar.DAY_OF_MONTH)
+                + "/" + (hora.get(Calendar.MONTH)+1)
+                + "/" + hora.get(Calendar.YEAR)
+                + " - " + hora.get(Calendar.HOUR_OF_DAY)
+                + ":" + (hora.get(Calendar.MINUTE) == 0 ? "00" : hora.get(Calendar.MINUTE))
+                + " hs.");
+        hora = null;
 
         reservarDialogo.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
@@ -163,12 +200,12 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return reservarDialogo;
     }
 
-    private AlertDialog buildVerTurnoDialogo(final View view){
+    private AlertDialog buildVerTurnoDialogo(final View view, int turnoPos) {
 
         final AlertDialog verTurnoDialogo;
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(view.getContext());
 
-        LayoutInflater inflater =  (LayoutInflater)view.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) view.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View dialogView = inflater.inflate(R.layout.dialogo_modificar_turno, null);
         builder.setView(dialogView);
 
@@ -196,10 +233,29 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         verTurnoDialogo = builder.create();
 
         descripcionEdit = dialogView.findViewById(R.id.tuno_descripcion_edit_text);
+        nombrePaceinteTxt = dialogView.findViewById(R.id.turno_nombre_paciente_txt);
+        fechaTurnoTxt = dialogView.findViewById(R.id.fecha_turno_editado_txt);
         seleccionarPacienteDialogBtn = dialogView.findViewById(R.id.turno_seleccionar_paciente_btn);
         seleccionarPacienteDialogBtn.setVisibility(View.GONE);
         verPacienteDialogBtn = dialogView.findViewById(R.id.turno_ver_paciente_btn);
         verPacienteDialogBtn.setVisibility(View.VISIBLE);
+
+        descripcionEdit.setText(listTurnos.get(turnoPos).getDescripcion());
+        nombrePaceinteTxt.setText((listTurnos.get(turnoPos).getNombrePaciente()));
+        //No puedo usar la fecha del turno porque se guarda mal la hora ¯\_(ツ)_/¯
+//        SimpleDateFormat sdf = new SimpleDateFormat("'Fecha: 'dd/MM/yy' - 'HH:MM' hs.'");
+//        fechaTurnoTxt.setText(sdf.format(listTurnos.get(turnoPos).getFecha()));
+        Calendar hora = (Calendar) fechaSeleccionada.clone();
+        hora.add(Calendar.MINUTE, 30 * turnoPos);
+        fechaTurnoTxt.setText("Fecha: "
+                + hora.get(Calendar.DAY_OF_MONTH)
+                + "/" + (hora.get(Calendar.MONTH)+1)
+                + "/" + hora.get(Calendar.YEAR)
+                + " - " + hora.get(Calendar.HOUR_OF_DAY)
+                + ":" + (hora.get(Calendar.MINUTE) == 0 ? "00" : hora.get(Calendar.MINUTE))
+                + " hs.");
+        hora = null;
+
 
         verTurnoDialogo.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
@@ -209,15 +265,14 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 verTurnoDialogo.getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(view.getResources().getColor(R.color.colorCancelar));
             }
         });
-
         verPacienteDialogBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //TODO ir a la pantallar para ver paciente
                 Intent i1 = new Intent(view.getContext(), VerPacienteActivity.class);
                 Calendar pruebaCalendario = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-                pruebaCalendario.set(1998,4,13);
-                i1.putExtra("paciente", new Paciente("Intent ", "Ver paciente Btn", "OS", pruebaCalendario.getTime(), "40905", 123456789L, "Argentina", "Santa fe","Escalada", "S/N", "493", "Sin dpto"));
+                pruebaCalendario.set(1998, 4, 13);
+                i1.putExtra("paciente", new Paciente("Intent ", "Ver paciente Btn", "OS", pruebaCalendario.getTime(), "40905", 123456789L, "Argentina", "Santa fe", "Escalada", "S/N", "493", "Sin dpto"));
                 view.getContext().startActivity(i1);
             }
         });

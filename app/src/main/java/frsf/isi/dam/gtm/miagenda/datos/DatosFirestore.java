@@ -45,8 +45,8 @@ public class DatosFirestore {
     public static final int ERROR_SAVE_PACIENTE = -4;
     public static final int SAVE_TURNO = 5;
     public static final int ERROR_SAVE_TURNO = -5;
-    private static final int GETALL_TURNOS = 6;
-    private static final int ERROR_GETALL_TURNOS = -6;
+    public static final int GETALL_TURNOS = 6;
+    public static final int ERROR_GETALL_TURNOS = -6;
 
     private static DatosFirestore instance;
     private static final String TAG = "DatosFirestore";
@@ -246,8 +246,8 @@ public class DatosFirestore {
 
         db.collectionGroup(idColeccionTurnos)
                 .whereEqualTo("propietario", datosUsuario.getId())
-                .whereGreaterThanOrEqualTo("fechaHora", fechaInicio)
-                .whereLessThanOrEqualTo("fechaHora", fechaFin)
+                .whereGreaterThanOrEqualTo("fecha", fechaInicio)
+                .whereLessThanOrEqualTo("fecha", fechaFin)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
