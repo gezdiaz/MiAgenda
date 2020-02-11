@@ -211,7 +211,10 @@ public class MisPacientesFragment extends Fragment {
                         Log.wtf(TAG, "Entro al default del Switch del Spinner");
                     }
                 }
-                //Llamar metodo para actualizar el RecyclerView con categoriaBusqueda y buscarEdit.getText().toString()
+                char finalChar = buscarEdit.getText().toString().charAt(buscarEdit.getText().toString().length()-1);
+                finalChar++;
+                String busquedaMax = buscarEdit.getText().toString().substring(0,buscarEdit.getText().toString().length()-2)+finalChar;
+                //Llamar a la funcion con categoriaBusqueda, buscarEdit.getText().toSring() y busquedaMax
             }
         });
 
