@@ -90,4 +90,6 @@
     <string name="datos_paciente_no_validos">Por favor ingrese datos válidos.</string>
     <string name="por_favor_espere">Por favor espere</string>
     <string name="guardando_paciente">Guardando paciente.</string>
+    <string name="llamar_btn">Llamar</string>
+    <string name="llamada_item_option">Llamada</string>
 </resources>

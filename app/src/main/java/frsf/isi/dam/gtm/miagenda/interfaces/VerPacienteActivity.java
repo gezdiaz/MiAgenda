@@ -14,8 +14,10 @@ import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -47,15 +49,17 @@ import frsf.isi.dam.gtm.miagenda.interfaces.listahistoriaclinica.HistoriaClinica
 
 public class VerPacienteActivity extends AppCompatActivity implements OnMapReadyCallback {
 
+    private static final String TAG = "VerPacienteActivity";
     private Toolbar toolbar;
     private MaterialTextView dniPacienteLbl, edadPacienteLbl, obraSocialPacienteLbl, telefonoPacienteLbl, nombrePacienteLbl;
     private TextView masInfoMapaLbl;
     private MaterialButton verHistoriaClinicaBtn;
     private GoogleMap googleMap;
     //Variables para probar los datos del pacientes
-    private String dni = "40905305", edad="21", obraSocial="IAPOS", telefono="15431193",provincia="Santa fe", ciudad="San justo", calle = "Belgrano", numero="200";
+    private String dni = "40905305", edad = "21", obraSocial = "IAPOS", telefono = "15431193", provincia = "Santa fe", ciudad = "San justo", calle = "Belgrano", numero = "200";
     private boolean permisoLocalizacionAceptado;
     private Paciente p;
+    private Intent intentLlamada;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +75,7 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
         //getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_arrow);// set drawable icon
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        SupportMapFragment mapFragment = (SupportMapFragment)  getSupportFragmentManager().findFragmentById(R.id.ver_paciente_map);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.ver_paciente_map);
         mapFragment.getMapAsync(this);
 
         dniPacienteLbl = findViewById(R.id.dni_paciente_lbl);
@@ -82,17 +86,18 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
         nombrePacienteLbl = findViewById(R.id.nombre_paciente_lbl);
         masInfoMapaLbl = findViewById(R.id.mas_info_mapa_lbl);
 
-        nombrePacienteLbl.append(" "+p.getNombre()+" "+p.getApellido());
-        dniPacienteLbl.append(" " +p.getDni());
-        edadPacienteLbl.append(" " +p.getEdad() + " años");
-        obraSocialPacienteLbl.append(" " +p.getObraSocial());
-        telefonoPacienteLbl.append(" " +p.getTelefono());
+
+        nombrePacienteLbl.append(" " + p.getNombre() + " " + p.getApellido());
+        dniPacienteLbl.append(" " + p.getDni());
+        edadPacienteLbl.append(" " + p.getEdad() + " años");
+        obraSocialPacienteLbl.append(" " + p.getObraSocial());
+        telefonoPacienteLbl.append(" " + p.getTelefono());
 
         verHistoriaClinicaBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i1 = new Intent(getApplicationContext(), HistoriaClinicaActivity.class);
-                i1.putExtra("paciente",p);
+                i1.putExtra("paciente", p);
                 startActivity(i1);
             }
         });
@@ -100,7 +105,7 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_opcion, menu);
+        getMenuInflater().inflate(R.menu.menu_llamada, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -116,6 +121,30 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
             }
             case android.R.id.home: {
                 onBackPressed();
+                break;
+            }
+            case R.id.llamada_option_item:{
+                intentLlamada = new Intent(Intent.ACTION_CALL);
+                intentLlamada.setData(Uri.parse("tel:" + String.valueOf(p.getTelefono())));
+                //Esto lo pongo porque necesita API 23 y estamos usando 22
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                        // TODO: Consider calling
+                        //    Activity#requestPermissions
+                        // here to request the missing permissions, and then overriding
+                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                        //                                          int[] grantResults)
+                        // to handle the case where the user grants the permission. See the documentation
+                        // for Activity#requestPermissions for more details.
+                        ActivityCompat.requestPermissions(VerPacienteActivity.this, new String[]{Manifest.permission.CALL_PHONE}, 8888);
+                        Log.d(TAG, "Necesita Permisos");
+                        //return;
+                    }
+                    else{
+                        startActivity(intentLlamada);
+                    }
+                }
+
                 break;
             }
         }
@@ -139,7 +168,7 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
-            case 9999: {
+            case 9999:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     permisoLocalizacionAceptado = true;
                 }
@@ -161,7 +190,11 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
 //                    }
                 }
                 inicializarMapa();
-            }
+                break;
+            case 8888:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    startActivity(intentLlamada);
+                }
         }
     }
     private void inicializarMapa(){
