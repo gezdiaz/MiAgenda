@@ -136,8 +136,11 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
                         Log.d(TAG, "Necesita Permisos");
                         //return;
                     }
+                    else{
+                        startActivity(intentLlamada);
+                    }
                 }
-                startActivity(intentLlamada);
+
                 break;
             }
         }
