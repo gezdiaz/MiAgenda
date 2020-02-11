@@ -39,6 +39,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore:21.4.0'
     implementation 'com.google.firebase:firebase-auth:19.2.0'
     implementation 'com.google.firebase:firebase-storage:19.1.1'
+    implementation 'com.firebaseui:firebase-ui-firestore:6.2.0'
 
     //Play services, para iniciar con Google, usar mapas y ubicación
     implementation 'com.google.android.gms:play-services-auth:17.0.0'

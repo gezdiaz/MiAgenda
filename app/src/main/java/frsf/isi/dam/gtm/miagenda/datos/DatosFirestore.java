@@ -7,6 +7,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -16,6 +17,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -28,6 +30,8 @@ import java.util.Map;
 
 import frsf.isi.dam.gtm.miagenda.entidades.Paciente;
 import frsf.isi.dam.gtm.miagenda.entidades.Turno;
+import frsf.isi.dam.gtm.miagenda.interfaces.drawerprincipal.PrincipalActivity;
+import frsf.isi.dam.gtm.miagenda.interfaces.drawerprincipal.mispacientes.MisPacientesAdapter;
 
 public class DatosFirestore {
 
@@ -289,6 +293,13 @@ public class DatosFirestore {
                     }
                 });
 
+    }
+
+    public Query getAllPacientesQuery() {
+
+        Query query = datosUsuario.collection(idColeccionPacientes).orderBy("apellido" , Query.Direction.ASCENDING).orderBy("nombre", Query.Direction.ASCENDING);
+
+        return query;
     }
 
 }

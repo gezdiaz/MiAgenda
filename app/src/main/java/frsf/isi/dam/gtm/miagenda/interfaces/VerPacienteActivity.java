@@ -10,6 +10,7 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -18,6 +19,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
@@ -47,6 +49,7 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
 
     private Toolbar toolbar;
     private MaterialTextView dniPacienteLbl, edadPacienteLbl, obraSocialPacienteLbl, telefonoPacienteLbl, nombrePacienteLbl;
+    private TextView masInfoMapaLbl;
     private MaterialButton verHistoriaClinicaBtn;
     private GoogleMap googleMap;
     //Variables para probar los datos del pacientes
@@ -77,6 +80,7 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
         telefonoPacienteLbl = findViewById(R.id.telefono_paciente_lbl);
         verHistoriaClinicaBtn = findViewById(R.id.ver_historia_btn);
         nombrePacienteLbl = findViewById(R.id.nombre_paciente_lbl);
+        masInfoMapaLbl = findViewById(R.id.mas_info_mapa_lbl);
 
         nombrePacienteLbl.append(" "+p.getNombre()+" "+p.getApellido());
         dniPacienteLbl.append(" " +p.getDni());
@@ -180,21 +184,33 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
             t.show();
         }
 
-        Address pacienteAddress = addressList.get(0);
 
-        LatLng pacienteUbicacionLatLng = new LatLng(pacienteAddress.getLatitude(),pacienteAddress.getLongitude());
+        if(addressList.size() != 0) {
 
-        Marker marker = googleMap.addMarker(new MarkerOptions()
-                                                .position(pacienteUbicacionLatLng)
-                                                .title((p.getDireccion().getStringToShow()).toUpperCase()));
+            masInfoMapaLbl.setText(R.string.mapa_mas_info);
+
+            Address pacienteAddress = addressList.get(0);
+
+            LatLng pacienteUbicacionLatLng = new LatLng(pacienteAddress.getLatitude(),pacienteAddress.getLongitude());
+
+            Marker marker = googleMap.addMarker(new MarkerOptions()
+                    .position(pacienteUbicacionLatLng)
+                    .title((p.getDireccion().getStringToShow()).toUpperCase()));
 
 
-        CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(pacienteUbicacionLatLng)
-                .zoom(15)
-                .build();
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(pacienteUbicacionLatLng)
+                    .zoom(15)
+                    .build();
 
-        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+        }
+        else{
+            masInfoMapaLbl.setText(getString(R.string.ubicacion_no_encontrada)+"\n" + p.getDireccion().getStringToShow()) ;
+            masInfoMapaLbl.setTextColor(Color.RED);
+        }
+
     }
 
 }
