@@ -153,7 +153,7 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         long difMilis = horaSeleccionada.getTimeInMillis() - inicio.getTimeInMillis();
         double difHoras = difMilis/3.6e+6;
         Log.d(TAG, "Diferencia en horas: "+difHoras);
-        int pos = (int)((difHoras/60)*MiAgendaFragment.tiempoTurno);
+        int pos = (int)((difHoras*60)/MiAgendaFragment.tiempoTurno);
         Log.d(TAG, "pos en funcion: "+pos);
         return pos;
     }
