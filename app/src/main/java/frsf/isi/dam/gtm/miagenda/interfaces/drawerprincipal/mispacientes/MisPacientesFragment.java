@@ -61,36 +61,17 @@ public class MisPacientesFragment extends Fragment {
     private int posicionItemSpinerSeleccionada = 0;
     private String categoriaBusqueda;
 
+    private RecyclerView recyclerView;
+    private MisPacientesAdapter adapter;
+    private FloatingActionButton fabMisPacientes;
+    private DatosFirestore datosFirestore;
+    private FirestoreRecyclerOptions<Paciente> firestoreRecyclerOptions;
+
     public MisPacientesFragment(){
         setHasOptionsMenu(true);
     }
 
-    RecyclerView recyclerView;
-    MisPacientesAdapter adapter;
-    FloatingActionButton fabMisPacientes;
-    DatosFirestore datosFirestore;
-//    private Handler handler = new Handler(Looper.myLooper()){
-//        @Override
-//        public void handleMessage(@NonNull Message msg) {
-//            switch (msg.what){
-//                case DatosFirestore.GETALL_PACIENTES:{
-//                    List<Paciente> pacientesRecibidos = (List<Paciente>) msg.obj;
-//                    ((MisPacientesAdapter) adapter).setPlatoViewDataSet(pacientesRecibidos);
-//                    adapter.notifyDataSetChanged();
-//                    if(progressDialog.isShowing()){
-//                        progressDialog.cancel();
-//                    }
-//                    break;
-//                }
-//                case DatosFirestore.ERROR_GETALL_PACIENTES:{
-//                    Toast t = Toast.makeText(DishViewActivity.this, R.string.databaseGetAllDishesError, Toast.LENGTH_LONG);
-//                    t.show();
-//                    finish();
-//                    break;
-//                }
-//            }
-//        }
-//    };
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -103,12 +84,13 @@ public class MisPacientesFragment extends Fragment {
 
 
         datosFirestore = DatosFirestore.getInstance();
-        FirestoreRecyclerOptions<Paciente> firestoreRecyclerOptions = new FirestoreRecyclerOptions.Builder<Paciente>().setQuery(datosFirestore.getAllPacientesQuery(),Paciente.class).build();
+
+        firestoreRecyclerOptions = new FirestoreRecyclerOptions.Builder<Paciente>().setQuery( datosFirestore.getAllPacientesQuery(),Paciente.class).build();
 
         adapter = new MisPacientesAdapter(firestoreRecyclerOptions);
         adapter.notifyDataSetChanged();
-
         recyclerView.setAdapter(adapter);
+
         fabMisPacientes = view.findViewById(R.id.fab_mis_pacientes);
         fabMisPacientes.setColorFilter(getResources().getColor(R.color.colorTextSecondary));
         fabMisPacientes.setOnClickListener(new View.OnClickListener() {
@@ -165,16 +147,15 @@ public class MisPacientesFragment extends Fragment {
 
     private androidx.appcompat.app.AlertDialog buildBuscarDialog(){
         final androidx.appcompat.app.AlertDialog buscarDialog;
-        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getContext());
+        final MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getContext());
         LayoutInflater inflater =  (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View dialogView = inflater.inflate(R.layout.dialogo_buscar, null);
         builder.setView(dialogView);
-        buscarDialog = builder.create();
 
         buscarEdit = dialogView.findViewById(R.id.buscar_edit_text);
         buscarSpinner = dialogView.findViewById(R.id.buscar_spinner);
 
-        ArrayAdapter<CharSequence> adapterSpinner = ArrayAdapter.createFromResource(getContext(), R.array.buscar_array, android.R.layout.simple_spinner_item);
+        final ArrayAdapter<CharSequence> adapterSpinner = ArrayAdapter.createFromResource(getContext(), R.array.buscar_array, android.R.layout.simple_spinner_item);
         adapterSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         buscarSpinner.setAdapter(adapterSpinner);
 
@@ -211,10 +192,28 @@ public class MisPacientesFragment extends Fragment {
                         Log.wtf(TAG, "Entro al default del Switch del Spinner");
                     }
                 }
-                char finalChar = buscarEdit.getText().toString().charAt(buscarEdit.getText().toString().length()-1);
-                finalChar++;
-                String busquedaMax = buscarEdit.getText().toString().substring(0,buscarEdit.getText().toString().length()-2)+finalChar;
-                //Llamar a la funcion con categoriaBusqueda, buscarEdit.getText().toSring() y busquedaMax
+
+                if(buscarEdit.getText().toString().isEmpty()){
+
+                    mostrarListaPaciente(null, null,null);
+                }
+                else {
+                    String busquedaUsuario;
+                    char finalChar = buscarEdit.getText().toString().charAt(buscarEdit.getText().toString().length() - 1);
+                    finalChar++;
+
+                    String busquedaMax;
+                    if (buscarEdit.getText().toString().length() > 1) {
+                        busquedaUsuario = buscarEdit.getText().toString().substring(0,1).toUpperCase().concat(buscarEdit.getText().toString().substring(1));
+                        busquedaMax = busquedaUsuario.substring(0, buscarEdit.getText().toString().length() - 1) + finalChar;
+                    } else {
+                        busquedaUsuario = buscarEdit.getText().toString().toUpperCase();
+                        busquedaMax = String.valueOf(finalChar).toUpperCase();
+                    }
+                    //Llamar a la funcion con categoriaBusqueda, buscarEdit.getText().toSring() y busquedaMax
+                    mostrarListaPaciente(categoriaBusqueda, busquedaUsuario,busquedaMax);
+                }
+
             }
         });
 
@@ -225,12 +224,35 @@ public class MisPacientesFragment extends Fragment {
             }
         });
 
+        buscarDialog = builder.create();
 
-
-
-
-
-
+        buscarDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                buscarDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.colorCancelar));
+            }
+        });
         return buscarDialog;
+    }
+
+    private void mostrarListaPaciente(String categoriaBusqueda, String busquedaUsuario, String busquedaMax) {
+
+        if(busquedaUsuario!=null){
+            Log.d(TAG,"lo que el usuario escribio: " +  busquedaUsuario);
+            Log.d(TAG, "categoria busqueda: " +categoriaBusqueda);
+            Log.d(TAG,"hasta donde tiene que buscar: " +  busquedaMax);
+        }
+
+        if(categoriaBusqueda == null && busquedaUsuario == null && busquedaMax == null){
+
+            firestoreRecyclerOptions= new FirestoreRecyclerOptions.Builder<Paciente>().setQuery(datosFirestore.getAllPacientesQuery(),Paciente.class).build();
+            adapter.updateOptions(firestoreRecyclerOptions);
+
+        }
+        else{
+            firestoreRecyclerOptions= new FirestoreRecyclerOptions.Builder<Paciente>().setQuery(datosFirestore.getPacientesPorBusqueda(categoriaBusqueda,busquedaUsuario,busquedaMax),Paciente.class).build();
+            adapter.updateOptions(firestoreRecyclerOptions);
+        }
+
     }
 }
