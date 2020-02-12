@@ -21,6 +21,8 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -36,6 +38,7 @@ import frsf.isi.dam.gtm.miagenda.R;
 import frsf.isi.dam.gtm.miagenda.datos.DatosFirestore;
 import frsf.isi.dam.gtm.miagenda.entidades.Paciente;
 import frsf.isi.dam.gtm.miagenda.interfaces.NuevoPacienteActivity;
+import frsf.isi.dam.gtm.miagenda.interfaces.drawerprincipal.PrincipalActivity;
 
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
@@ -45,7 +48,7 @@ public class MisPacientesFragment extends Fragment {
     RecyclerView recyclerView;
     MisPacientesAdapter adapter;
     FloatingActionButton fabMisPacientes;
-    DatosFirestore datosFirestore;
+    Snackbar avisoSeleccion;
 //    private Handler handler = new Handler(Looper.myLooper()){
 //        @Override
 //        public void handleMessage(@NonNull Message msg) {
@@ -80,10 +83,21 @@ public class MisPacientesFragment extends Fragment {
 
         //TODO obtener los datos de firestore
 
-        datosFirestore = DatosFirestore.getInstance();
+        DatosFirestore datosFirestore = DatosFirestore.getInstance();
         FirestoreRecyclerOptions<Paciente> firestoreRecyclerOptions = new FirestoreRecyclerOptions.Builder<Paciente>().setQuery(datosFirestore.getAllPacientesQuery(),Paciente.class).build();
 
-        adapter = new MisPacientesAdapter(firestoreRecyclerOptions);
+        Log.d(TAG, "Arguments recibidos: "+getArguments());
+
+        boolean modoseleccionar = false;
+        Bundle arguments = getArguments();
+        if(arguments != null && arguments.getBoolean("seleccionarPaciente", false)){
+            //Tiene que seleccionar un paciente
+            modoseleccionar = true;
+            avisoSeleccion = Snackbar.make(getActivity().findViewById(R.id.coordinator_layout), "Seleccionando paciente para turno", Snackbar.LENGTH_INDEFINITE);
+                    avisoSeleccion.show();
+        }
+
+        adapter = new MisPacientesAdapter(firestoreRecyclerOptions, modoseleccionar, this);
         adapter.notifyDataSetChanged();
 
         recyclerView.setAdapter(adapter);
@@ -111,5 +125,12 @@ public class MisPacientesFragment extends Fragment {
         super.onStop();
         //Para evitar que la aplicacion siempre este escuchando cambios de la base de datos (por ser de tiempo real) aunque no este en esta actividad.
         adapter.stopListening();
+    }
+
+    public void responderPaciente(Paciente p) {
+        if(avisoSeleccion.isShown()) {
+            avisoSeleccion.dismiss();
+        }
+        ((PrincipalActivity) getActivity()).responderPaciente(p);
     }
 }

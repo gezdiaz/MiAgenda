@@ -3,6 +3,7 @@ package frsf.isi.dam.gtm.miagenda.interfaces.drawerprincipal.miagenda;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,11 +16,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -39,7 +42,6 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private MiAgendaFragment fragment;
 
     private MaterialButton verPacienteDialogBtn, seleccionarPacienteDialogBtn;
-    private AlertDialog modificarTurnoDialogo;
     private TextInputEditText descripcionEdit;
     private TextView nombrePaceinteTxt, fechaTurnoTxt;
 
@@ -64,7 +66,6 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public int getItemViewType(int position) {
-        //TODO usar tipo de turno para definir tipo de view. Para esto hay que saber que tipo de turno esta en la posición position de la lista de turnos.
         if (listTurnos.get(position).isDisponible()) {
             return TURNO_LIBRE;
         } else {
@@ -98,7 +99,7 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 turnoLibreHolder.turnoLibreConstraintLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        AlertDialog reservarDialog = buildReservarDialog(view, position);
+                        AlertDialog reservarDialog = buildReservarDialog(position, null, null);
                         reservarDialog.show();
                     }
                 });
@@ -114,7 +115,7 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 turnoOcupadoHolder.turnoOcupadoConstraint.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        AlertDialog verTurnoDialog = buildVerTurnoDialogo(view, position);
+                        AlertDialog verTurnoDialog = buildVerTurnoDialogo(position);
                         verTurnoDialog.show();
                     }
                 });
@@ -132,11 +133,36 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
 
-    private AlertDialog buildReservarDialog(final View view, final int turnoPos) {
+    public void retomarCreacionTurno(Paciente p, Bundle datosIngresados){
+        Calendar horaSeleccionada = (Calendar) datosIngresados.get("horaSeleccionada");
+        String descripcionIngresada = datosIngresados.getString("descripcionIngresada","");
+        int pos = getPosicionDeHora(horaSeleccionada);
+        Log.d(TAG, "Posicion calculada: "+pos);
+        buildReservarDialog(pos, descripcionIngresada, p).show();
+    }
+
+    private int getPosicionDeHora(Calendar horaSeleccionada) {
+        //hora = horaInicio + (pos*timepoTurno minutos)
+        //hora = horaInicio + (pos*timepoTurno minutos)/60 horas
+        //pos = (hora - horaInicio)*60/tiempoTurno
+        Calendar inicio = (Calendar) horaSeleccionada.clone();
+        inicio.set(Calendar.HOUR_OF_DAY, MiAgendaFragment.horaInicio);
+        inicio.set(Calendar.MINUTE, 0);
+        inicio.set(Calendar.SECOND, 0);
+        inicio.set(Calendar.MILLISECOND, 0);
+        long difMilis = horaSeleccionada.getTimeInMillis() - inicio.getTimeInMillis();
+        double difHoras = difMilis/3.6e+6;
+        Log.d(TAG, "Diferencia en horas: "+difHoras);
+        int pos = (int)((difHoras/60)*MiAgendaFragment.tiempoTurno);
+        Log.d(TAG, "pos en funcion: "+pos);
+        return pos;
+    }
+
+    private AlertDialog buildReservarDialog(final int turnoPos, String descripcionIngresada, final Paciente pacienteSeleccionado) {
 
         final AlertDialog reservarDialogo;
-        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(view.getContext());
-        LayoutInflater inflater = (LayoutInflater) view.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(fragment.getContext());
+        LayoutInflater inflater = (LayoutInflater) fragment.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View dialogView = inflater.inflate(R.layout.dialogo_modificar_turno, null);
         builder.setView(dialogView);
 
@@ -145,13 +171,15 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             public void onClick(DialogInterface dialogInterface, int i) {
                 //TODO Reservar turno
                 //Paciente falso para probar
-                Paciente p = new Paciente("Gastón", "Díaz", "OSECAC", new Date(), "40267721", 155046210l, "Argentina", "fdgeg", "sgerg", "sfger", "fdbe", "fge");
+//                Paciente p = new Paciente("Gastón", "Díaz", "OSECAC", new Date(), "40267721", 155046210l, "Argentina", "fdgeg", "sgerg", "sfger", "fdbe", "fge");
                 Calendar fechaTurno = (Calendar)fechaSeleccionada.clone();
                 fechaTurno.add(Calendar.MINUTE, MiAgendaFragment.tiempoTurno*turnoPos);
-                Turno t = new Turno(descripcionEdit.getText().toString(), p.getApellido()+", "+p.getNombre(), fechaTurno.getTime());
-                t.setDisponible(false);
-                t.setPosicion(turnoPos);
-                DatosFirestore.getInstance().saveTurno(t, p.getDni(), fragment.handler);
+//                Turno t = new Turno(descripcionEdit.getText().toString(), p.getApellido()+", "+p.getNombre(), fechaTurno.getTime());
+//                t.setDisponible(false);
+//                t.setPosicion(turnoPos);
+//                DatosFirestore.getInstance().saveTurno(t, p.getDni(), fragment.handler);
+                String descripcion = descripcionEdit.getText().toString();
+                guardarTurno(turnoPos, descripcion, fechaTurno, pacienteSeleccionado);
             }
         });
 
@@ -172,6 +200,9 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         verPacienteDialogBtn = dialogView.findViewById(R.id.turno_ver_paciente_btn);
         verPacienteDialogBtn.setVisibility(View.GONE);
 
+        if(descripcionIngresada != null){
+            descripcionEdit.setText(descripcionIngresada);
+        }
 
         Calendar hora = (Calendar) fechaSeleccionada.clone();
         hora.add(Calendar.MINUTE, 30 * turnoPos);
@@ -187,25 +218,60 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         reservarDialogo.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialogInterface) {
-                reservarDialogo.getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(view.getResources().getColor(R.color.colorCancelar));
+                reservarDialogo.getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(fragment.getResources().getColor(R.color.colorCancelar));
             }
         });
+
+        if(pacienteSeleccionado != null){
+            seleccionarPacienteDialogBtn.setText(R.string.cambiar_paciente);
+            nombrePaceinteTxt.setText(pacienteSeleccionado.getApellido()+", "+pacienteSeleccionado.getNombre());
+        }
 
         seleccionarPacienteDialogBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //TODO ir a pantalla para seleccionar paciente
+                String descripcionIngresada = descripcionEdit.getText().toString();
+                SimpleDateFormat sdf = new SimpleDateFormat("'Fecha: 'dd/MM/yyyy' - 'HH:mm' hs.'");
+                Calendar horaSeleccionada = Calendar.getInstance();
+                try {
+                    horaSeleccionada.setTime(sdf.parse(fechaTurnoTxt.getText().toString()));
+                    horaSeleccionada.set(Calendar.SECOND, 0);
+                    horaSeleccionada.set(Calendar.MILLISECOND, 0);
+                } catch (ParseException e) {
+                    Log.d(TAG, "Error al parsear la fecha", e);
+                }
+                Log.d(TAG, "hora seleccionada al pedir paciente: "+horaSeleccionada);
+                Bundle guardar = new Bundle();
+                guardar.putSerializable("horaSeleccionada", horaSeleccionada);
+                guardar.putString("descripcionIngresada", descripcionIngresada);
+                fragment.seleccionarPaciente(horaSeleccionada, guardar, reservarDialogo);
+                reservarDialogo.dismiss();
             }
         });
         return reservarDialogo;
     }
 
-    private AlertDialog buildVerTurnoDialogo(final View view, int turnoPos) {
+    private void guardarTurno(int turnoPos, String descripcion, Calendar fechaTurno, Paciente p) {
+        if(p == null){
+            //No seleccionó paciente, se descarta el turno
+            Snackbar.make(fragment.getActivity().findViewById(R.id.coordinator_layout), "No se seleccionó ningún paciente, se descarta el turno", BaseTransientBottomBar.LENGTH_LONG)
+                    .setBackgroundTint(fragment.getResources().getColor(R.color.colorCancelar))
+                    .show();
+        }else{
+            Turno t = new Turno(descripcion, p.getApellido()+", "+p.getNombre(), fechaTurno.getTime());
+            t.setPosicion(turnoPos);
+            t.setDisponible(false);
+            DatosFirestore.getInstance().saveTurno(t, p.getDni(), fragment.handler);
+        }
+    }
+
+    private AlertDialog buildVerTurnoDialogo(int turnoPos) {
 
         final AlertDialog verTurnoDialogo;
-        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(view.getContext());
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(fragment.getContext());
 
-        LayoutInflater inflater = (LayoutInflater) view.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) fragment.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View dialogView = inflater.inflate(R.layout.dialogo_modificar_turno, null);
         builder.setView(dialogView);
 
@@ -261,8 +327,8 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             @Override
             public void onShow(DialogInterface dialogInterface) {
 
-                verTurnoDialogo.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(view.getResources().getColor(R.color.colorCancelar));
-                verTurnoDialogo.getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(view.getResources().getColor(R.color.colorCancelar));
+                verTurnoDialogo.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(fragment.getResources().getColor(R.color.colorCancelar));
+                verTurnoDialogo.getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(fragment.getResources().getColor(R.color.colorCancelar));
             }
         });
         verPacienteDialogBtn.setOnClickListener(new View.OnClickListener() {

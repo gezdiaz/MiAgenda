@@ -5,7 +5,11 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.view.GravityCompat;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -31,6 +35,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.logging.LogRecord;
 
@@ -47,10 +52,17 @@ public class PrincipalActivity extends AppCompatActivity {
     public static final String NEWUSER = "newUser";
     private static final String TAG = "PrincipalActivity";
 
+    protected static String comunicado;
+
     private AppBarConfiguration mAppBarConfiguration;
     private FirebaseAuth mAuth;
     private TextView userNameTxt, userEmailTxt;
     private ImageView userImageView;
+    private NavController navController;
+    private boolean seleccionPacienteEnviada = false;
+    private Calendar horaTurnoPendiente;
+    private Bundle datosGuardados;
+    private AlertDialog dialogoReservar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,21 +120,53 @@ public class PrincipalActivity extends AppCompatActivity {
                     .setDrawerLayout(drawer)
                     .build();
 
-            NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+            navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+
+            navController.addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {
+                @Override
+                public void onDestinationChanged(@NonNull NavController controller, @NonNull NavDestination destination, @Nullable Bundle arguments) {
+                    Log.d(TAG, "Llama a onDestinationChanged");
+//                    Log.d(TAG, "NavDestination: "+destination);
+//                    Log.d(TAG, "NavAction: "+destination.getId());
+//                    Log.d(TAG, "MiAgendaId: "+R.id.nav_mi_agenda);
+//                    Log.d(TAG, "MisPacientesId: "+R.id.nav_mis_pacientes);
+                    Log.d(TAG, "args: "+arguments);
+                    switch (destination.getId()) {
+                        case R.id.nav_mi_agenda:
+                            Log.d(TAG, "Va a MiAgenda");
+                            if(seleccionPacienteEnviada){
+                                if(!arguments.getBoolean("respuestaPaciente", false)){
+                                    //TODO Avisar que si cambia de pantalla se cancela la creación de turno
+                                    Log.d(TAG, "Vuelve a MiAgenda sin seleccionar un paciente");
+                                }
+                                seleccionPacienteEnviada = false;
+                            }
+                            break;
+                        case R.id.nav_mis_pacientes:
+                            Log.d(TAG, "Va a MisPacientes");
+                            break;
+                        default:
+                            Log.wtf(TAG, "No va a ningún lado");
+                    }
+                }
+            });
+
             NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
             NavigationUI.setupWithNavController(navigationView, navController);
+
+
         }
 
         //Mostrar mensaje de inicio de sesión si recién ingresa.
         Intent i = getIntent();
         if (i.getBooleanExtra(LOGIN, false)) {
             Snackbar s;
-            if(i.getBooleanExtra(NEWUSER, false)){
+            if (i.getBooleanExtra(NEWUSER, false)) {
                 s = Snackbar.make(findViewById(R.id.coordinator_layout), R.string.exito_creacion_cuenta, Snackbar.LENGTH_LONG);
-            }else {
-                if(i.getBooleanExtra(LOGINGOOGLE, false)){
+            } else {
+                if (i.getBooleanExtra(LOGINGOOGLE, false)) {
                     s = Snackbar.make(findViewById(R.id.coordinator_layout), R.string.exito_inicio_sesion_google, Snackbar.LENGTH_LONG);
-                }else {
+                } else {
                     s = Snackbar.make(findViewById(R.id.coordinator_layout), R.string.exito_inicio_sesion, Snackbar.LENGTH_LONG);
                 }
             }
@@ -130,6 +174,37 @@ public class PrincipalActivity extends AppCompatActivity {
             s.show();
         }
 
+    }
+
+    public void seleccionarPaciente(Calendar horaTurno, Bundle datosAGuardar, AlertDialog dialogoReservar) {
+        seleccionPacienteEnviada = true;
+        horaTurnoPendiente = horaTurno;
+        datosGuardados = datosAGuardar;
+        this.dialogoReservar = dialogoReservar;
+        Bundle args = new Bundle();
+//        args.putString("prueba", "String enviado desde PrincipalActivity");
+        args.putBoolean("seleccionarPaciente", true);
+        navController.navigate(R.id.nav_mis_pacientes, args);
+//        Log.d(TAG, "Current destination: " + navController.getCurrentDestination());
+    }
+
+    public AlertDialog getDialogoReservar() {
+        AlertDialog d = dialogoReservar;
+        dialogoReservar = null;
+        return d;
+    }
+
+    public void responderPaciente(Paciente p){
+        Log.d(TAG, "Respondió con paciente" + p);
+        Bundle args = new Bundle();
+        args.putBoolean("respuestaPaciente", true);
+        args.putSerializable("paciente", p);
+        args.putSerializable("horaTurno", horaTurnoPendiente);
+        args.putBundle("datos", datosGuardados);
+        navController.navigate(R.id.nav_mi_agenda, args);
+        horaTurnoPendiente = null;
+        seleccionPacienteEnviada = false;
+        datosGuardados = null;
     }
 
     @Override
@@ -171,4 +246,5 @@ public class PrincipalActivity extends AppCompatActivity {
             finish();
         }
     }
+
 }
