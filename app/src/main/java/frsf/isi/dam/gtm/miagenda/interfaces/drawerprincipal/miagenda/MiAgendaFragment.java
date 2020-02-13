@@ -54,6 +54,7 @@ public class MiAgendaFragment extends Fragment {
     private Calendar fechaMostrar;
     private TextView fechaTxt;
     private List<Turno> listTurnos;
+    private boolean nuevoTurno = false;
 
     protected Handler handler = new Handler(Looper.myLooper()) {
         @Override
@@ -73,18 +74,31 @@ public class MiAgendaFragment extends Fragment {
                 case DatosFirestore.SAVE_TURNO:
                     Log.d(TAG, "Se gaurdó el turno");
 //                    mostrarFechaSeleccionada(fechaMostrar);
-                    ((PrincipalActivity) getActivity()).recargarFragment(MiAgendaFragment.this, fechaMostrar);
+                    if(nuevoTurno) {
+                        nuevoTurno = false;
+                        ((PrincipalActivity) getActivity()).recargarFragment(MiAgendaFragment.this, fechaMostrar);
+                    }else{
+                        mostrarFechaSeleccionada(fechaMostrar);
+                    }
                     break;
                 case DatosFirestore.ERROR_SAVE_TURNO:
                     Log.d(TAG, "Error al guardar el turno");
                     Snackbar.make(getView().findViewById(R.id.mi_agenda_layout), "Se produjo un error al guardar el turno", BaseTransientBottomBar.LENGTH_LONG)
                             .setBackgroundTint(getResources().getColor(R.color.colorCancelar))
                             .show();
+                    break;
                 case DatosFirestore.GET_PACIENTE:
                     //Obtuvo el paciente para mostrar
                     Intent i = new Intent(getActivity(), VerPacienteActivity.class);
                     i.putExtra("paciente", (Paciente) msg.obj);
                     getActivity().startActivity(i);
+                    break;
+                case DatosFirestore.ELIMINACION_TURNO:
+                    Snackbar.make(getActivity().findViewById(R.id.coordinator_layout), R.string.elimino_turno, BaseTransientBottomBar.LENGTH_SHORT).show();
+                    mostrarFechaSeleccionada(fechaMostrar);
+                    break;
+                case DatosFirestore.ERROR_ELIMINACION_TURNO:
+                    Snackbar.make(getActivity().findViewById(R.id.coordinator_layout), R.string.error_eliminar_turno, BaseTransientBottomBar.LENGTH_SHORT).show();
                     break;
             }
         }
@@ -245,10 +259,20 @@ public class MiAgendaFragment extends Fragment {
 
     public void guardarTurno(Turno t, String dni) {
         recyclerView.setVisibility(View.INVISIBLE);
+        nuevoTurno = true;
         DatosFirestore.getInstance().saveTurno(t, dni, handler);
     }
 
     public void verPaciente(String dniPaciente) {
         DatosFirestore.getInstance().getPacienteById(dniPaciente, handler);
+    }
+
+    public void borrarTurno(Turno turno) {
+        DatosFirestore.getInstance().borrarTurno(turno, handler);
+    }
+
+    public void actualizarTurno(Turno turno) {
+        Log.d(TAG, "Turno a actualizado: "+turno);
+        DatosFirestore.getInstance().saveTurno(turno, turno.getDniPaciente(), handler);
     }
 }

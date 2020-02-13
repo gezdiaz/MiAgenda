@@ -281,6 +281,11 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 //TODO Modificar turno
+                String nuevaDescripcion = descripcionEdit.getText().toString();
+                if(nuevaDescripcion != turno.getDescripcion()){
+                    turno.setDescripcion(nuevaDescripcion);
+                    fragment.actualizarTurno(turno);
+                }
             }
         });
 
@@ -288,6 +293,7 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 //TODO quitar turno
+                fragment.borrarTurno(turno);
             }
         });
 

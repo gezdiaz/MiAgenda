@@ -11,6 +11,7 @@ import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.common.net.HostAndPort;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -47,6 +48,8 @@ public class DatosFirestore {
     public static final int ERROR_SAVE_TURNO = -5;
     public static final int GETALL_TURNOS = 6;
     public static final int ERROR_GETALL_TURNOS = -6;
+    public static final int ELIMINACION_TURNO = 7;
+    public static final int ERROR_ELIMINACION_TURNO = -7;
 
     private static DatosFirestore instance;
     private static final String TAG = "DatosFirestore";
@@ -210,6 +213,10 @@ public class DatosFirestore {
             t.setId(collectionTurnos.document().getId());
         }
 
+        if(t.getDniPaciente() == null || t.getDniPaciente().isEmpty()){
+            t.setDniPaciente(idPaciente);
+        }
+
         collectionTurnos.document(t.getId()).set(t)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -290,6 +297,32 @@ public class DatosFirestore {
                         }else{
                             Log.d(TAG, "Se produjo un error al actualizar la url de la imagen del paciente "+idPaciente);
                         }
+                    }
+                });
+
+    }
+
+    public void borrarTurno(final Turno t, final Handler handler){
+        DocumentReference documentTurno = datosUsuario.collection(idColeccionPacientes)
+                                                    .document(t.getDniPaciente())
+                                                    .collection(idColeccionTurnos)
+                                                    .document(t.getId());
+
+        documentTurno.delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Message m = Message.obtain();
+                        m.what = ELIMINACION_TURNO;
+                        handler.sendMessage(m);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Message m = Message.obtain();
+                        m.what = ERROR_ELIMINACION_TURNO;
+                        handler.sendMessage(m);
                     }
                 });
 

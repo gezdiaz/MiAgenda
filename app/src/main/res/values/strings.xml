@@ -93,4 +93,6 @@
     <string name="llamar_btn">Llamar</string>
     <string name="llamada_item_option">Llamada</string>
     <string name="seleccione_paciente">Seleccione un paciente</string>
+    <string name="elimino_turno">Se eliminó el turno</string>
+    <string name="error_eliminar_turno">Se produjo un error al eliminar el turno</string>
 </resources>
