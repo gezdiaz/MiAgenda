@@ -7,6 +7,7 @@ public class Turno {
     private String id;
     private String descripcion;
     private String nombrePaciente;
+    private String dniPaciente;
     private Date fecha;
     private String propietario;
     private int posicion;
@@ -16,11 +17,20 @@ public class Turno {
         disponible = true;
     }
 
-    public Turno(String descripcion, String nombrePaciente, Date fecha) {
+    public Turno(String descripcion, String nombrePaciente, String dniPaciente, Date fecha) {
         this.descripcion = descripcion;
         this.nombrePaciente = nombrePaciente;
+        this.dniPaciente = dniPaciente;
         this.fecha = fecha;
         this.disponible = false;
+    }
+
+    public String getDniPaciente() {
+        return dniPaciente;
+    }
+
+    public void setDniPaciente(String dniPaciente) {
+        this.dniPaciente = dniPaciente;
     }
 
     public int getPosicion() {

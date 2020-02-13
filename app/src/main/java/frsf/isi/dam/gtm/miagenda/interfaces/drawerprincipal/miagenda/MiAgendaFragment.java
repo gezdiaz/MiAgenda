@@ -1,5 +1,6 @@
 package frsf.isi.dam.gtm.miagenda.interfaces.drawerprincipal.miagenda;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -33,6 +34,7 @@ import frsf.isi.dam.gtm.miagenda.R;
 import frsf.isi.dam.gtm.miagenda.datos.DatosFirestore;
 import frsf.isi.dam.gtm.miagenda.entidades.Paciente;
 import frsf.isi.dam.gtm.miagenda.entidades.Turno;
+import frsf.isi.dam.gtm.miagenda.interfaces.VerPacienteActivity;
 import frsf.isi.dam.gtm.miagenda.interfaces.drawerprincipal.PrincipalActivity;
 
 
@@ -78,6 +80,11 @@ public class MiAgendaFragment extends Fragment {
                     Snackbar.make(getView().findViewById(R.id.mi_agenda_layout), "Se produjo un error al guardar el turno", BaseTransientBottomBar.LENGTH_LONG)
                             .setBackgroundTint(getResources().getColor(R.color.colorCancelar))
                             .show();
+                case DatosFirestore.GET_PACIENTE:
+                    //Obtuvo el paciente para mostrar
+                    Intent i = new Intent(getActivity(), VerPacienteActivity.class);
+                    i.putExtra("paciente", (Paciente) msg.obj);
+                    getActivity().startActivity(i);
                     break;
             }
         }
@@ -239,5 +246,9 @@ public class MiAgendaFragment extends Fragment {
     public void guardarTurno(Turno t, String dni) {
         recyclerView.setVisibility(View.INVISIBLE);
         DatosFirestore.getInstance().saveTurno(t, dni, handler);
+    }
+
+    public void verPaciente(String dniPaciente) {
+        DatosFirestore.getInstance().getPacienteById(dniPaciente, handler);
     }
 }

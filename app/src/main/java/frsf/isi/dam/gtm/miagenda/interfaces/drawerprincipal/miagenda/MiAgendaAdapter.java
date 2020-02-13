@@ -260,7 +260,7 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     .setBackgroundTint(fragment.getResources().getColor(R.color.colorCancelar))
                     .show();
         }else{
-            Turno t = new Turno(descripcion, p.getApellido()+", "+p.getNombre(), fechaTurno.getTime());
+            Turno t = new Turno(descripcion, p.getApellido()+", "+p.getNombre(), p.getDni(), fechaTurno.getTime());
             t.setPosicion(turnoPos);
             t.setDisponible(false);
             fragment.guardarTurno(t, p.getDni());
@@ -271,6 +271,7 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         final AlertDialog verTurnoDialogo;
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(fragment.getContext());
+        final Turno turno = listTurnos.get(turnoPos);
 
         LayoutInflater inflater = (LayoutInflater) fragment.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View dialogView = inflater.inflate(R.layout.dialogo_modificar_turno, null);
@@ -307,8 +308,8 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         verPacienteDialogBtn = dialogView.findViewById(R.id.turno_ver_paciente_btn);
         verPacienteDialogBtn.setVisibility(View.VISIBLE);
 
-        descripcionEdit.setText(listTurnos.get(turnoPos).getDescripcion());
-        nombrePaceinteTxt.setText((listTurnos.get(turnoPos).getNombrePaciente()));
+        descripcionEdit.setText(turno.getDescripcion());
+        nombrePaceinteTxt.setText(turno.getNombrePaciente());
         //No puedo usar la fecha del turno porque se guarda mal la hora ¯\_(ツ)_/¯
 //        SimpleDateFormat sdf = new SimpleDateFormat("'Fecha: 'dd/MM/yy' - 'HH:MM' hs.'");
 //        fechaTurnoTxt.setText(sdf.format(listTurnos.get(turnoPos).getFecha()));
@@ -336,11 +337,12 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             @Override
             public void onClick(View view) {
                 //TODO ir a la pantallar para ver paciente
-                Intent i1 = new Intent(view.getContext(), VerPacienteActivity.class);
-                Calendar pruebaCalendario = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-                pruebaCalendario.set(1998, 4, 13);
-                i1.putExtra("paciente", new Paciente("Intent ", "Ver paciente Btn", "OS", pruebaCalendario.getTime(), "40905", 123456789L, "Argentina", "Santa fe", "Escalada", "S/N", "493", "Sin dpto"));
-                view.getContext().startActivity(i1);
+//                Intent i1 = new Intent(view.getContext(), VerPacienteActivity.class);
+//                Calendar pruebaCalendario = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+//                pruebaCalendario.set(1998, 4, 13);
+//                i1.putExtra("paciente", new Paciente("Intent ", "Ver paciente Btn", "OS", pruebaCalendario.getTime(), "40905", 123456789L, "Argentina", "Santa fe", "Escalada", "S/N", "493", "Sin dpto"));
+//                view.getContext().startActivity(i1);
+                fragment.verPaciente(turno.getDniPaciente());
             }
         });
 
