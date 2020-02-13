@@ -284,18 +284,22 @@ public class HistoriaClinicaActivity extends AppCompatActivity {
                     canvas.drawText(linea, margenX, margenY, paint);
                     margenY += paint.descent() - paint.ascent();
                 }
-
                 if ((margenY >= largoPagina)) {
                     numeroPagina++;
                     documentoPdf.finishPage(contenidoPagina);
                     crearNuevaPagina();
-                } else {
-                    canvas.drawLine(margenX, margenY, 580, margenY, paint);
                 }
-
-                margenY += 10 + paint.descent() - paint.ascent();
-
             }
+
+             if ((margenY >= largoPagina)) {
+                 numeroPagina++;
+                 documentoPdf.finishPage(contenidoPagina);
+                 crearNuevaPagina();
+             } else {
+                 canvas.drawLine(margenX, margenY, 580, margenY, paint);
+             }
+
+             margenY += 10 + paint.descent() - paint.ascent();
 
         }
 
