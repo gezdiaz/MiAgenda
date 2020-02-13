@@ -98,6 +98,10 @@
     <string name="buscar_option">Buscar</string>
     <string name="busqueda_hint">Busqueda</string>
     <string name="seleccionar_tipo_busqueda_lbl">Buscar por:</string>
+    <string name="channel_name">Notificacion diaria</string>
+    <string name="channel_description">Canal creado para las notificacion diaria</string>
+    <string name="notificacion_diaria_text">Toca para ver tus turnos de hoy.</string>
+    <string name="notificacion_diaria_title">¡Buen día!</string>
 
     <string-array name="buscar_array">
         <item>Apellido</item>

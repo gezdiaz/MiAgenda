@@ -1,6 +1,10 @@
 package frsf.isi.dam.gtm.miagenda.interfaces.drawerprincipal;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -31,10 +35,15 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 import java.util.logging.LogRecord;
 
 import frsf.isi.dam.gtm.miagenda.R;
+import frsf.isi.dam.gtm.miagenda.broadcastreceiver.NotificacionDiariaReceiver;
+import frsf.isi.dam.gtm.miagenda.broadcastreceiver.NotificacionDiariaService;
 import frsf.isi.dam.gtm.miagenda.datos.DatosFirestore;
 import frsf.isi.dam.gtm.miagenda.entidades.Paciente;
 import frsf.isi.dam.gtm.miagenda.entidades.Turno;
@@ -51,6 +60,11 @@ public class PrincipalActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private TextView userNameTxt, userEmailTxt;
     private ImageView userImageView;
+    public static AlarmManager alarmManager;
+
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +74,6 @@ public class PrincipalActivity extends AppCompatActivity {
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorTextSecondary));
         setSupportActionBar(toolbar);
 
-
         //verificar si hay una sesión iniciada.
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
@@ -69,6 +82,23 @@ public class PrincipalActivity extends AppCompatActivity {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
         } else {
+
+            //Registrar Notificacion diaria Receiver
+
+            NotificacionDiariaReceiver br = new NotificacionDiariaReceiver();
+            IntentFilter filtro = new IntentFilter();
+            filtro.addAction(NotificacionDiariaReceiver.ALARMNOTIFICATION);
+//            IntentFilter filtro2 = new IntentFilter();
+//            filtro2.addAction(NotificacionDiariaReceiver.SCREENONNOTIFICATION);
+            IntentFilter filtro3 = new IntentFilter();
+            filtro3.addAction(NotificacionDiariaReceiver.BOOTNOTIFICATION);
+            getApplication().getApplicationContext().registerReceiver(br, filtro);
+//            getApplication().getApplicationContext().registerReceiver(br, filtro2);
+            getApplication().getApplicationContext().registerReceiver(br,filtro3);
+
+            //Inicializar alarma
+            iniciarNotificacionesDiarias(getApplicationContext());
+
             //Hay una cuenta iniciada
             DrawerLayout drawer = findViewById(R.id.drawer_layout);
             NavigationView navigationView = findViewById(R.id.nav_view);
@@ -150,6 +180,12 @@ public class PrincipalActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.cerrar_sesion_option_item: {
+
+                Intent intent = new Intent(this, NotificacionDiariaReceiver.class);
+                PendingIntent sender = PendingIntent.getBroadcast(this, 1, intent, 0);
+                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                alarmManager.cancel(sender);
+
                 Intent i1 = new Intent(this, LoginActivity.class);
                 //Le digo a LogInActivity que cierre sesión
                 i1.putExtra(LoginActivity.SignOut, true);
@@ -171,4 +207,29 @@ public class PrincipalActivity extends AppCompatActivity {
             finish();
         }
     }
+
+    public static void iniciarNotificacionesDiarias(Context context){
+        //Crear notificacion diaria
+        Intent broadcastIntent = new Intent(context, NotificacionDiariaReceiver.class);
+        broadcastIntent.setAction(NotificacionDiariaReceiver.ALARMNOTIFICATION);
+        PendingIntent broadcastPendingIntent = PendingIntent.getBroadcast(context,1,broadcastIntent,0);
+
+        Calendar ahora = Calendar.getInstance();
+        ahora.setTimeZone(TimeZone.getDefault());
+        //TODO usar las variables de los turnos
+        Calendar horaAlarmaNotificacion = Calendar.getInstance();
+        horaAlarmaNotificacion.setTimeZone(TimeZone.getDefault());
+        horaAlarmaNotificacion.set(Calendar.HOUR_OF_DAY,6);
+        horaAlarmaNotificacion.set(Calendar.MINUTE,30);
+        horaAlarmaNotificacion.set(Calendar.SECOND,0);
+
+
+        if(horaAlarmaNotificacion.getTimeInMillis()< ahora.getTimeInMillis()){
+            horaAlarmaNotificacion.set(Calendar.DATE, horaAlarmaNotificacion.get(Calendar.DATE)+1);
+        }
+
+        alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, horaAlarmaNotificacion.getTimeInMillis(),AlarmManager.INTERVAL_DAY,broadcastPendingIntent);
+    }
+
 }

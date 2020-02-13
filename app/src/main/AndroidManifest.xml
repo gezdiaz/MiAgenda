@@ -13,6 +13,9 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -58,7 +61,22 @@
         <activity android:name=".interfaces.LoginActivity"
         android:screenOrientation="portrait"
         />
-    </application>
 
+        <receiver android:name=".broadcastreceiver.NotificacionDiariaReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"></action>
+                <action android:name="android.intent.action.SCREEN_ON"></action>
+            </intent-filter>
+        </receiver>
+        <service
+            android:name = ".broadcastreceiver.NotificacionDiariaService"
+            android:label = "@string/app_name">
+        <intent-filter>
+            <action
+                android:name = "frsf.isi.dam.gtm.miagenda.broadcastreceiver.NotificacionDiariaService" />
+            <category android:name= "android.intent.category.DEFAULT" />
+        </intent-filter>
+        </service>
+    </application>
 
 </manifest>
