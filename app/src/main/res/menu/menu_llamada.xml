@@ -3,16 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/cerrar_sesion_option_item"
-        android:orderInCategory="100"
-        android:title="@string/cerrar_sesion_option_item"
-        app:showAsAction="never" />
-
-    <item
         android:id="@+id/llamada_option_item"
         android:orderInCategory="100"
         android:icon="@drawable/ic_call_24px"
         android:title="@string/llamada_item_option"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/editar_option_item"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_edit_24px"
+        android:title="@string/llamada_item_option"
+        app:showAsAction="always"/>
+
 
 </menu>

@@ -1,5 +1,6 @@
 package frsf.isi.dam.gtm.miagenda.interfaces;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -44,12 +45,14 @@ import com.google.android.material.textview.MaterialTextView;
 import java.util.List;
 
 import frsf.isi.dam.gtm.miagenda.R;
+import frsf.isi.dam.gtm.miagenda.datos.DatosFirestore;
 import frsf.isi.dam.gtm.miagenda.entidades.Paciente;
 import frsf.isi.dam.gtm.miagenda.interfaces.listahistoriaclinica.HistoriaClinicaActivity;
 
 public class VerPacienteActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final String TAG = "VerPacienteActivity";
+    public static final int REQUESTEDITARPACIENTE = 1;
     private Toolbar toolbar;
     private MaterialTextView dniPacienteLbl, edadPacienteLbl, obraSocialPacienteLbl, telefonoPacienteLbl, nombrePacienteLbl;
     private TextView masInfoMapaLbl;
@@ -78,29 +81,7 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.ver_paciente_map);
         mapFragment.getMapAsync(this);
 
-        dniPacienteLbl = findViewById(R.id.dni_paciente_lbl);
-        edadPacienteLbl = findViewById(R.id.edad_paciente_lbl);
-        obraSocialPacienteLbl = findViewById(R.id.obra_social_paciente_lbl);
-        telefonoPacienteLbl = findViewById(R.id.telefono_paciente_lbl);
-        verHistoriaClinicaBtn = findViewById(R.id.ver_historia_btn);
-        nombrePacienteLbl = findViewById(R.id.nombre_paciente_lbl);
-        masInfoMapaLbl = findViewById(R.id.mas_info_mapa_lbl);
-
-
-        nombrePacienteLbl.append(" " + p.getNombre() + " " + p.getApellido());
-        dniPacienteLbl.append(" " + p.getDni());
-        edadPacienteLbl.append(" " + p.getEdad() + " años");
-        obraSocialPacienteLbl.append(" " + p.getObraSocial());
-        telefonoPacienteLbl.append(" " + p.getTelefono());
-
-        verHistoriaClinicaBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i1 = new Intent(getApplicationContext(), HistoriaClinicaActivity.class);
-                i1.putExtra("paciente", p);
-                startActivity(i1);
-            }
-        });
+        inicializarTextViews();
     }
 
     @Override
@@ -112,13 +93,13 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.cerrar_sesion_option_item:{
-                Intent i1 = new Intent(this, LoginActivity.class);
-                //Le digo a LogInActivity que cierre sesión
-                i1.putExtra(LoginActivity.SignOut, true);
-                startActivity(i1);
-                break;
-            }
+//            case R.id.cerrar_sesion_option_item:{
+//                Intent i1 = new Intent(this, LoginActivity.class);
+//                //Le digo a LogInActivity que cierre sesión
+//                i1.putExtra(LoginActivity.SignOut, true);
+//                startActivity(i1);
+//                break;
+//            }
             case android.R.id.home: {
                 onBackPressed();
                 break;
@@ -147,8 +128,58 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
 
                 break;
             }
+            case R.id.editar_option_item:{
+
+                Intent editarPacienteIntent = new Intent(getApplicationContext(), NuevoPacienteActivity.class);
+                editarPacienteIntent.setAction(NuevoPacienteActivity.EDITARACTION);
+                editarPacienteIntent.putExtra("paciente",p);
+                startActivityForResult(editarPacienteIntent,REQUESTEDITARPACIENTE);
+                break;
+            }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == REQUESTEDITARPACIENTE){
+            p = (Paciente) data.getSerializableExtra("paciente");
+
+            Log.d(TAG, "Paciente: " + p.toString());
+            inicializarTextViews();
+        }
+    }
+
+    private void inicializarTextViews() {
+
+        dniPacienteLbl = findViewById(R.id.dni_paciente_lbl);
+        dniPacienteLbl.setText(R.string.dni_paciente_lbl);
+        edadPacienteLbl = findViewById(R.id.edad_paciente_lbl);
+        edadPacienteLbl.setText(R.string.edad_paciente_lbl);
+        obraSocialPacienteLbl = findViewById(R.id.obra_social_paciente_lbl);
+        obraSocialPacienteLbl.setText(R.string.obra_social_paciente_lbl);
+        telefonoPacienteLbl = findViewById(R.id.telefono_paciente_lbl);
+        telefonoPacienteLbl.setText(R.string.telefono_paciente_lbl);
+        verHistoriaClinicaBtn = findViewById(R.id.ver_historia_btn);
+        nombrePacienteLbl = findViewById(R.id.nombre_paciente_lbl);
+        nombrePacienteLbl.setText(R.string.nombre_ver_paciente);
+        masInfoMapaLbl = findViewById(R.id.mas_info_mapa_lbl);
+
+        nombrePacienteLbl.append(" " + p.getNombre() + " " + p.getApellido());
+        dniPacienteLbl.append(" " + p.getDni());
+        edadPacienteLbl.append(" " + p.getEdad() + " años");
+        obraSocialPacienteLbl.append(" " + p.getObraSocial());
+        telefonoPacienteLbl.append(" " + p.getTelefono());
+
+        verHistoriaClinicaBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i1 = new Intent(getApplicationContext(), HistoriaClinicaActivity.class);
+                i1.putExtra("paciente", p);
+                startActivity(i1);
+            }
+        });
     }
 
     @Override
