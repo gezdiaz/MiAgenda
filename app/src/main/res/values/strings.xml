@@ -95,4 +95,6 @@
     <string name="seleccione_paciente">Seleccione un paciente</string>
     <string name="elimino_turno">Se eliminó el turno</string>
     <string name="error_eliminar_turno">Se produjo un error al eliminar el turno</string>
+    <string name="aviso_sin_paciente">Se canceló la creación del turno</string>
+    <string name="seleccionando_paciente">Seleccionando paciente para turno</string>
 </resources>

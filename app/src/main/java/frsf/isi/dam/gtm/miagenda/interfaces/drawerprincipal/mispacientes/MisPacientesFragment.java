@@ -1,6 +1,7 @@
 package frsf.isi.dam.gtm.miagenda.interfaces.drawerprincipal.mispacientes;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -49,8 +50,8 @@ public class MisPacientesFragment extends Fragment {
     private RecyclerView recyclerView;
     private MisPacientesAdapter adapter;
     private FloatingActionButton fabMisPacientes;
-    private Snackbar avisoSeleccion;
     private ProgressBar progressBar;
+    private Snackbar avisoSeleccion;
 //    private Handler handler = new Handler(Looper.myLooper()){
 //        @Override
 //        public void handleMessage(@NonNull Message msg) {
@@ -97,16 +98,15 @@ public class MisPacientesFragment extends Fragment {
         if(arguments != null && arguments.getBoolean("seleccionarPaciente", false)){
             //Tiene que seleccionar un paciente
             modoseleccionar = true;
-            avisoSeleccion = Snackbar.make(getActivity().findViewById(R.id.coordinator_layout), "Seleccionando paciente para turno", Snackbar.LENGTH_INDEFINITE);
-                    avisoSeleccion.show();
         }
 
         adapter = new MisPacientesAdapter(firestoreRecyclerOptions, modoseleccionar, this);
         adapter.notifyDataSetChanged();
 
         recyclerView.setAdapter(adapter);
-        fabMisPacientes = view.findViewById(R.id.fab_mis_pacientes);
+        fabMisPacientes = ((PrincipalActivity) getActivity()).fabPrincipal;//view.findViewById(R.id.fab_mis_pacientes);
         fabMisPacientes.setColorFilter(getResources().getColor(R.color.colorTextSecondary));
+        fabMisPacientes.setImageDrawable(getActivity().getDrawable(R.drawable.ic_add_24px));
         fabMisPacientes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,14 +127,16 @@ public class MisPacientesFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        //Para evitar que la aplicacion siempre este escuchando cambios de la base de datos (por ser de tiempo real) aunque no este en esta actividad.
+        //Para evitar que la aplicación siempre este escuchando cambios de la base de datos (por ser de tiempo real) aunque no este en esta actividad.
         adapter.stopListening();
     }
 
     public void responderPaciente(Paciente p) {
-        if(avisoSeleccion.isShown()) {
-            avisoSeleccion.dismiss();
-        }
         ((PrincipalActivity) getActivity()).responderPaciente(p);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
     }
 }

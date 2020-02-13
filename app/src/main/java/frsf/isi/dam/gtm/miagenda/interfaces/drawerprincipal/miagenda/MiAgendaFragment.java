@@ -151,11 +151,13 @@ public class MiAgendaFragment extends Fragment {
         boolean respuestaPaciente = false;
 
         Bundle arguments = getArguments();
+        boolean seleccionEnviada = ((PrincipalActivity) getActivity()).seleccionPacienteEnviada;
+        Log.d(TAG, "Arguments recibidos en MiAgenda: " + arguments);
         if(arguments != null){
             if(arguments.getBoolean("respuestaPaciente", false)) {
-                if (((PrincipalActivity) getActivity()).seleccionPacienteEnviada) {
+                if (seleccionEnviada) {
                     //Si se había enviado una selección de paciente vuelvo a crear el diálogo, sino no
-                    Log.d(TAG, "Arguments recibidos en MiAgenda: " + arguments);
+
                     Paciente p = (Paciente) getArguments().get("paciente");
                     Calendar hora = (Calendar) getArguments().get("horaTurno");
                     respuestaPaciente = true;
@@ -176,13 +178,28 @@ public class MiAgendaFragment extends Fragment {
                     ((PrincipalActivity) getActivity()).seleccionPacienteEnviada = false;
                     adapter.setFecha(fechaMostrar);
                     adapter.retomarCreacionTurno(p, arguments.getBundle("datos"));
+                }else{
+                    Log.d(TAG, "Seleccion Paciente es false");
                 }
             }else{
+                if(seleccionEnviada){
+                    //Había pedido un paciente pero no respondió
+                    Log.d(TAG, "No hubo respuesta en a la petición de paciente, pero sí hubo argumentos");
+                    ((PrincipalActivity) getActivity()).seleccionPacienteEnviada = false;
+                    ((PrincipalActivity) getActivity()).mostrarCanceloTurno();
+                }
                 Calendar f = (Calendar) arguments.get("fechaMostrar");
                 if(f != null){
                     mostrarFechaSeleccionada(f);
                     actualizoLista = true;
                 }
+            }
+        }else{
+            if(seleccionEnviada){
+                //Había enviado la selección de paciente pero le llegaron argumentos nulos, probablemente porque volvió a MiAgneda por el drawer
+                Log.d(TAG, "No hubo respuesta en a la petición de paciente");
+                ((PrincipalActivity) getActivity()).seleccionPacienteEnviada = false;
+                ((PrincipalActivity) getActivity()).mostrarCanceloTurno();
             }
         }
 
@@ -200,8 +217,9 @@ public class MiAgendaFragment extends Fragment {
 
         buildDatePicker();
 
-        verCalendarioFAB = view.findViewById(R.id.fab_mi_agenda);
+        verCalendarioFAB = ((PrincipalActivity) getActivity()).fabPrincipal;//view.findViewById(R.id.fab_mi_agenda);
         verCalendarioFAB.setColorFilter(getResources().getColor(R.color.colorTextSecondary));
+        verCalendarioFAB.setImageDrawable(getActivity().getDrawable(R.drawable.ic_calendar_24px));
         verCalendarioFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

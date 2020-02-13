@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
@@ -16,7 +17,9 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -30,9 +33,11 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -65,6 +70,8 @@ public class PrincipalActivity extends AppCompatActivity {
     private Calendar horaTurnoPendiente;
     private Bundle datosGuardados;
     private AlertDialog dialogoReservar;
+    private Snackbar avisoSeleccion, avisoTurnoCancelado;
+    public FloatingActionButton fabPrincipal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +92,13 @@ public class PrincipalActivity extends AppCompatActivity {
             //Hay una cuenta iniciada
             DrawerLayout drawer = findViewById(R.id.drawer_layout);
             NavigationView navigationView = findViewById(R.id.nav_view);
+            fabPrincipal = findViewById(R.id.fab_principal);
+
+            CoordinatorLayout coordinatorLayout = findViewById(R.id.coordinator_layout);
+            avisoSeleccion = Snackbar.make(coordinatorLayout, R.string.seleccionando_paciente, Snackbar.LENGTH_INDEFINITE);
+
+            avisoTurnoCancelado = Snackbar.make(coordinatorLayout, R.string.aviso_sin_paciente, Snackbar.LENGTH_LONG);
+            avisoTurnoCancelado.setBackgroundTint(getResources().getColor(R.color.colorCancelar));
 
             //Seteo el perfil del usuario logueado en el header del drawer
             View headerView = navigationView.getHeaderView(0);
@@ -132,16 +146,22 @@ public class PrincipalActivity extends AppCompatActivity {
 //                    Log.d(TAG, "MiAgendaId: "+R.id.nav_mi_agenda);
 //                    Log.d(TAG, "MisPacientesId: "+R.id.nav_mis_pacientes);
                     Log.d(TAG, "args: " + arguments);
+                    Log.d(TAG, "SeleccionPacienteEnviada es: "+seleccionPacienteEnviada);
                     switch (destination.getId()) {
                         case R.id.nav_mi_agenda:
                             Log.d(TAG, "Va a MiAgenda");
+                            if (avisoSeleccion != null && avisoSeleccion.isShown()) {
+                                avisoSeleccion.dismiss();
+                            }
                             if (seleccionPacienteEnviada) {
 
                                 if (arguments == null || !arguments.getBoolean("respuestaPaciente", false)) {
                                     //TODO Avisar que si cambia de pantalla se cancela la creación de turno
+                                    avisoTurnoCancelado.show();
                                     Log.d(TAG, "Vuelve a MiAgenda sin seleccionar un paciente");
+                                    seleccionPacienteEnviada = false;
                                 }
-                            }else{
+                            } else {
                                 if (arguments != null && arguments.getBoolean("respuestaPaciente", false)) {
                                     //está respondiendo con un paciente pero no le había pedido esa respuesta
                                     arguments.putBoolean("respuestaPaciente", false);
@@ -151,6 +171,17 @@ public class PrincipalActivity extends AppCompatActivity {
                             break;
                         case R.id.nav_mis_pacientes:
                             Log.d(TAG, "Va a MisPacientes");
+                            if (avisoSeleccion != null) {
+                                if (avisoSeleccion.isShown()) {
+                                    avisoSeleccion.dismiss();
+                                    seleccionPacienteEnviada = false;
+                                    avisoTurnoCancelado.show();
+                                } else {
+                                    if(seleccionPacienteEnviada) {
+                                        avisoSeleccion.show();
+                                    }
+                                }
+                            }
                             break;
                         default:
                             Log.wtf(TAG, "No va a ningún lado");
@@ -167,12 +198,12 @@ public class PrincipalActivity extends AppCompatActivity {
             if (i.getBooleanExtra(LOGIN, false)) {
                 Snackbar s;
                 if (i.getBooleanExtra(NEWUSER, false)) {
-                    s = Snackbar.make(findViewById(R.id.coordinator_layout), R.string.exito_creacion_cuenta, Snackbar.LENGTH_LONG);
+                    s = Snackbar.make(coordinatorLayout, R.string.exito_creacion_cuenta, Snackbar.LENGTH_LONG);
                 } else {
                     if (i.getBooleanExtra(LOGINGOOGLE, false)) {
-                        s = Snackbar.make(findViewById(R.id.coordinator_layout), R.string.exito_inicio_sesion_google, Snackbar.LENGTH_LONG);
+                        s = Snackbar.make(coordinatorLayout, R.string.exito_inicio_sesion_google, Snackbar.LENGTH_LONG);
                     } else {
-                        s = Snackbar.make(findViewById(R.id.coordinator_layout), R.string.exito_inicio_sesion, Snackbar.LENGTH_LONG);
+                        s = Snackbar.make(coordinatorLayout, R.string.exito_inicio_sesion, Snackbar.LENGTH_LONG);
                     }
                 }
                 s.setBackgroundTint(getResources().getColor(R.color.colorPrimary));
@@ -255,10 +286,14 @@ public class PrincipalActivity extends AppCompatActivity {
     }
 
     public void recargarFragment(Fragment fragment, Calendar fechaMostrada) {
-        if(fragment instanceof MiAgendaFragment){
+        if (fragment instanceof MiAgendaFragment) {
             Bundle args = new Bundle();
             args.putSerializable("fechaMostrar", fechaMostrada);
             navController.navigate(R.id.recargar_agenda, args);
         }
+    }
+
+    public void mostrarCanceloTurno() {
+        avisoTurnoCancelado.show();
     }
 }
