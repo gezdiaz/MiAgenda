@@ -3,6 +3,7 @@ package frsf.isi.dam.gtm.miagenda.interfaces.drawerprincipal.mispacientes;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -15,6 +16,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
@@ -33,6 +35,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -50,20 +54,45 @@ import frsf.isi.dam.gtm.miagenda.datos.DatosFirestore;
 import frsf.isi.dam.gtm.miagenda.entidades.Paciente;
 import frsf.isi.dam.gtm.miagenda.interfaces.LoginActivity;
 import frsf.isi.dam.gtm.miagenda.interfaces.NuevoPacienteActivity;
+import frsf.isi.dam.gtm.miagenda.interfaces.drawerprincipal.PrincipalActivity;
 
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class MisPacientesFragment extends Fragment {
     private static final String TAG = "MisPacientesFragment";
 
+    private RecyclerView recyclerView;
+    private MisPacientesAdapter adapter;
+    private FloatingActionButton fabMisPacientes;
+    private ProgressBar progressBar;
+    private Snackbar avisoSeleccion;
+//    private Handler handler = new Handler(Looper.myLooper()){
+//        @Override
+//        public void handleMessage(@NonNull Message msg) {
+//            switch (msg.what){
+//                case DatosFirestore.GETALL_PACIENTES:{
+//                    List<Paciente> pacientesRecibidos = (List<Paciente>) msg.obj;
+//                    ((MisPacientesAdapter) adapter).setPlatoViewDataSet(pacientesRecibidos);
+//                    adapter.notifyDataSetChanged();
+//                    if(progressDialog.isShowing()){
+//                        progressDialog.cancel();
+//                    }
+//                    break;
+//                }
+//                case DatosFirestore.ERROR_GETALL_PACIENTES:{
+//                    Toast t = Toast.makeText(DishViewActivity.this, R.string.databaseGetAllDishesError, Toast.LENGTH_LONG);
+//                    t.show();
+//                    finish();
+//                    break;
+//                }
+//            }
+//        }
+//    };
     private TextInputEditText buscarEdit;
     private Spinner buscarSpinner;
     private int posicionItemSpinerSeleccionada = 0;
     private String categoriaBusqueda;
-
-    private RecyclerView recyclerView;
-    private MisPacientesAdapter adapter;
-    private FloatingActionButton fabMisPacientes;
+;
     private DatosFirestore datosFirestore;
     private FirestoreRecyclerOptions<Paciente> firestoreRecyclerOptions;
 
@@ -83,16 +112,29 @@ public class MisPacientesFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
 
-        datosFirestore = DatosFirestore.getInstance();
+        //TODO obtener los datos de firestore
 
-        firestoreRecyclerOptions = new FirestoreRecyclerOptions.Builder<Paciente>().setQuery( datosFirestore.getAllPacientesQuery(),Paciente.class).build();
+        DatosFirestore datosFirestore = DatosFirestore.getInstance();
+        FirestoreRecyclerOptions<Paciente> firestoreRecyclerOptions = new FirestoreRecyclerOptions.Builder<Paciente>()
+                .setQuery(datosFirestore.getAllPacientesQuery(),Paciente.class)
+                .build();
 
-        adapter = new MisPacientesAdapter(firestoreRecyclerOptions);
+        Log.d(TAG, "Arguments recibidos: "+getArguments());
+
+        boolean modoseleccionar = false;
+        Bundle arguments = getArguments();
+        if(arguments != null && arguments.getBoolean("seleccionarPaciente", false)){
+            //Tiene que seleccionar un paciente
+            modoseleccionar = true;
+        }
+
+        adapter = new MisPacientesAdapter(firestoreRecyclerOptions, modoseleccionar, this);
         adapter.notifyDataSetChanged();
         recyclerView.setAdapter(adapter);
 
-        fabMisPacientes = view.findViewById(R.id.fab_mis_pacientes);
+        fabMisPacientes = ((PrincipalActivity) getActivity()).fabPrincipal;//view.findViewById(R.id.fab_mis_pacientes);
         fabMisPacientes.setColorFilter(getResources().getColor(R.color.colorTextSecondary));
+        fabMisPacientes.setImageDrawable(getActivity().getDrawable(R.drawable.ic_add_24px));
         fabMisPacientes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -141,8 +183,12 @@ public class MisPacientesFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        //Para evitar que la aplicacion siempre este escuchando cambios de la base de datos (por ser de tiempo real) aunque no este en esta actividad.
+        //Para evitar que la aplicación siempre este escuchando cambios de la base de datos (por ser de tiempo real) aunque no este en esta actividad.
         adapter.stopListening();
+    }
+
+    public void responderPaciente(Paciente p) {
+        ((PrincipalActivity) getActivity()).responderPaciente(p);
     }
 
     private androidx.appcompat.app.AlertDialog buildBuscarDialog(){

@@ -9,12 +9,24 @@
         android:id="@+id/nav_mi_agenda"
         android:name="frsf.isi.dam.gtm.miagenda.interfaces.drawerprincipal.miagenda.MiAgendaFragment"
         android:label="@string/menu_mi_agenda"
-        tools:layout="@layout/fragment_mi_agenda" />
+        tools:layout="@layout/fragment_mi_agenda">
+        <action
+            android:id="@+id/recargar_agenda"
+            app:destination="@id/nav_mi_agenda"
+            app:popUpTo="@id/nav_mi_agenda"
+            app:popUpToInclusive="true"/>
+    </fragment>
 
 
     <fragment
         android:id="@+id/nav_mis_pacientes"
         android:name="frsf.isi.dam.gtm.miagenda.interfaces.drawerprincipal.mispacientes.MisPacientesFragment"
         android:label="@string/menu_mis_pacientes"
-        tools:layout="@layout/fragment_mis_pacientes" />
+        tools:layout="@layout/fragment_mis_pacientes">
+        <action
+            android:id="@+id/respuesta_paciente"
+            app:destination="@id/nav_mi_agenda"
+            app:popUpTo="@id/nav_mi_agenda"
+            app:popUpToInclusive="true" />
+    </fragment>
 </navigation>
