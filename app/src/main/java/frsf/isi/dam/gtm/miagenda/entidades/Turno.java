@@ -8,7 +8,7 @@ public class Turno {
     private String id;
     private String descripcion;
     private String nombrePaciente;
-    private Date fechaHora;
+    private Date fecha;
     private String propietario;
 
     public Turno() {
@@ -17,7 +17,7 @@ public class Turno {
     public Turno(String descripcion, String nombrePaciente, Date fechaHora) {
         this.descripcion = descripcion;
         this.nombrePaciente = nombrePaciente;
-        this.fechaHora = fechaHora;
+        this.fecha = fechaHora;
     }
 
     public String getId() {
@@ -52,12 +52,12 @@ public class Turno {
         this.nombrePaciente = nombrePaciente;
     }
 
-    public Date getFechaHora() {
-        return fechaHora;
+    public Date getFecha() {
+        return fecha;
     }
 
-    public void setFechaHora(Date fechaHora) {
-        this.fechaHora = fechaHora;
+    public void setFecha(Date fechaHora) {
+        this.fecha = fechaHora;
     }
 
     @Override
@@ -66,8 +66,9 @@ public class Turno {
                 "id='" + id + "'\n" +
                 ", descripcion='" + descripcion + "'\n" +
                 ", nombrePaciente='" + nombrePaciente + "'\n" +
-                ", fechaHora=" + fechaHora + '\n' +
+                ", fechaHora=" + fecha + '\n' +
                 ", propietario='" + propietario + "'\n" +
                 '}';
     }
+
 }

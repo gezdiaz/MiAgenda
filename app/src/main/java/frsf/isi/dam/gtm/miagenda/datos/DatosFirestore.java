@@ -372,4 +372,11 @@ public class DatosFirestore {
         });
         return query;
     }
+
+    public Query getAllTurnosDePacienteQuery(String idPaciente) {
+        final DocumentReference documentPaciente = datosUsuario.collection(idColeccionPacientes).document(idPaciente);
+        final CollectionReference collectionTurnos = documentPaciente.collection(idColeccionTurnos);
+
+        return collectionTurnos.orderBy("fecha", Query.Direction.DESCENDING);
+    }
 }
