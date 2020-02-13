@@ -7,8 +7,8 @@ public class Turno {
     private String id;
     private String descripcion;
     private String nombrePaciente;
-    private String dniPaciente;
     private Date fecha;
+    private String dniPaciente;
     private String propietario;
     private int posicion;
     private boolean disponible;
@@ -101,4 +101,5 @@ public class Turno {
                 ", disponible=" + disponible + '\n' +
                 "}\n";
     }
+
 }
