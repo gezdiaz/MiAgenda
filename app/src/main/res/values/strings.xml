@@ -94,4 +94,15 @@
     <string name="llamada_item_option">Llamada</string>
     <string name="editar_paciente">Editar paciente</string>
     <string name="guardar">GUARDAR</string>
+    <string name="search_item_option">Buscar</string>
+    <string name="buscar_option">Buscar</string>
+    <string name="busqueda_hint">Busqueda</string>
+    <string name="seleccionar_tipo_busqueda_lbl">Buscar por:</string>
+
+    <string-array name="buscar_array">
+        <item>Apellido</item>
+        <item>Nombre</item>
+        <item>DNI</item>
+    </string-array>
+
 </resources>
