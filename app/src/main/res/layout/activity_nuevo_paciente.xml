@@ -51,6 +51,7 @@
                     android:inputType="textPersonName"
                     android:maxLines="1"
                     android:maxLength="15"
+                    android:importantForAutofill="no"
                     />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -72,6 +73,7 @@
                     android:inputType="textPersonName"
                     android:maxLines="1"
                     android:maxLength="15"
+                    android:importantForAutofill="no"
                     />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -92,7 +94,8 @@
                     android:focusable="false"
                     android:inputType="date"
                     android:maxLines="1"
-                    android:maxLength="11" />
+                    android:maxLength="11"
+                    android:importantForAutofill="no"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -113,6 +116,7 @@
                     android:inputType="number"
                     android:maxLines="1"
                     android:maxLength="15"
+                    android:importantForAutofill="no"
                     />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -135,6 +139,7 @@
                     android:inputType="phone"
                     android:maxLines="1"
                     android:maxLength="15"
+                    android:importantForAutofill="no"
                     />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -156,7 +161,8 @@
                     android:layout_height="wrap_content"
                     android:inputType="text"
                     android:maxLines="1"
-                    android:maxLength="30" />
+                    android:maxLength="30"
+                    android:importantForAutofill="no"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
@@ -186,7 +192,8 @@
                     android:layout_height="wrap_content"
                     android:inputType="textPostalAddress"
                     android:maxLines="1"
-                    android:maxLength="30"/>
+                    android:maxLength="30"
+                    android:importantForAutofill="no"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -206,7 +213,8 @@
                     android:layout_height="wrap_content"
                     android:inputType="textPostalAddress"
                     android:maxLines="1"
-                    android:maxLength="30"/>
+                    android:maxLength="30"
+                    android:importantForAutofill="no"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -228,7 +236,7 @@
                     android:inputType="textPostalAddress"
                     android:maxLines="1"
                     android:maxLength="30"
-
+                    android:importantForAutofill="no"
                     />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -249,7 +257,8 @@
                     android:layout_height="wrap_content"
                     android:inputType="textPostalAddress"
                     android:maxLines="1"
-                    android:maxLength="30" />
+                    android:maxLength="30"
+                    android:importantForAutofill="no"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -270,7 +279,8 @@
                     android:layout_height="wrap_content"
                     android:inputType="number"
                     android:maxLines="1"
-                    android:maxLength="10"/>
+                    android:maxLength="10"
+                    android:importantForAutofill="no"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -291,7 +301,8 @@
                     android:layout_height="wrap_content"
                     android:inputType="text"
                     android:maxLength="10"
-                    android:maxLines="1" />
+                    android:maxLines="1"
+                    android:importantForAutofill="no"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <RelativeLayout

@@ -31,6 +31,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
@@ -54,6 +55,8 @@ import frsf.isi.dam.gtm.miagenda.interfaces.listahistoriaclinica.HistoriaClinica
 
 public class NuevoPacienteActivity extends AppCompatActivity {
 
+    public static final String EDITARACTION = "editarPaciente";
+
     private final int REQUEST_IMAGE_CAPTURE = 1;
 
     private Toolbar myToolBar;
@@ -73,6 +76,10 @@ public class NuevoPacienteActivity extends AppCompatActivity {
     private Bitmap imageBitmap;
     private String TAG = "NuevoPacienteActivity";
     private String rutaImagen;
+    private Paciente pacienteEditado;
+    private String dniSinEditar = "";
+
+
     private final Handler handler = new Handler(Looper.myLooper()) {
         @Override
         public void handleMessage(@NonNull Message msg) {
@@ -81,6 +88,11 @@ public class NuevoPacienteActivity extends AppCompatActivity {
                     Log.d(TAG, "Paciente guardado correctamente");
                     if (progressDialog.isShowing()) {
                         progressDialog.cancel();
+                    }
+                    if(getIntent().getAction() == EDITARACTION){
+                        Intent resultado = new Intent();
+                        resultado.putExtra("paciente",pacienteEditado);
+                        setResult(VerPacienteActivity.REQUESTEDITARPACIENTE, resultado);
                     }
                     finish();
                     break;
@@ -137,9 +149,23 @@ public class NuevoPacienteActivity extends AppCompatActivity {
         paisEdit = findViewById(R.id.pais_edit);
         departamentoEdit = findViewById(R.id.departamento_direccion_edit);
 
+
+        if(getIntent().getAction() == EDITARACTION){
+            pacienteEditado = (Paciente) getIntent().getSerializableExtra("paciente");
+            setearDatos(pacienteEditado);
+            myToolBar.setTitle(R.string.editar_paciente);
+            registrarPacBtn.setText(R.string.guardar);
+        }
+        else{
+            myToolBar.setTitle(R.string.nuevo_paciente_name);
+            registrarPacBtn.setText(R.string.registrar_paciente_btn);
+        }
+
+
         fechaNacimientoEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 datePicker.show(getSupportFragmentManager(), datePicker.toString());
             }
         });
@@ -167,6 +193,7 @@ public class NuevoPacienteActivity extends AppCompatActivity {
                 }
             }
         });
+
 
         telefonoEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -258,21 +285,33 @@ public class NuevoPacienteActivity extends AppCompatActivity {
                 contadorWhile = 0;
                 datosValidos = true;
 
+                nombrePacienteEdit.requestFocus();
                 nombrePacienteEdit.clearFocus();
+                apellidoPacienteEdit.requestFocus();
                 apellidoPacienteEdit.clearFocus();
                 fechaNacimientoEdit.requestFocus();
                 fechaNacimientoEdit.clearFocus();
+                dniEdit.requestFocus();
                 dniEdit.clearFocus();
+                telefonoEdit.requestFocus();
                 telefonoEdit.clearFocus();
+                provinciaEdit.requestFocus();
                 provinciaEdit.clearFocus();
+                ciudadEdit.requestFocus();
                 ciudadEdit.clearFocus();
+                calleEdit.requestFocus();
                 calleEdit.clearFocus();
+                numeroDireccionEdit.requestFocus();
                 numeroDireccionEdit.clearFocus();
+                obraSocialEdit.requestFocus();
                 obraSocialEdit.clearFocus();
 
-                if (fechaNacimientoEdit.getText().toString().isEmpty()) {
+                if(fechaNacimientoEdit.getText().toString().isEmpty()){
+                    fechaNacimientoEdit.setError(getString(R.string.campo_vacio_error));
                     validaciones[2] = false;
-                } else {
+                }
+                else{
+                    fechaNacimientoEdit.setError(null);
                     validaciones[2] = true;
                 }
 
@@ -284,23 +323,54 @@ public class NuevoPacienteActivity extends AppCompatActivity {
                 }
                 if (datosValidos) {
                     //TODO Registrar paciente
-                    Paciente p = new Paciente(
-                            nombrePacienteEdit.getText().toString(),
-                            apellidoPacienteEdit.getText().toString(),
-                            obraSocialEdit.getText().toString(),
-                            fechaNacimiento.getTime(),
-                            dniEdit.getText().toString(),
-                            Long.parseLong(telefonoEdit.getText().toString()),
-                            paisEdit.getText().toString().isEmpty() ? "Argentina" : paisEdit.getText().toString(),
-                            provinciaEdit.getText().toString(),
-                            ciudadEdit.getText().toString(),
-                            calleEdit.getText().toString(),
-                            numeroDireccionEdit.getText().toString(),
-                            departamentoEdit.getText().toString());
+                    Paciente p;
+                    if(fechaNacimiento != null){
+                        p = new Paciente(
+                                nombrePacienteEdit.getText().toString(),
+                                apellidoPacienteEdit.getText().toString(),
+                                obraSocialEdit.getText().toString(),
+                                fechaNacimiento.getTime(),
+                                dniEdit.getText().toString(),
+                                Long.parseLong(telefonoEdit.getText().toString()),
+                                paisEdit.getText().toString().isEmpty() ? "Argentina" : paisEdit.getText().toString(),
+                                provinciaEdit.getText().toString(),
+                                ciudadEdit.getText().toString(),
+                                calleEdit.getText().toString(),
+                                numeroDireccionEdit.getText().toString(),
+                                departamentoEdit.getText().toString());
+                    }
+                    else {
+                        p = new Paciente(
+                        nombrePacienteEdit.getText().toString(),
+                                apellidoPacienteEdit.getText().toString(),
+                                obraSocialEdit.getText().toString(),
+                                pacienteEditado.getFechaNacimiento(),
+                                dniEdit.getText().toString(),
+                                Long.parseLong(telefonoEdit.getText().toString()),
+                                paisEdit.getText().toString().isEmpty() ? "Argentina" : paisEdit.getText().toString(),
+                                provinciaEdit.getText().toString(),
+                                ciudadEdit.getText().toString(),
+                                calleEdit.getText().toString(),
+                                numeroDireccionEdit.getText().toString(),
+                                departamentoEdit.getText().toString());
+                    }
+
+                    if(getIntent().getAction() == EDITARACTION){
+
+                        p.setFotoURL(pacienteEditado.getFotoURL());
+
+                        if (pacienteEditado.getDni() != p.getDni()){
+                            dniSinEditar = pacienteEditado.getDni();
+                        }
+                        pacienteEditado = p;
+                    }
+
                     progressDialog = ProgressDialog.show(NuevoPacienteActivity.this, getString(R.string.por_favor_espere), getString(R.string.guardando_paciente));
                     progressDialog.setCancelable(false);
-                    DatosFirestore.getInstance().savePaciente(p, handler);
-                    if (imageBitmap != null) {
+
+                    DatosFirestore.getInstance().savePaciente(p, dniSinEditar ,handler);
+
+                    if ( imageBitmap != null ) {
                         ArchivosCloudStorage.getInstance().saveImageEnPaciente(dniEdit.getText().toString(), imageBitmap, handler, getApplicationContext());
                     }
                     // finish();
@@ -334,6 +404,42 @@ public class NuevoPacienteActivity extends AppCompatActivity {
                 actualizarImagen(null);
             }
         });
+    }
+
+    private void setearDatos(Paciente p) {
+
+        Calendar fechaNac = Calendar.getInstance(TimeZone.getTimeZone("UTC-3"));
+        fechaNac.setTime(p.getFechaNacimiento());
+
+        nombrePacienteEdit.setText(p.getNombre());
+        apellidoPacienteEdit.setText(p.getApellido());
+        fechaNacimientoEdit.setText(fechaNac.get(Calendar.DATE) + "/" +(fechaNac.get(Calendar.MONTH)+1) + "/" + fechaNac.get(Calendar.YEAR));
+        dniEdit.setText(p.getDni());
+        telefonoEdit.setText(String.valueOf(p.getTelefono()));
+        provinciaEdit.setText(p.getDireccion().getProvincia());
+        ciudadEdit.setText(p.getDireccion().getCiudad());
+        calleEdit.setText(p.getDireccion().getCalle());
+        numeroDireccionEdit.setText(p.getDireccion().getNumero());
+        obraSocialEdit.setText(p.getObraSocial());
+        departamentoEdit.setText(p.getDireccion().getDepartamento());
+
+
+        if(p.getFotoURL() != null){
+
+            Uri photoUrl = Uri.parse(p.getFotoURL());
+            fotoPacienteRelativeLayout.setVisibility(View.VISIBLE);
+            if (photoUrl != null) {
+                //Si tiene foto la cargo con Glide
+                Glide.with(getApplicationContext())
+                        .load(photoUrl)
+                        .into(fotoPacienteImageView);
+            }
+        }
+        else{
+
+            fotoPacienteRelativeLayout.setVisibility(View.GONE);
+        }
+
     }
 
     @Override
@@ -372,10 +478,24 @@ public class NuevoPacienteActivity extends AppCompatActivity {
         datePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
             @Override
             public void onPositiveButtonClick(Long aLong) {
-                fechaNacimiento = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+                fechaNacimiento = Calendar.getInstance(TimeZone.getTimeZone("UTC-3"));
                 fechaNacimiento.setTimeInMillis(aLong);
                 String fechaSeleccionada = (fechaNacimiento.get(Calendar.DATE)) + "/" + (fechaNacimiento.get(Calendar.MONTH) + 1) + "/" + fechaNacimiento.get(Calendar.YEAR);
                 fechaNacimientoEdit.setText(fechaSeleccionada);
+                fechaNacimientoEdit.setError(null);
+            }
+        });
+        datePicker.addOnNegativeButtonClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(fechaNacimientoEdit.getText().toString().isEmpty()){
+                    fechaNacimientoEdit.setError(getString(R.string.campo_vacio_error));
+                    validaciones[2] = false;
+                }
+                else{
+                    fechaNacimientoEdit.setError(null);
+                    validaciones[2] = true;
+                }
             }
         });
     }
@@ -439,8 +559,20 @@ public class NuevoPacienteActivity extends AppCompatActivity {
         if (bitmap != null) {
             fotoPacienteRelativeLayout.setVisibility(View.VISIBLE);
         } else {
+            if(getIntent().getAction() == EDITARACTION){
+                pacienteEditado.setFotoURL(null);
+            }
             fotoPacienteRelativeLayout.setVisibility(View.GONE);
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        if(getIntent().getAction() == EDITARACTION){
+            Intent resultado = new Intent();
+            resultado.putExtra("paciente",pacienteEditado);
+            setResult(VerPacienteActivity.REQUESTEDITARPACIENTE, resultado);
+        }
+        finish();
+    }
 }

@@ -92,4 +92,6 @@
     <string name="guardando_paciente">Guardando paciente.</string>
     <string name="llamar_btn">Llamar</string>
     <string name="llamada_item_option">Llamada</string>
+    <string name="editar_paciente">Editar paciente</string>
+    <string name="guardar">GUARDAR</string>
 </resources>

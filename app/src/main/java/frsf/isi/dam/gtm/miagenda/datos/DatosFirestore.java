@@ -3,6 +3,7 @@ package frsf.isi.dam.gtm.miagenda.datos;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -139,9 +140,52 @@ public class DatosFirestore {
                 });
     }
 
-    public void savePaciente(Paciente p, final Handler handler) {
+    public void savePaciente(final Paciente p, String dniSinEditar, final Handler handler) {
         //Guarda el paciente en la base de datos
-        CollectionReference collectionPacientes = datosUsuario.collection(idColeccionPacientes);
+        final CollectionReference collectionPacientes = datosUsuario.collection(idColeccionPacientes);
+
+
+        if(dniSinEditar != ""){
+            collectionPacientes.document(dniSinEditar).delete()
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            guardarPaciente(p, handler, collectionPacientes);
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d(TAG, "savePaciente: Error al eliminar el paciente.", e);
+                            Message m = Message.obtain();
+                            m.what = ERROR_SAVE_PACIENTE;
+                            handler.sendMessage(m);
+                        }
+                    });
+        }
+        else{
+           collectionPacientes.document(p.getDni()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+               @Override
+               public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                   if(task.isSuccessful()){
+                       if(task.getResult().exists()){
+                        //TODO mostrar error
+                       }
+                       else {
+                           guardarPaciente(p, handler, collectionPacientes);
+                       }
+                   }
+                   else {
+                       Message m = Message.obtain();
+                       m.what = ERROR_SAVE_PACIENTE;
+                       handler.sendMessage(m);
+                   }
+                   }
+               });
+           }
+    }
+
+    private void guardarPaciente(Paciente p, final Handler handler, CollectionReference collectionPacientes) {
         collectionPacientes.document(String.valueOf(p.getDni())).set(p)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -154,7 +198,7 @@ public class DatosFirestore {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "savePaciente: Error al guardar el paciente.", e);
+                        Log.d(TAG, "guardarPaciente: Error al guardar el paciente.", e);
                         Message m = Message.obtain();
                         m.what = ERROR_SAVE_PACIENTE;
                         handler.sendMessage(m);
