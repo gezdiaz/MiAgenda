@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -45,10 +46,11 @@ import static androidx.constraintlayout.widget.Constraints.TAG;
 public class MisPacientesFragment extends Fragment {
     private static final String TAG = "MisPacientesFragment";
 
-    RecyclerView recyclerView;
-    MisPacientesAdapter adapter;
-    FloatingActionButton fabMisPacientes;
-    Snackbar avisoSeleccion;
+    private RecyclerView recyclerView;
+    private MisPacientesAdapter adapter;
+    private FloatingActionButton fabMisPacientes;
+    private Snackbar avisoSeleccion;
+    private ProgressBar progressBar;
 //    private Handler handler = new Handler(Looper.myLooper()){
 //        @Override
 //        public void handleMessage(@NonNull Message msg) {
@@ -84,7 +86,9 @@ public class MisPacientesFragment extends Fragment {
         //TODO obtener los datos de firestore
 
         DatosFirestore datosFirestore = DatosFirestore.getInstance();
-        FirestoreRecyclerOptions<Paciente> firestoreRecyclerOptions = new FirestoreRecyclerOptions.Builder<Paciente>().setQuery(datosFirestore.getAllPacientesQuery(),Paciente.class).build();
+        FirestoreRecyclerOptions<Paciente> firestoreRecyclerOptions = new FirestoreRecyclerOptions.Builder<Paciente>()
+                .setQuery(datosFirestore.getAllPacientesQuery(),Paciente.class)
+                .build();
 
         Log.d(TAG, "Arguments recibidos: "+getArguments());
 

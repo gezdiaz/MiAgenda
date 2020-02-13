@@ -180,6 +180,7 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 //                DatosFirestore.getInstance().saveTurno(t, p.getDni(), fragment.handler);
                 String descripcion = descripcionEdit.getText().toString();
                 guardarTurno(turnoPos, descripcion, fechaTurno, pacienteSeleccionado);
+//                fragment.recargarFragment();
             }
         });
 
@@ -262,7 +263,7 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             Turno t = new Turno(descripcion, p.getApellido()+", "+p.getNombre(), fechaTurno.getTime());
             t.setPosicion(turnoPos);
             t.setDisponible(false);
-            DatosFirestore.getInstance().saveTurno(t, p.getDni(), fragment.handler);
+            fragment.guardarTurno(t, p.getDni());
         }
     }
 

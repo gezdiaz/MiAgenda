@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -26,7 +27,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 import java.util.TimeZone;
 
 import frsf.isi.dam.gtm.miagenda.R;
@@ -44,6 +44,7 @@ public class MiAgendaFragment extends Fragment {
 
     private final String TAG = "MiAgendaFragment";
     private RecyclerView recyclerView;
+    private ProgressBar progressBar;
     private MiAgendaAdapter adapter;
     private FloatingActionButton verCalendarioFAB;
     private MaterialDatePicker.Builder<Long> builder;
@@ -69,7 +70,8 @@ public class MiAgendaFragment extends Fragment {
                     break;
                 case DatosFirestore.SAVE_TURNO:
                     Log.d(TAG, "Se gaurdó el turno");
-                    mostrarFechaSeleccionada(fechaMostrar);
+//                    mostrarFechaSeleccionada(fechaMostrar);
+                    ((PrincipalActivity) getActivity()).recargarFragment(MiAgendaFragment.this, fechaMostrar);
                     break;
                 case DatosFirestore.ERROR_SAVE_TURNO:
                     Log.d(TAG, "Error al guardar el turno");
@@ -96,13 +98,14 @@ public class MiAgendaFragment extends Fragment {
         adapter.notifyDataSetChanged();
         fechaTxt.setText(fechaMostrar.get(Calendar.DATE) + " de " + fechaMostrar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault()) + " de " + fechaMostrar.get(Calendar.YEAR));
         recyclerView.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.GONE);
     }
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mi_agenda, container, false);
-
+        boolean actualizoLista = false;
 
         fechaTxt = view.findViewById(R.id.txt_fecha_hoy);
 
@@ -114,6 +117,7 @@ public class MiAgendaFragment extends Fragment {
         fechaMostrar.set(Calendar.MILLISECOND, 0);
 
         recyclerView = view.findViewById(R.id.recycler_turnos);
+        progressBar = view.findViewById(R.id.mi_agenda_progress);
         //TODO setear lista de turnos
         recyclerView.setVisibility(View.INVISIBLE);
         listTurnos = new ArrayList<>();
@@ -126,24 +130,39 @@ public class MiAgendaFragment extends Fragment {
         boolean respuestaPaciente = false;
 
         Bundle arguments = getArguments();
-        if(arguments != null && arguments.getBoolean("respuestaPaciente", false)){
-            Log.d(TAG, "Arguments recibidos en MiAgenda: "+arguments);
-            Paciente p = (Paciente) getArguments().get("paciente");
-            Calendar hora = (Calendar) getArguments().get("horaTurno");
-            respuestaPaciente = true;
-            if(!estaMostrandoFecha(hora)){
-                fechaMostrar = (Calendar) hora.clone();
-                fechaMostrar.set(Calendar.HOUR_OF_DAY, horaInicio);
-                fechaMostrar.set(Calendar.MINUTE, 0);
-                fechaMostrar.set(Calendar.SECOND, 0);
-                fechaMostrar.set(Calendar.MILLISECOND, 0);
-                mostrarFechaSeleccionada(fechaMostrar);
-            }
-            Log.d(TAG, "Datos guardados recibidos: "+arguments.getBundle("datos"));
+        if(arguments != null){
+            if(arguments.getBoolean("respuestaPaciente", false)) {
+                if (((PrincipalActivity) getActivity()).seleccionPacienteEnviada) {
+                    //Si se había enviado una selección de paciente vuelvo a crear el diálogo, sino no
+                    Log.d(TAG, "Arguments recibidos en MiAgenda: " + arguments);
+                    Paciente p = (Paciente) getArguments().get("paciente");
+                    Calendar hora = (Calendar) getArguments().get("horaTurno");
+                    respuestaPaciente = true;
+                    if (!estaMostrandoFecha(hora)) {
+                        fechaMostrar = (Calendar) hora.clone();
+                        fechaMostrar.set(Calendar.HOUR_OF_DAY, horaInicio);
+                        fechaMostrar.set(Calendar.MINUTE, 0);
+                        fechaMostrar.set(Calendar.SECOND, 0);
+                        fechaMostrar.set(Calendar.MILLISECOND, 0);
+                        mostrarFechaSeleccionada(fechaMostrar);
+                        actualizoLista = true;
+                    }
+                    Log.d(TAG, "Datos guardados recibidos: " + arguments.getBundle("datos"));
 //            adapter.setPacienteSeleccionado(p);
 //            AlertDialog dialogoGuardado = ((PrincipalActivity) getActivity()).getDialogoReservar();
 //            dialogoGuardado.show();
-            adapter.retomarCreacionTurno(p, arguments.getBundle("datos"));
+                    //"consumo" la selección del paciente
+                    ((PrincipalActivity) getActivity()).seleccionPacienteEnviada = false;
+                    adapter.setFecha(fechaMostrar);
+                    adapter.retomarCreacionTurno(p, arguments.getBundle("datos"));
+                }
+            }else{
+                Calendar f = (Calendar) arguments.get("fechaMostrar");
+                if(f != null){
+                    mostrarFechaSeleccionada(f);
+                    actualizoLista = true;
+                }
+            }
         }
 
         listTurnos = new ArrayList<>();
@@ -154,7 +173,9 @@ public class MiAgendaFragment extends Fragment {
         }
         h = null;
 
-        mostrarFechaSeleccionada(fechaMostrar);
+        if (!actualizoLista) {
+            mostrarFechaSeleccionada(fechaMostrar);
+        }
 
         buildDatePicker();
 
@@ -205,6 +226,7 @@ public class MiAgendaFragment extends Fragment {
         Log.d(TAG, "Fecha seleccionada: " + fechaSeleccionada.getTime() + " TimeZone: " + fechaSeleccionada.getTimeZone().getDisplayName());
         Log.d(TAG, "Fecha mostrar: " + fechaMostrar.getTime() + " Milis: " + fechaMostrar.getTimeInMillis());
         recyclerView.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
         fechaMostrar = fechaSeleccionada;
         //buscar en firebase los turnos de esta fecha.
         DatosFirestore.getInstance().getTurnosEnFecha(fechaSeleccionada.getTime(), handler);
@@ -212,5 +234,10 @@ public class MiAgendaFragment extends Fragment {
 
     void seleccionarPaciente(Calendar hora, Bundle datosAguardar, AlertDialog dialogoReservar){
         ((PrincipalActivity) getActivity()).seleccionarPaciente(hora, datosAguardar, dialogoReservar);
+    }
+
+    public void guardarTurno(Turno t, String dni) {
+        recyclerView.setVisibility(View.INVISIBLE);
+        DatosFirestore.getInstance().saveTurno(t, dni, handler);
     }
 }

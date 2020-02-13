@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.view.GravityCompat;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
@@ -44,6 +45,7 @@ import frsf.isi.dam.gtm.miagenda.datos.DatosFirestore;
 import frsf.isi.dam.gtm.miagenda.entidades.Paciente;
 import frsf.isi.dam.gtm.miagenda.entidades.Turno;
 import frsf.isi.dam.gtm.miagenda.interfaces.LoginActivity;
+import frsf.isi.dam.gtm.miagenda.interfaces.drawerprincipal.miagenda.MiAgendaFragment;
 
 public class PrincipalActivity extends AppCompatActivity {
 
@@ -59,7 +61,7 @@ public class PrincipalActivity extends AppCompatActivity {
     private TextView userNameTxt, userEmailTxt;
     private ImageView userImageView;
     private NavController navController;
-    private boolean seleccionPacienteEnviada = false;
+    public boolean seleccionPacienteEnviada = false;
     private Calendar horaTurnoPendiente;
     private Bundle datosGuardados;
     private AlertDialog dialogoReservar;
@@ -71,7 +73,6 @@ public class PrincipalActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorTextSecondary));
         setSupportActionBar(toolbar);
-
 
         //verificar si hay una sesión iniciada.
         mAuth = FirebaseAuth.getInstance();
@@ -130,16 +131,22 @@ public class PrincipalActivity extends AppCompatActivity {
 //                    Log.d(TAG, "NavAction: "+destination.getId());
 //                    Log.d(TAG, "MiAgendaId: "+R.id.nav_mi_agenda);
 //                    Log.d(TAG, "MisPacientesId: "+R.id.nav_mis_pacientes);
-                    Log.d(TAG, "args: "+arguments);
+                    Log.d(TAG, "args: " + arguments);
                     switch (destination.getId()) {
                         case R.id.nav_mi_agenda:
                             Log.d(TAG, "Va a MiAgenda");
-                            if(seleccionPacienteEnviada){
-                                if(!arguments.getBoolean("respuestaPaciente", false)){
+                            if (seleccionPacienteEnviada) {
+
+                                if (arguments == null || !arguments.getBoolean("respuestaPaciente", false)) {
                                     //TODO Avisar que si cambia de pantalla se cancela la creación de turno
                                     Log.d(TAG, "Vuelve a MiAgenda sin seleccionar un paciente");
                                 }
-                                seleccionPacienteEnviada = false;
+                            }else{
+                                if (arguments != null && arguments.getBoolean("respuestaPaciente", false)) {
+                                    //está respondiendo con un paciente pero no le había pedido esa respuesta
+                                    arguments.putBoolean("respuestaPaciente", false);
+                                    Log.d(TAG, "Se recibió una respuestaPaciente no solicitada");
+                                }
                             }
                             break;
                         case R.id.nav_mis_pacientes:
@@ -155,23 +162,23 @@ public class PrincipalActivity extends AppCompatActivity {
             NavigationUI.setupWithNavController(navigationView, navController);
 
 
-        }
-
-        //Mostrar mensaje de inicio de sesión si recién ingresa.
-        Intent i = getIntent();
-        if (i.getBooleanExtra(LOGIN, false)) {
-            Snackbar s;
-            if (i.getBooleanExtra(NEWUSER, false)) {
-                s = Snackbar.make(findViewById(R.id.coordinator_layout), R.string.exito_creacion_cuenta, Snackbar.LENGTH_LONG);
-            } else {
-                if (i.getBooleanExtra(LOGINGOOGLE, false)) {
-                    s = Snackbar.make(findViewById(R.id.coordinator_layout), R.string.exito_inicio_sesion_google, Snackbar.LENGTH_LONG);
+            //Mostrar mensaje de inicio de sesión si recién ingresa.
+            Intent i = getIntent();
+            if (i.getBooleanExtra(LOGIN, false)) {
+                Snackbar s;
+                if (i.getBooleanExtra(NEWUSER, false)) {
+                    s = Snackbar.make(findViewById(R.id.coordinator_layout), R.string.exito_creacion_cuenta, Snackbar.LENGTH_LONG);
                 } else {
-                    s = Snackbar.make(findViewById(R.id.coordinator_layout), R.string.exito_inicio_sesion, Snackbar.LENGTH_LONG);
+                    if (i.getBooleanExtra(LOGINGOOGLE, false)) {
+                        s = Snackbar.make(findViewById(R.id.coordinator_layout), R.string.exito_inicio_sesion_google, Snackbar.LENGTH_LONG);
+                    } else {
+                        s = Snackbar.make(findViewById(R.id.coordinator_layout), R.string.exito_inicio_sesion, Snackbar.LENGTH_LONG);
+                    }
                 }
+                s.setBackgroundTint(getResources().getColor(R.color.colorPrimary));
+                s.show();
             }
-            s.setBackgroundTint(getResources().getColor(R.color.colorPrimary));
-            s.show();
+
         }
 
     }
@@ -194,16 +201,16 @@ public class PrincipalActivity extends AppCompatActivity {
         return d;
     }
 
-    public void responderPaciente(Paciente p){
+    public void responderPaciente(Paciente p) {
         Log.d(TAG, "Respondió con paciente" + p);
         Bundle args = new Bundle();
         args.putBoolean("respuestaPaciente", true);
         args.putSerializable("paciente", p);
         args.putSerializable("horaTurno", horaTurnoPendiente);
         args.putBundle("datos", datosGuardados);
-        navController.navigate(R.id.nav_mi_agenda, args);
+        //Uso una acción en vez de navegar directamente al fragment para eliminar todos los fragments anteriores de la pila (con popUpTo)
+        navController.navigate(R.id.respuesta_paciente, args);
         horaTurnoPendiente = null;
-        seleccionPacienteEnviada = false;
         datosGuardados = null;
     }
 
@@ -247,4 +254,11 @@ public class PrincipalActivity extends AppCompatActivity {
         }
     }
 
+    public void recargarFragment(Fragment fragment, Calendar fechaMostrada) {
+        if(fragment instanceof MiAgendaFragment){
+            Bundle args = new Bundle();
+            args.putSerializable("fechaMostrar", fechaMostrada);
+            navController.navigate(R.id.recargar_agenda, args);
+        }
+    }
 }
