@@ -1,6 +1,7 @@
 package frsf.isi.dam.gtm.miagenda.interfaces.listahistoriaclinica;
 
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -26,6 +28,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.os.StrictMode;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,30 +37,42 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
 import frsf.isi.dam.gtm.miagenda.R;
+import frsf.isi.dam.gtm.miagenda.datos.DatosFirestore;
 import frsf.isi.dam.gtm.miagenda.entidades.Paciente;
 import frsf.isi.dam.gtm.miagenda.interfaces.LoginActivity;
+import frsf.isi.dam.gtm.miagenda.interfaces.drawerprincipal.mispacientes.MisPacientesAdapter;
 
 public class HistoriaClinicaActivity extends AppCompatActivity {
+
+    public static final String TAG  = "HistoriaClinicaActivity";
 
     private List<Turno> mockTurnos;
     private Paciente p;
     private View contextView;
     private RecyclerView historiaClinicaRecyclerView;
-    private RecyclerView.Adapter historiaClinicaAdapter;
+    private HistoriaClinicaAdapter historiaClinicaAdapter;
     private RecyclerView.LayoutManager historiaClinicaLayoutManager;
     private MaterialButton generarPdfBtn, verPdfBtn;
     private ProgressBar creacionPdfProgressBar;
@@ -74,9 +89,10 @@ public class HistoriaClinicaActivity extends AppCompatActivity {
     private PdfDocument.Page contenidoPagina;
     private Canvas canvas;
     private Paint paint;
-    private final int maxCantCaracteresXRenglon = 60;
+    private final int maxCantCaracteresXRenglon = 105;
     private String directorioDestinoPdf;
-
+    private DatosFirestore datosFirestore;
+    private FirestoreRecyclerOptions<frsf.isi.dam.gtm.miagenda.entidades.Turno> firestoreRecyclerOptions;
 
     private Handler myHandler;
 
@@ -144,24 +160,21 @@ public class HistoriaClinicaActivity extends AppCompatActivity {
 
         ActivityCompat.requestPermissions(HistoriaClinicaActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PackageManager.PERMISSION_GRANTED);
 
-        //prueba con turnos falsos
-        mockTurnos = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            mockTurnos.add(new Turno(((i + 1) + "/2/2020"), "Problema x" + i, "Sin nombre"));
-        }
-        mockTurnos.add(new Turno("21/2/2020", "Problema aMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMaMMMMMMMMMaMMMMMMMMMaMMMMMMMMMaMMMMMMMMMaMMMMMMMMMaMMMMMMMMMaMMMMMMMMMa", "Sin nombre"));
-
 
         historiaClinicaRecyclerView = findViewById(R.id.historia_clinica_recyclerview);
         historiaClinicaLayoutManager = new LinearLayoutManager(this);
         historiaClinicaRecyclerView.setLayoutManager(historiaClinicaLayoutManager);
-        historiaClinicaAdapter = new HistoriaClinicaAdapter(mockTurnos);
+
+        datosFirestore = DatosFirestore.getInstance();
+        Query query = datosFirestore.getAllTurnosDePacienteQuery(p.getDni());
+        firestoreRecyclerOptions = new FirestoreRecyclerOptions.Builder<frsf.isi.dam.gtm.miagenda.entidades.Turno>().setQuery(query, frsf.isi.dam.gtm.miagenda.entidades.Turno.class).build();
+
+        historiaClinicaAdapter = new HistoriaClinicaAdapter(firestoreRecyclerOptions);
+        historiaClinicaAdapter.notifyDataSetChanged();
         historiaClinicaRecyclerView.setAdapter(historiaClinicaAdapter);
 
         pacienteLbl = findViewById(R.id.paciente_hist_clin_lbl);
-
         pacienteLbl.append(": " + p.getNombre()+" "+p.getApellido());
-        //TODO Buscar la lista de turnos en la DB
 
         generarPdfBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -188,13 +201,14 @@ public class HistoriaClinicaActivity extends AppCompatActivity {
             }
         });
 
+
         verPdfBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 verPdf();
             }
         });
-
+        Log.d(TAG,String.valueOf(firestoreRecyclerOptions.getSnapshots().size()));
     }
 
 
@@ -232,7 +246,7 @@ public class HistoriaClinicaActivity extends AppCompatActivity {
 
         crearNuevaPagina();
 
-        for (Turno t : mockTurnos) {
+         for (frsf.isi.dam.gtm.miagenda.entidades.Turno t : historiaClinicaAdapter.getSnapshots()) {
 
             //Aca le sumo cinco al margenY para que no quede un fecha colgada en una hoja y la respectiva descripcon en una hoja nueva.
             if (((margenY + 5 + paint.descent() - paint.ascent()) >= largoPagina)) {
@@ -241,7 +255,7 @@ public class HistoriaClinicaActivity extends AppCompatActivity {
                 crearNuevaPagina();
             }
 
-            canvas.drawText(t.getFecha().toString(), margenX, margenY, paint);
+            canvas.drawText(getFechaToString(t), margenX, margenY, paint);
 
             margenY += 5 + paint.descent() - paint.ascent();
 
@@ -270,18 +284,22 @@ public class HistoriaClinicaActivity extends AppCompatActivity {
                     canvas.drawText(linea, margenX, margenY, paint);
                     margenY += paint.descent() - paint.ascent();
                 }
-
                 if ((margenY >= largoPagina)) {
                     numeroPagina++;
                     documentoPdf.finishPage(contenidoPagina);
                     crearNuevaPagina();
-                } else {
-                    canvas.drawLine(margenX, margenY, 580, margenY, paint);
                 }
-
-                margenY += 10 + paint.descent() - paint.ascent();
-
             }
+
+             if ((margenY >= largoPagina)) {
+                 numeroPagina++;
+                 documentoPdf.finishPage(contenidoPagina);
+                 crearNuevaPagina();
+             } else {
+                 canvas.drawLine(margenX, margenY, 580, margenY, paint);
+             }
+
+             margenY += 10 + paint.descent() - paint.ascent();
 
         }
 
@@ -305,6 +323,13 @@ public class HistoriaClinicaActivity extends AppCompatActivity {
         } catch (IOException e) {
             msg.what = PDF_ERROR_CODIGO;
         }
+    }
+
+    private String getFechaToString(frsf.isi.dam.gtm.miagenda.entidades.Turno t) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeZone(TimeZone.getDefault());
+        cal.setTime(t.getFecha());
+     return cal.get(Calendar.DATE) + "/" + (cal.get(Calendar.MONTH)+1) + "/" + cal.get(Calendar.YEAR);
     }
 
     private void crearNuevaPagina() {
@@ -338,19 +363,24 @@ public class HistoriaClinicaActivity extends AppCompatActivity {
 
     private void cortarString(String linea, ArrayList<String> lineasARetornar) {
 
+        Log.d(TAG,linea);
         //Este metodo es para aquellos casos en que un string deba mostrarse en mas de un renglon.
 
         if (linea.length() > maxCantCaracteresXRenglon) {
             //lineasARetornar.add(linea.substring(0, 50));
             String lineaCortada = (linea.substring(0, maxCantCaracteresXRenglon));
+            if(lineaCortada.lastIndexOf(' ') == 0){
+                lineaCortada = lineaCortada.substring(1);
+            }
             if (lineaCortada.lastIndexOf(' ') != -1) {
 
                 lineasARetornar.add(lineaCortada.substring(0, lineaCortada.lastIndexOf(' ')));
-                linea = linea.substring(lineaCortada.lastIndexOf(' ') + 1, linea.length() - 1);
+                linea = linea.substring(lineaCortada.lastIndexOf(' ')+1);
                 cortarString(linea, lineasARetornar);
+
             } else {
                 lineasARetornar.add(lineaCortada);
-                cortarString(linea.substring(maxCantCaracteresXRenglon + 1), lineasARetornar);
+                cortarString(linea.substring(maxCantCaracteresXRenglon), lineasARetornar);
             }
 
         } else {
@@ -388,6 +418,16 @@ public class HistoriaClinicaActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        historiaClinicaAdapter.startListening();
+    }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        historiaClinicaAdapter.stopListening();
+    }
 }
 

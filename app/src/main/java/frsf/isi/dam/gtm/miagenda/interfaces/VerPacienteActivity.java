@@ -144,6 +144,7 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == REQUESTEDITARPACIENTE){
+            //TODO este paciente no muestra una nueva foto que le fue seteada porque
             p = (Paciente) data.getSerializableExtra("paciente");
 
             Log.d(TAG, "Paciente: " + p.toString());

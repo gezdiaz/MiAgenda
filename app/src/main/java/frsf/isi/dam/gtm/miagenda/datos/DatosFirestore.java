@@ -385,24 +385,16 @@ public class DatosFirestore {
         query = datosUsuario.collection(idColeccionPacientes).whereGreaterThanOrEqualTo(categoriaBusqueda,busquedaUsuario).whereLessThan(categoriaBusqueda,busquedaMax);
 
         Log.d(TAG, "En getPAcientesPOrBusqueda");
-        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                ArrayList<Paciente> listaPacientes = new ArrayList<>();
-                for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                    Paciente p = document.toObject(Paciente.class);
-                    listaPacientes.add(p);
-                    Log.d(TAG, "Paciente obtenido: " + p.toString());
-                }
-                Log.d(TAG, "Cantidad de pacientes encontrados:  " + listaPacientes.size());
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w(TAG, "Error al obtener los pacientes.", e);
-
-            }
-        });
+        if(categoriaBusqueda == "apellido"){
+            query.orderBy(categoriaBusqueda).orderBy("nombre");
+        }
         return query;
+    }
+
+    public Query getAllTurnosDePacienteQuery(String idPaciente) {
+        final DocumentReference documentPaciente = datosUsuario.collection(idColeccionPacientes).document(idPaciente);
+        final CollectionReference collectionTurnos = documentPaciente.collection(idColeccionTurnos);
+
+        return collectionTurnos.orderBy("fecha", Query.Direction.DESCENDING);
     }
 }
