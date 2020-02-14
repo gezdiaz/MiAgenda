@@ -66,28 +66,6 @@ public class MisPacientesFragment extends Fragment {
     private FloatingActionButton fabMisPacientes;
     private ProgressBar progressBar;
     private Snackbar avisoSeleccion;
-//    private Handler handler = new Handler(Looper.myLooper()){
-//        @Override
-//        public void handleMessage(@NonNull Message msg) {
-//            switch (msg.what){
-//                case DatosFirestore.GETALL_PACIENTES:{
-//                    List<Paciente> pacientesRecibidos = (List<Paciente>) msg.obj;
-//                    ((MisPacientesAdapter) adapter).setPlatoViewDataSet(pacientesRecibidos);
-//                    adapter.notifyDataSetChanged();
-//                    if(progressDialog.isShowing()){
-//                        progressDialog.cancel();
-//                    }
-//                    break;
-//                }
-//                case DatosFirestore.ERROR_GETALL_PACIENTES:{
-//                    Toast t = Toast.makeText(DishViewActivity.this, R.string.databaseGetAllDishesError, Toast.LENGTH_LONG);
-//                    t.show();
-//                    finish();
-//                    break;
-//                }
-//            }
-//        }
-//    };
     private TextInputEditText buscarEdit;
     private Spinner buscarSpinner;
     private int posicionItemSpinerSeleccionada = 0;
@@ -100,8 +78,6 @@ public class MisPacientesFragment extends Fragment {
         setHasOptionsMenu(true);
     }
 
-
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mis_pacientes, container, false);
@@ -112,12 +88,10 @@ public class MisPacientesFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
 
-        //TODO obtener los datos de firestore
-
-        DatosFirestore datosFirestore = DatosFirestore.getInstance();
-        FirestoreRecyclerOptions<Paciente> firestoreRecyclerOptions = new FirestoreRecyclerOptions.Builder<Paciente>()
-                .setQuery(datosFirestore.getAllPacientesQuery(),Paciente.class)
-                .build();
+        datosFirestore = DatosFirestore.getInstance();
+        firestoreRecyclerOptions = new FirestoreRecyclerOptions.Builder<Paciente>()
+                                    .setQuery(datosFirestore.getAllPacientesQuery(),Paciente.class)
+                                    .build();
 
         Log.d(TAG, "Arguments recibidos: "+getArguments());
 
@@ -163,7 +137,6 @@ public class MisPacientesFragment extends Fragment {
                 break;
             }
             case R.id.search_option_item:{
-                //TODO Hacer la busqueda
 
                 AlertDialog buscarDialog = buildBuscarDialog();
                 buscarDialog.show();
@@ -240,7 +213,6 @@ public class MisPacientesFragment extends Fragment {
                 }
 
                 if(buscarEdit.getText().toString().isEmpty()){
-
                     mostrarListaPaciente(null, null,null);
                 }
                 else {
@@ -291,7 +263,7 @@ public class MisPacientesFragment extends Fragment {
 
         if(categoriaBusqueda == null && busquedaUsuario == null && busquedaMax == null){
 
-            firestoreRecyclerOptions= new FirestoreRecyclerOptions.Builder<Paciente>().setQuery(datosFirestore.getAllPacientesQuery(),Paciente.class).build();
+            firestoreRecyclerOptions = new FirestoreRecyclerOptions.Builder<Paciente>().setQuery(datosFirestore.getAllPacientesQuery(),Paciente.class).build();
             adapter.updateOptions(firestoreRecyclerOptions);
 
         }

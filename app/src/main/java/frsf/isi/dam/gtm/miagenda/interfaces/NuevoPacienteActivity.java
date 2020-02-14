@@ -363,6 +363,7 @@ public class NuevoPacienteActivity extends AppCompatActivity {
                             dniSinEditar = pacienteEditado.getDni();
                         }
                         pacienteEditado = p;
+
                     }
 
                     progressDialog = ProgressDialog.show(NuevoPacienteActivity.this, getString(R.string.por_favor_espere), getString(R.string.guardando_paciente));
@@ -371,6 +372,7 @@ public class NuevoPacienteActivity extends AppCompatActivity {
                     DatosFirestore.getInstance().savePaciente(p, dniSinEditar ,handler);
 
                     if ( imageBitmap != null ) {
+
                         ArchivosCloudStorage.getInstance().saveImageEnPaciente(dniEdit.getText().toString(), imageBitmap, handler, getApplicationContext());
                     }
                     // finish();
