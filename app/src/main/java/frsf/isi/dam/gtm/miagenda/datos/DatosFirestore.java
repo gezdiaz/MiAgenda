@@ -385,7 +385,9 @@ public class DatosFirestore {
         query = datosUsuario.collection(idColeccionPacientes).whereGreaterThanOrEqualTo(categoriaBusqueda,busquedaUsuario).whereLessThan(categoriaBusqueda,busquedaMax);
 
         Log.d(TAG, "En getPAcientesPOrBusqueda");
-
+        if(categoriaBusqueda == "apellido"){
+            query.orderBy(categoriaBusqueda).orderBy("nombre");
+        }
         return query;
     }
 

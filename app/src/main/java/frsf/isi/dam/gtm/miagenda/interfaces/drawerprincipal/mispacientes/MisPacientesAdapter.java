@@ -7,10 +7,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.solver.widgets.Snapshot;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.squareup.okhttp.internal.DiskLruCache;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import frsf.isi.dam.gtm.miagenda.R;
 import frsf.isi.dam.gtm.miagenda.entidades.Paciente;
