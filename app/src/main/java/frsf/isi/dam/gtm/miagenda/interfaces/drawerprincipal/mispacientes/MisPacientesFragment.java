@@ -93,7 +93,6 @@ public class MisPacientesFragment extends Fragment {
     private int posicionItemSpinerSeleccionada = 0;
     private String categoriaBusqueda;
 ;
-    private DatosFirestore datosFirestore;
     private FirestoreRecyclerOptions<Paciente> firestoreRecyclerOptions;
 
     public MisPacientesFragment(){
@@ -291,12 +290,12 @@ public class MisPacientesFragment extends Fragment {
 
         if(categoriaBusqueda == null && busquedaUsuario == null && busquedaMax == null){
 
-            firestoreRecyclerOptions= new FirestoreRecyclerOptions.Builder<Paciente>().setQuery(datosFirestore.getAllPacientesQuery(),Paciente.class).build();
+            firestoreRecyclerOptions= new FirestoreRecyclerOptions.Builder<Paciente>().setQuery(DatosFirestore.getInstance().getAllPacientesQuery(),Paciente.class).build();
             adapter.updateOptions(firestoreRecyclerOptions);
 
         }
         else{
-            firestoreRecyclerOptions= new FirestoreRecyclerOptions.Builder<Paciente>().setQuery(datosFirestore.getPacientesPorBusqueda(categoriaBusqueda,busquedaUsuario,busquedaMax),Paciente.class).build();
+            firestoreRecyclerOptions= new FirestoreRecyclerOptions.Builder<Paciente>().setQuery(DatosFirestore.getInstance().getPacientesPorBusqueda(categoriaBusqueda,busquedaUsuario,busquedaMax),Paciente.class).build();
             adapter.updateOptions(firestoreRecyclerOptions);
         }
 
