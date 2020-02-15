@@ -148,7 +148,7 @@ public class DatosFirestore {
         final CollectionReference collectionPacientes = datosUsuario.collection(idColeccionPacientes);
 
 
-        if(dniSinEditar != ""){
+        if(!dniSinEditar.isEmpty()){
             collectionPacientes.document(dniSinEditar).delete()
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
@@ -173,6 +173,8 @@ public class DatosFirestore {
                    if(task.isSuccessful()){
                        if(task.getResult().exists()){
                         //TODO mostrar error
+                           Log.d(TAG, "El paciente ya existe");
+//                           guardarPaciente(p, handler, collectionPacientes);
                        }
                        else {
                            guardarPaciente(p, handler, collectionPacientes);

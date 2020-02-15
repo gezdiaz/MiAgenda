@@ -38,6 +38,8 @@ public class ArchivosCloudStorage {
 
     public static final int CARGA_IMAGEN = 1;
     public static final int ERROR_CARGA_IMAGEN = -1;
+    private static final int ELIMINAR_IMAGEN = 2;
+    private static final int ERROR_ELIMINAR_IMAGEN = -2;
 
 
     private static final String TAG = "ArchivosCloudStorage";
@@ -99,7 +101,6 @@ public class ArchivosCloudStorage {
                 });
     }
     public void saveImageEnPaciente(final String dniPaciente, Bitmap imagen, final Handler handler, Context context){
-
 
         final NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
 
@@ -173,6 +174,14 @@ public class ArchivosCloudStorage {
                         notificationManager.notify(notificationID, notificationBuilder.build());
                     }
                 });
+    }
+
+    public void eliminarImagenDePaciente(String dniPaciente){
+
+        StorageReference imagen = archivosUsuario.child(dniPaciente).child(imagenPerfilString);
+
+        imagen.delete();
+
     }
 
 }
