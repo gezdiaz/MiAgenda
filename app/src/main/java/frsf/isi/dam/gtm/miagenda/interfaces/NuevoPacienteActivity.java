@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.os.Parcel;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
@@ -24,13 +25,17 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.datepicker.CalendarConstraints;
+import com.google.android.material.datepicker.DateValidatorPointForward;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.time.Month;
 import java.util.Calendar;
+import java.util.Objects;
 import java.util.TimeZone;
 
 import frsf.isi.dam.gtm.miagenda.R;
@@ -54,6 +59,7 @@ public class NuevoPacienteActivity extends AppCompatActivity {
     private boolean datosValidos = true;
     private int contadorWhile = 0;
     private ProgressDialog progressDialog;
+    private Calendar hoy;
 
     private MaterialDatePicker.Builder<Long> builder;
     private MaterialDatePicker<Long> datePicker;
@@ -152,7 +158,7 @@ public class NuevoPacienteActivity extends AppCompatActivity {
         departamentoEdit = findViewById(R.id.departamento_direccion_edit);
 
 
-        if(getIntent().getAction().equals(EDITAR_ACTION)){
+        if(getIntent().getAction() == EDITAR_ACTION){
             pacienteEditado = (Paciente) getIntent().getSerializableExtra("paciente");
             setearDatos(pacienteEditado);
             myToolBar.setTitle(R.string.editar_paciente);
@@ -167,7 +173,6 @@ public class NuevoPacienteActivity extends AppCompatActivity {
         fechaNacimientoEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 datePicker.show(getSupportFragmentManager(), datePicker.toString());
             }
         });
@@ -357,7 +362,7 @@ public class NuevoPacienteActivity extends AppCompatActivity {
                                 departamentoEdit.getText().toString());
                     }
 
-                    if(getIntent().getAction().equals(EDITAR_ACTION)){
+                    if(Objects.equals(getIntent().getAction(), EDITAR_ACTION)){
 
                         p.setFotoURL(pacienteEditado.getFotoURL());
 
@@ -492,19 +497,48 @@ public class NuevoPacienteActivity extends AppCompatActivity {
 
         //Tambien se puede hacer con un DatePickerDialog pero este es el que recomienda MaterialDesign
 
+        hoy = Calendar.getInstance(TimeZone.getDefault());
+
+        hoy.setTimeInMillis(System.currentTimeMillis());
         builder = MaterialDatePicker.Builder.datePicker();
         builder.setInputMode(MaterialDatePicker.INPUT_MODE_TEXT);
         builder.setTitleText(R.string.fecha_nacimiento_calendario);
+
+        CalendarConstraints.Builder constraintsBulder = new CalendarConstraints.Builder();
+        constraintsBulder.setEnd(hoy.getTimeInMillis());
+        CalendarConstraints.DateValidator dateValidator = new CalendarConstraints.DateValidator(){
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel parcel, int i) {
+
+            }
+
+            @Override
+            public boolean isValid(long date) {
+                if(hoy.getTimeInMillis()>=date){
+                    return true;
+                }
+                return false;
+            }
+        };
+        constraintsBulder.setValidator(dateValidator);
+        builder.setCalendarConstraints(constraintsBulder.build());
         //builder.setSelection(Calendar.getInstance().getTimeInMillis());
         datePicker = builder.build();
         datePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
             @Override
             public void onPositiveButtonClick(Long aLong) {
-                fechaNacimiento = Calendar.getInstance(TimeZone.getTimeZone("UTC-3"));
-                fechaNacimiento.setTimeInMillis(aLong);
+                fechaNacimiento = Calendar.getInstance(TimeZone.getDefault());
+                fechaNacimiento.setTimeInMillis(aLong-TimeZone.getDefault().getRawOffset());
                 String fechaSeleccionada = (fechaNacimiento.get(Calendar.DATE)) + "/" + (fechaNacimiento.get(Calendar.MONTH) + 1) + "/" + fechaNacimiento.get(Calendar.YEAR);
                 fechaNacimientoEdit.setText(fechaSeleccionada);
                 fechaNacimientoEdit.setError(null);
+                Log.d(TAG,"TimeZone: " + fechaNacimiento.getTimeZone().getRawOffset());
+
             }
         });
         datePicker.addOnNegativeButtonClickListener(new View.OnClickListener() {

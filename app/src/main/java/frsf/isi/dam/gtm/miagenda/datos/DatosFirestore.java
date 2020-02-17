@@ -374,7 +374,10 @@ public class DatosFirestore {
 
         Log.d(TAG, "En getPAcientesPOrBusqueda");
         if(categoriaBusqueda == "apellido"){
-            query.orderBy(categoriaBusqueda).orderBy("nombre");
+            query.orderBy(categoriaBusqueda, Query.Direction.ASCENDING).orderBy("nombre", Query.Direction.ASCENDING);
+        }
+        else{
+            query.orderBy(categoriaBusqueda);
         }
         return query;
     }
