@@ -485,8 +485,8 @@ public class NuevoPacienteActivity extends AppCompatActivity {
         builder.setInputMode(MaterialDatePicker.INPUT_MODE_TEXT);
         builder.setTitleText(R.string.fecha_nacimiento_calendario);
 
-        CalendarConstraints.Builder constraintsBulder = new CalendarConstraints.Builder();
-        constraintsBulder.setEnd(hoy.getTimeInMillis());
+        CalendarConstraints.Builder constraintsBuilder = new CalendarConstraints.Builder();
+        constraintsBuilder.setEnd(hoy.getTimeInMillis());
         CalendarConstraints.DateValidator dateValidator = new CalendarConstraints.DateValidator(){
             @Override
             public int describeContents() {
@@ -506,8 +506,8 @@ public class NuevoPacienteActivity extends AppCompatActivity {
                 return false;
             }
         };
-        constraintsBulder.setValidator(dateValidator);
-        builder.setCalendarConstraints(constraintsBulder.build());
+        constraintsBuilder.setValidator(dateValidator);
+        builder.setCalendarConstraints(constraintsBuilder.build());
         //builder.setSelection(Calendar.getInstance().getTimeInMillis());
         datePicker = builder.build();
         datePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
