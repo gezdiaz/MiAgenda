@@ -175,9 +175,9 @@ public class ArchivosCloudStorage {
                 });
     }
 
-    public void eliminarImagenDePaciente(String dniPaciente){
+    public void eliminarImagenDePaciente(String idPaciente){
 
-        StorageReference imagen = archivosUsuario.child(dniPaciente).child(imagenPerfilString);
+        StorageReference imagen = archivosUsuario.child(idPaciente).child(imagenPerfilString);
 
         imagen.delete();
 

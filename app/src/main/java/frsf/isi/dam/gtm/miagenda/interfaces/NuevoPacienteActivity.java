@@ -68,8 +68,8 @@ public class NuevoPacienteActivity extends AppCompatActivity {
     private String TAG = "NuevoPacienteActivity";
     private String rutaImagen;
     private Paciente pacienteEditado;
-    private String dniSinEditar = "";
-    private boolean teniaImagen = false, debeActualizarImagen = false;
+    private boolean teniaImagen = false, debeActualizarImagen = false, cambioImagen = false;
+
 
     private final Handler handler = new Handler(Looper.myLooper()) {
         @Override
@@ -83,7 +83,7 @@ public class NuevoPacienteActivity extends AppCompatActivity {
                         if (progressDialog.isShowing()) {
                             progressDialog.cancel();
                         }
-                        if(getIntent().getAction() == EDITAR_ACTION){
+                        if(Objects.equals(getIntent().getAction(), EDITAR_ACTION)){
                             Intent resultado = new Intent();
                             resultado.putExtra("paciente","6");
                             setResult(VerPacienteActivity.REQUESTEDITARPACIENTE, resultado);
@@ -158,7 +158,7 @@ public class NuevoPacienteActivity extends AppCompatActivity {
         departamentoEdit = findViewById(R.id.departamento_direccion_edit);
 
 
-        if(getIntent().getAction() == EDITAR_ACTION){
+        if(Objects.equals(getIntent().getAction(), EDITAR_ACTION)){
             pacienteEditado = (Paciente) getIntent().getSerializableExtra("paciente");
             setearDatos(pacienteEditado);
             myToolBar.setTitle(R.string.editar_paciente);
@@ -323,7 +323,7 @@ public class NuevoPacienteActivity extends AppCompatActivity {
                 }
 
                 while (contadorWhile < validaciones.length && datosValidos) {
-                    if (validaciones[contadorWhile] == false) {
+                    if (!validaciones[contadorWhile]) {
                         datosValidos = false;
                     }
                     contadorWhile++;
@@ -363,11 +363,11 @@ public class NuevoPacienteActivity extends AppCompatActivity {
                     }
 
                     if(Objects.equals(getIntent().getAction(), EDITAR_ACTION)){
-
-                        p.setFotoURL(pacienteEditado.getFotoURL());
-
-                        if (!pacienteEditado.getDni().equals(p.getDni())){
-                            dniSinEditar = pacienteEditado.getDni();
+                        p.setId(pacienteEditado.getId());
+                        if(cambioImagen && imageBitmap == null && teniaImagen){
+                            ArchivosCloudStorage.getInstance().eliminarImagenDePaciente(p.getId());
+                        }else{
+                            p.setFotoURL(pacienteEditado.getFotoURL());
                         }
                         pacienteEditado = p;
 
@@ -376,29 +376,13 @@ public class NuevoPacienteActivity extends AppCompatActivity {
                     progressDialog = ProgressDialog.show(NuevoPacienteActivity.this, getString(R.string.por_favor_espere), getString(R.string.guardando_paciente));
                     progressDialog.setCancelable(false);
 
-                    DatosFirestore.getInstance().savePaciente(p, dniSinEditar ,handler);
+                    DatosFirestore.getInstance().guardarPaciente(p, handler);
 
                     if ( imageBitmap != null ) {
+                        ArchivosCloudStorage.getInstance().saveImageEnPaciente(p.getId(), imageBitmap, handler, getApplicationContext());
                         Log.d(TAG,"entra al if de imageBitmap");
                         debeActualizarImagen = true;
                         ArchivosCloudStorage.getInstance().saveImageEnPaciente(p.getDni(), imageBitmap, handler, getApplicationContext());
-                    }else{
-                        if(teniaImagen){
-                            if(dniSinEditar.isEmpty()){
-
-                                debeActualizarImagen = false;
-                                ArchivosCloudStorage.getInstance().eliminarImagenDePaciente(p.getDni());
-                            }
-                            else {
-                                debeActualizarImagen = false;
-                            }
-                        }
-                        else {
-                            debeActualizarImagen = false;
-                        }
-                    }
-                    if(!dniSinEditar.isEmpty()){
-                        ArchivosCloudStorage.getInstance().eliminarImagenDePaciente(dniSinEditar);
                     }
                     // finish();
                 } else {
@@ -417,9 +401,7 @@ public class NuevoPacienteActivity extends AppCompatActivity {
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 // Ensure that there's a camera activity to handle the intent
                 if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-
                     startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-
                 }
 
             }
@@ -462,8 +444,7 @@ public class NuevoPacienteActivity extends AppCompatActivity {
                         .load(photoUrl)
                         .into(fotoPacienteImageView);
             }
-        }
-        else{
+        }else{
             fotoPacienteRelativeLayout.setVisibility(View.GONE);
         }
 
@@ -612,10 +593,11 @@ public class NuevoPacienteActivity extends AppCompatActivity {
     private void actualizarImagen(Bitmap bitmap) {
         imageBitmap = bitmap;
         fotoPacienteImageView.setImageBitmap(bitmap);
+        cambioImagen = true;
         if (bitmap != null) {
             fotoPacienteRelativeLayout.setVisibility(View.VISIBLE);
         } else {
-            if(getIntent().getAction() == EDITAR_ACTION){
+            if(Objects.equals(getIntent().getAction(), EDITAR_ACTION)){
                 pacienteEditado.setFotoURL(null);
             }
             fotoPacienteRelativeLayout.setVisibility(View.GONE);
@@ -624,7 +606,7 @@ public class NuevoPacienteActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if(getIntent().getAction() == EDITAR_ACTION){
+        if(Objects.equals(getIntent().getAction(), EDITAR_ACTION)){
             Intent resultado = new Intent();
             resultado.putExtra("paciente",pacienteEditado);
             setResult(VerPacienteActivity.REQUESTEDITARPACIENTE, resultado);
