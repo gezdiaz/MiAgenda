@@ -1,20 +1,28 @@
 package frsf.isi.dam.gtm.miagenda.interfaces;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,19 +31,26 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textview.MaterialTextView;
 
 import java.util.List;
 
 import frsf.isi.dam.gtm.miagenda.R;
+import frsf.isi.dam.gtm.miagenda.datos.DatosFirestore;
 import frsf.isi.dam.gtm.miagenda.entidades.Paciente;
 import frsf.isi.dam.gtm.miagenda.interfaces.listahistoriaclinica.HistoriaClinicaActivity;
 
@@ -53,13 +68,50 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
     private boolean permisoLocalizacionAceptado;
     private Paciente p;
     private Intent intentLlamada;
+    private ProgressDialog progressDialog;
+
+    private final Handler handler = new Handler(Looper.myLooper()) {
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            switch (msg.what) {
+                case DatosFirestore.GET_PACIENTE:
+                    Log.d(TAG, "Paciente guardado correctamente");
+
+                    p = (Paciente) msg.obj;
+
+                    if (progressDialog.isShowing()) {
+                        progressDialog.cancel();
+                    }
+
+                    SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.ver_paciente_map);
+                    mapFragment.getMapAsync(VerPacienteActivity.this);
+
+                    inicializarTextViews();
+
+                    break;
+                case DatosFirestore.ERROR_GET_PACIENTE:
+                    Log.d(TAG, "Error al obtener el paciente");
+                    if (progressDialog.isShowing()) {
+                        progressDialog.cancel();
+                    }
+                    Snackbar.make(findViewById(R.id.nuevo_paciente_linear_lay), "Se produjo un error al obtener el paciente", BaseTransientBottomBar.LENGTH_LONG)
+                            .setBackgroundTint(getResources().getColor(R.color.colorCancelar))
+                            .show();
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ver_paciente);
 
-        p = (Paciente) getIntent().getSerializableExtra("paciente");
+        if(getIntent().getStringExtra("idPaciente") != null){
+            progressDialog = ProgressDialog.show(VerPacienteActivity.this, getString(R.string.por_favor_espere), getString(R.string.buscando_paciente));
+            progressDialog.setCancelable(false);
+            DatosFirestore.getInstance().getPacienteById(getIntent().getStringExtra("idPaciente"),handler);
+        }
 
         toolbar = findViewById(R.id.ver_paciente_toolbar);
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorTextSecondary));
@@ -67,11 +119,6 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
 
         //getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_arrow);// set drawable icon
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.ver_paciente_map);
-        mapFragment.getMapAsync(this);
-
-        inicializarTextViews();
     }
 
     @Override
@@ -134,11 +181,8 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == REQUESTEDITARPACIENTE){
-            //TODO este paciente no muestra una nueva foto que le fue seteada porque
-            p = (Paciente) data.getSerializableExtra("paciente");
-
-            Log.d(TAG, "Paciente: " + p.toString());
-            inicializarTextViews();
+           DatosFirestore.getInstance().getPacienteById(getIntent().getStringExtra("idPaciente"),handler);
+//            Log.d(TAG, "Paciente: " + p.toString());
         }
     }
 
@@ -269,3 +313,7 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
     }
 
 }
+
+
+
+

@@ -63,8 +63,7 @@ public class NuevoPacienteActivity extends AppCompatActivity {
     private String rutaImagen;
     private Paciente pacienteEditado;
     private String dniSinEditar = "";
-    private boolean teniaImagen = false;
-
+    private boolean teniaImagen = false, debeActualizarImagen = false;
 
     private final Handler handler = new Handler(Looper.myLooper()) {
         @Override
@@ -72,15 +71,20 @@ public class NuevoPacienteActivity extends AppCompatActivity {
             switch (msg.what) {
                 case DatosFirestore.SAVE_PACIENTE:
                     Log.d(TAG, "Paciente guardado correctamente");
-                    if (progressDialog.isShowing()) {
-                        progressDialog.cancel();
+                    //TODO si no tiene que guardar una nueva imagen , el fin de la actividad debe llevarse a cabo aca.
+                    Log.d(TAG, "debeActualizarImagen = " + debeActualizarImagen);
+                    if(!debeActualizarImagen){
+                        if (progressDialog.isShowing()) {
+                            progressDialog.cancel();
+                        }
+                        if(getIntent().getAction() == EDITAR_ACTION){
+                            Intent resultado = new Intent();
+                            resultado.putExtra("paciente","6");
+                            setResult(VerPacienteActivity.REQUESTEDITARPACIENTE, resultado);
+                        }
+                        finish();
                     }
-                    if(getIntent().getAction() == EDITAR_ACTION){
-                        Intent resultado = new Intent();
-                        resultado.putExtra("paciente",pacienteEditado);
-                        setResult(VerPacienteActivity.REQUESTEDITARPACIENTE, resultado);
-                    }
-                    finish();
+
                     break;
                 case DatosFirestore.ERROR_SAVE_PACIENTE:
                     Log.d(TAG, "Error al guardar el paciente");
@@ -92,8 +96,20 @@ public class NuevoPacienteActivity extends AppCompatActivity {
                             .show();
                     break;
                 case ArchivosCloudStorage.CARGA_IMAGEN:
+
+                    if (progressDialog.isShowing()) {
+                        progressDialog.cancel();
+                    }
+                    if(getIntent().getAction() == EDITAR_ACTION){
+                        Intent resultado = new Intent();
+                        resultado.putExtra("paciente","6");
+                        setResult(VerPacienteActivity.REQUESTEDITARPACIENTE, resultado);
+                    }
+                    finish();
+
                     Log.d(TAG, "Se completo la carga de la imagen");
                     Toast.makeText(getApplicationContext(), "Se cargó la imagen", Toast.LENGTH_LONG).show();
+
                     break;
                 case ArchivosCloudStorage.ERROR_CARGA_IMAGEN:
                     Log.d(TAG, "Error al cargar la imagen");
@@ -358,12 +374,22 @@ public class NuevoPacienteActivity extends AppCompatActivity {
                     DatosFirestore.getInstance().savePaciente(p, dniSinEditar ,handler);
 
                     if ( imageBitmap != null ) {
+                        Log.d(TAG,"entra al if de imageBitmap");
+                        debeActualizarImagen = true;
                         ArchivosCloudStorage.getInstance().saveImageEnPaciente(p.getDni(), imageBitmap, handler, getApplicationContext());
                     }else{
                         if(teniaImagen){
                             if(dniSinEditar.isEmpty()){
+
+                                debeActualizarImagen = false;
                                 ArchivosCloudStorage.getInstance().eliminarImagenDePaciente(p.getDni());
                             }
+                            else {
+                                debeActualizarImagen = false;
+                            }
+                        }
+                        else {
+                            debeActualizarImagen = false;
                         }
                     }
                     if(!dniSinEditar.isEmpty()){
@@ -404,7 +430,7 @@ public class NuevoPacienteActivity extends AppCompatActivity {
 
     private void setearDatos(Paciente p) {
 
-        Calendar fechaNac = Calendar.getInstance(TimeZone.getTimeZone("UTC-3"));
+        Calendar fechaNac = Calendar.getInstance(TimeZone.getDefault());
         fechaNac.setTime(p.getFechaNacimiento());
 
         nombrePacienteEdit.setText(p.getNombre());

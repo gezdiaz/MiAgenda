@@ -139,17 +139,16 @@ public class ArchivosCloudStorage {
                                     @Override
                                     public void onComplete(@NonNull Task<Uri> task) {
                                         if(task.isSuccessful()){
-                                            DatosFirestore.getInstance().actualizarImagenDePaciente(task.getResult().toString(), dniPaciente);
+                                            DatosFirestore.getInstance().actualizarImagenDePaciente(task.getResult().toString(), dniPaciente,handler);
                                         }
                                     }
                                 });
-                        Message m = Message.obtain();
-                        m.what = CARGA_IMAGEN;
+
                         notificationBuilder.setContentText("Se completó la carga de la imagen")
                                 .setProgress(0,0,false)
                                 .setOngoing(false);
                         notificationManager.notify(notificationID, notificationBuilder.build());
-                        handler.sendMessage(m);
+                       // handler.sendMessage(m);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

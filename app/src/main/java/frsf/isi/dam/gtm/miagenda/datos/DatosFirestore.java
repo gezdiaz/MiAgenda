@@ -167,28 +167,10 @@ public class DatosFirestore {
                     });
         }
         else{
-           collectionPacientes.document(p.getDni()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-               @Override
-               public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                   if(task.isSuccessful()){
-                       if(task.getResult().exists()){
-                        //TODO mostrar error
-                           Log.d(TAG, "El paciente ya existe");
-//                           guardarPaciente(p, handler, collectionPacientes);
-                       }
-                       else {
-                           guardarPaciente(p, handler, collectionPacientes);
-                       }
-                   }
-                   else {
-                       Message m = Message.obtain();
-                       m.what = ERROR_SAVE_PACIENTE;
-                       handler.sendMessage(m);
-                   }
-                   }
-               });
+            guardarPaciente(p, handler, collectionPacientes);
            }
     }
+
 
     private void guardarPaciente(Paciente p, final Handler handler, CollectionReference collectionPacientes) {
         collectionPacientes.document(String.valueOf(p.getDni())).set(p)
@@ -328,7 +310,7 @@ public class DatosFirestore {
                 });
     }
 
-    public void actualizarImagenDePaciente(String urlImagen, final String idPaciente) {
+    public void actualizarImagenDePaciente(String urlImagen, final String idPaciente, final Handler handler) {
         CollectionReference collectionPacientes = datosUsuario.collection(idColeccionPacientes);
 
         Map<String, Object> map = new HashMap<>();
@@ -339,6 +321,10 @@ public class DatosFirestore {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()){
+                            //En este momento debo mandar un mensaje al handler para que termine la actividad editar paciente porque es cuando el paciente tiene la nueva url de la foto.
+                            Message m = Message.obtain();
+                            m.what = ArchivosCloudStorage.CARGA_IMAGEN;
+                            handler.sendMessage(m);
                             Log.d(TAG, "Se actualizó la url de la imagen del paciente "+idPaciente);
                         }else{
                             Log.d(TAG, "Se produjo un error al actualizar la url de la imagen del paciente "+idPaciente);

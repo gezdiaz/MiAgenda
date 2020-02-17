@@ -94,6 +94,7 @@
     <string name="llamada_item_option">Llamada</string>
     <string name="editar_paciente">Editar paciente</string>
     <string name="guardar">GUARDAR</string>
+    <string name="buscando_paciente">Buscando paciente</string>
     <string name="search_item_option">Buscar</string>
     <string name="buscar_option">Buscar</string>
     <string name="busqueda_hint">Busqueda</string>
