@@ -106,7 +106,7 @@ public class NuevoPacienteActivity extends AppCompatActivity {
                     if (progressDialog.isShowing()) {
                         progressDialog.cancel();
                     }
-                    if(getIntent().getAction() == EDITAR_ACTION){
+                    if(Objects.equals(getIntent().getAction(), EDITAR_ACTION)){
                         Intent resultado = new Intent();
                         resultado.putExtra("paciente","6");
                         setResult(VerPacienteActivity.REQUESTEDITARPACIENTE, resultado);

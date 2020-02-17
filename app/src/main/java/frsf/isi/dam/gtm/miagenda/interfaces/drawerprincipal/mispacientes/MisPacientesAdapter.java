@@ -83,7 +83,7 @@ public class MisPacientesAdapter extends FirestoreRecyclerAdapter<Paciente, Paci
 //                i.putExtra("paciente", new Paciente("Intent ", "Ver paciente Btn", "Sancor Seguros", pruebaCalendario.getTime(), 40905, 123456789L, "Argentina", "Santa fe","Escalada", "S/N", "493", "Sin dpto"));
 
                     //TODO mostrar datos de paciente
-                    i.putExtra("idPaciente","6");
+                    i.putExtra("idPaciente",paciente.getId());
                     view.getContext().startActivity(i);
                 }
 

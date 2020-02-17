@@ -94,7 +94,7 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
                     if (progressDialog.isShowing()) {
                         progressDialog.cancel();
                     }
-                    Snackbar.make(findViewById(R.id.nuevo_paciente_linear_lay), "Se produjo un error al obtener el paciente", BaseTransientBottomBar.LENGTH_LONG)
+                    Snackbar.make(findViewById(R.id.ver_paciente_linear_layout), "Se produjo un error al obtener el paciente", Snackbar.LENGTH_LONG)
                             .setBackgroundTint(getResources().getColor(R.color.colorCancelar))
                             .show();
                     break;
@@ -106,11 +106,11 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ver_paciente);
-
-        if(getIntent().getStringExtra("idPaciente") != null){
+        String idPaciente = getIntent().getStringExtra("idPaciente");
+        if(idPaciente != null && !idPaciente.isEmpty()){
             progressDialog = ProgressDialog.show(VerPacienteActivity.this, getString(R.string.por_favor_espere), getString(R.string.buscando_paciente));
             progressDialog.setCancelable(false);
-            DatosFirestore.getInstance().getPacienteById(getIntent().getStringExtra("idPaciente"),handler);
+            DatosFirestore.getInstance().getPacienteById(idPaciente,handler);
         }
 
         toolbar = findViewById(R.id.ver_paciente_toolbar);
