@@ -15,6 +15,7 @@ import io.opencensus.internal.StringUtils;
 
 public class Paciente implements Serializable {
 
+    private String id; //El id es distinto del DNI para que no haya problemas al editar el DNI.
     private String nombre;
     private String apellido;
     private String obraSocial;
@@ -39,6 +40,14 @@ public class Paciente implements Serializable {
         this.dni = dni;
         this.telefono = telefono;
         this.direccion = new Direccion(pais, provincia, ciudad, calle, numero, departamento);
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getNombre() {

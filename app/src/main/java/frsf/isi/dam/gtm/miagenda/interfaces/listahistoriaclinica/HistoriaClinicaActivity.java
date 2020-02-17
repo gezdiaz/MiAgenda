@@ -166,7 +166,7 @@ public class HistoriaClinicaActivity extends AppCompatActivity {
         historiaClinicaRecyclerView.setLayoutManager(historiaClinicaLayoutManager);
 
         datosFirestore = DatosFirestore.getInstance();
-        Query query = datosFirestore.getAllTurnosDePacienteQuery(p.getDni());
+        Query query = datosFirestore.getAllTurnosDePacienteQuery(p.getId());
         firestoreRecyclerOptions = new FirestoreRecyclerOptions.Builder<frsf.isi.dam.gtm.miagenda.entidades.Turno>().setQuery(query, frsf.isi.dam.gtm.miagenda.entidades.Turno.class).build();
 
         historiaClinicaAdapter = new HistoriaClinicaAdapter(firestoreRecyclerOptions);

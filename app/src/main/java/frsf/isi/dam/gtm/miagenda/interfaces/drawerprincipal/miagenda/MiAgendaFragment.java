@@ -291,6 +291,6 @@ public class MiAgendaFragment extends Fragment {
 
     public void actualizarTurno(Turno turno) {
         Log.d(TAG, "Turno a actualizado: "+turno);
-        DatosFirestore.getInstance().saveTurno(turno, turno.getDniPaciente(), handler);
+        DatosFirestore.getInstance().saveTurno(turno, turno.getIdPaciente(), handler);
     }
 }

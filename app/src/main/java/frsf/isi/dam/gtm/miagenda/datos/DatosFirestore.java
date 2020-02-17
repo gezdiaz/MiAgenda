@@ -3,21 +3,19 @@ package frsf.isi.dam.gtm.miagenda.datos;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.common.net.HostAndPort;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -26,14 +24,12 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import frsf.isi.dam.gtm.miagenda.entidades.Paciente;
 import frsf.isi.dam.gtm.miagenda.entidades.Turno;
-import frsf.isi.dam.gtm.miagenda.interfaces.drawerprincipal.PrincipalActivity;
-import frsf.isi.dam.gtm.miagenda.interfaces.drawerprincipal.mispacientes.MisPacientesAdapter;
 
 public class DatosFirestore {
 
@@ -86,6 +82,60 @@ public class DatosFirestore {
             Log.wtf(TAG, "Error, usuario no logueado. No debería llegar hasta acá");
         }
     }
+
+    //TODO eliminar esto
+    public void reestucturarBaseDeDatos() {
+        final CollectionReference coleccionPacientes = datosUsuario.collection(idColeccionPacientes);
+
+        Log.d("ActualizacionBD", "Empieza la actualizacion de la base de datos");
+//        db.collectionGroup(idColeccionTurnos).whereEqualTo("propietario", datosUsuario.getId()).get()
+//                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+//                        for(DocumentSnapshot document: queryDocumentSnapshots.getDocuments()) {
+//                            Turno t = document.toObject(Turno.class);
+//                            Map<String, Object> updates = new HashMap<>();
+//                            updates.put("dniPaciente", FieldValue.delete());
+//                            datosUsuario.collection(idColeccionPacientes).document(t.getIdPaciente()).collection(idColeccionTurnos).document(t.getId()).update(updates);
+//                        }
+//                    }
+//                });
+//        coleccionPacientes.get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> taskPacientes) {
+//                        if (taskPacientes.isSuccessful()) {
+//                            for (DocumentSnapshot document : taskPacientes.getResult()) {
+//                                Paciente p = document.toObject(Paciente.class);
+//                                if (p.getId() == null) {
+//                                    p.setId(p.getDni());
+//                                    Log.d("ActualizacionBD", "Se actualiza el paciente: "+p.getDni());
+//                                    coleccionPacientes.document(p.getId()).set(p);
+//                                    final CollectionReference coleccionTurnos = coleccionPacientes.document(p.getId()).collection(idColeccionTurnos);
+//                                    coleccionTurnos.get()
+//                                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                                                @Override
+//                                                public void onComplete(@NonNull Task<QuerySnapshot> taskTrunos) {
+//                                                    if(taskTrunos.isSuccessful()){
+//                                                        for(DocumentSnapshot document: taskTrunos.getResult()){
+//                                                            Turno t = document.toObject(Turno.class);
+//                                                            if(t.getIdPaciente() == null){
+//                                                                t.setIdPaciente(t.getDniPaciente());
+//                                                            }
+//                                                            Log.d("ActualizacionBD", "Se actualiza el turno: "+t.getId()+" del paciente: "+t.getIdPaciente());
+//                                                            coleccionTurnos.document(t.getId()).set(t);
+//                                                        }
+//                                                    }
+//                                                }
+//                                            });
+//                                }
+//
+//                            }
+//                        }
+//                    }
+//                });
+    }
+
 
     public void getAllPacientes(final Handler handler) {
         //obtiene todos los pacientes del usuario actual
@@ -143,55 +193,61 @@ public class DatosFirestore {
                 });
     }
 
-    public void savePaciente(final Paciente p, String dniSinEditar, final Handler handler) {
-        //Guarda el paciente en la base de datos
-        final CollectionReference collectionPacientes = datosUsuario.collection(idColeccionPacientes);
-
-
-        if(!dniSinEditar.isEmpty()){
-            collectionPacientes.document(dniSinEditar).delete()
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            guardarPaciente(p, handler, collectionPacientes);
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.d(TAG, "savePaciente: Error al eliminar el paciente.", e);
-                            Message m = Message.obtain();
-                            m.what = ERROR_SAVE_PACIENTE;
-                            handler.sendMessage(m);
-                        }
-                    });
-        }
-        else{
-           collectionPacientes.document(p.getDni()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-               @Override
-               public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                   if(task.isSuccessful()){
-                       if(task.getResult().exists()){
-                        //TODO mostrar error
-                           Log.d(TAG, "El paciente ya existe");
+//    public void savePaciente(final Paciente p, String dniSinEditar, final Handler handler) {
+//        //Guarda el paciente en la base de datos
+//        final CollectionReference collectionPacientes = datosUsuario.collection(idColeccionPacientes);
+//
+//
+//        if(!dniSinEditar.isEmpty()){
+//            collectionPacientes.document(dniSinEditar).delete()
+//                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                        @Override
+//                        public void onSuccess(Void aVoid) {
+//                            guardarPaciente(p, handler, collectionPacientes);
+//                        }
+//                    })
+//                    .addOnFailureListener(new OnFailureListener() {
+//                        @Override
+//                        public void onFailure(@NonNull Exception e) {
+//                            Log.d(TAG, "savePaciente: Error al eliminar el paciente.", e);
+//                            Message m = Message.obtain();
+//                            m.what = ERROR_SAVE_PACIENTE;
+//                            handler.sendMessage(m);
+//                        }
+//                    });
+//        }
+//        else{
+//           collectionPacientes.document(p.getDni()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//               @Override
+//               public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                   if(task.isSuccessful()){
+//                       if(task.getResult().exists()){
+//                        // mostrar error
+//                           Log.d(TAG, "El paciente ya existe");
+////                           guardarPaciente(p, handler, collectionPacientes);
+//                       }
+//                       else {
 //                           guardarPaciente(p, handler, collectionPacientes);
-                       }
-                       else {
-                           guardarPaciente(p, handler, collectionPacientes);
-                       }
-                   }
-                   else {
-                       Message m = Message.obtain();
-                       m.what = ERROR_SAVE_PACIENTE;
-                       handler.sendMessage(m);
-                   }
-                   }
-               });
-           }
-    }
+//                       }
+//                   }
+//                   else {
+//                       Message m = Message.obtain();
+//                       m.what = ERROR_SAVE_PACIENTE;
+//                       handler.sendMessage(m);
+//                   }
+//                   }
+//               });
+//           }
+//    }
 
-    private void guardarPaciente(Paciente p, final Handler handler, CollectionReference collectionPacientes) {
-        collectionPacientes.document(String.valueOf(p.getDni())).set(p)
+    public void guardarPaciente(Paciente p, final Handler handler) {
+        CollectionReference collectionPacientes = datosUsuario.collection(idColeccionPacientes);
+
+        if (p.getId() == null || p.getId().isEmpty()) {
+            p.setId(collectionPacientes.document().getId());
+        }
+
+        collectionPacientes.document(p.getId()).set(p)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -251,7 +307,7 @@ public class DatosFirestore {
         //Esto es para poder hacer un collectionGroup con todos los turnos de los pacientes de un usuario.
         final CollectionReference collectionTurnos = documentPaciente.collection(idColeccionTurnos);
 
-        if(t.getPropietario() == null || t.getPropietario().isEmpty()){
+        if (t.getPropietario() == null || t.getPropietario().isEmpty()) {
             t.setPropietario(datosUsuario.getId());
         }
 
@@ -259,8 +315,8 @@ public class DatosFirestore {
             t.setId(collectionTurnos.document().getId());
         }
 
-        if(t.getDniPaciente() == null || t.getDniPaciente().isEmpty()){
-            t.setDniPaciente(idPaciente);
+        if (t.getIdPaciente() == null || t.getIdPaciente().isEmpty()) {
+            t.setIdPaciente(idPaciente);
         }
 
         collectionTurnos.document(t.getId()).set(t)
@@ -306,10 +362,10 @@ public class DatosFirestore {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         ArrayList<Turno> listaTurnos = new ArrayList<>();
-                        for(DocumentSnapshot document: queryDocumentSnapshots){
+                        for (DocumentSnapshot document : queryDocumentSnapshots) {
                             Turno t = document.toObject(Turno.class);
                             listaTurnos.add(t);
-                            Log.d(TAG, "Turno obtenido: "+t.toString());
+                            Log.d(TAG, "Turno obtenido: " + t.toString());
                         }
                         Message m = Message.obtain();
                         m.what = GETALL_TURNOS;
@@ -338,21 +394,21 @@ public class DatosFirestore {
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        if(task.isSuccessful()){
-                            Log.d(TAG, "Se actualizó la url de la imagen del paciente "+idPaciente);
-                        }else{
-                            Log.d(TAG, "Se produjo un error al actualizar la url de la imagen del paciente "+idPaciente);
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "Se actualizó la url de la imagen del paciente " + idPaciente);
+                        } else {
+                            Log.d(TAG, "Se produjo un error al actualizar la url de la imagen del paciente " + idPaciente);
                         }
                     }
                 });
 
     }
 
-    public void borrarTurno(final Turno t, final Handler handler){
+    public void borrarTurno(final Turno t, final Handler handler) {
         DocumentReference documentTurno = datosUsuario.collection(idColeccionPacientes)
-                                                    .document(t.getDniPaciente())
-                                                    .collection(idColeccionTurnos)
-                                                    .document(t.getId());
+                .document(t.getIdPaciente())
+                .collection(idColeccionTurnos)
+                .document(t.getId());
 
         documentTurno.delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -376,7 +432,7 @@ public class DatosFirestore {
 
     public Query getAllPacientesQuery() {
 
-        Query query = datosUsuario.collection(idColeccionPacientes).orderBy("apellido" , Query.Direction.ASCENDING).orderBy("nombre", Query.Direction.ASCENDING);
+        Query query = datosUsuario.collection(idColeccionPacientes).orderBy("apellido", Query.Direction.ASCENDING).orderBy("nombre", Query.Direction.ASCENDING);
 
         return query;
     }
@@ -384,10 +440,10 @@ public class DatosFirestore {
     public Query getPacientesPorBusqueda(String categoriaBusqueda, String busquedaUsuario, String busquedaMax) {
         Query query;
 
-        query = datosUsuario.collection(idColeccionPacientes).whereGreaterThanOrEqualTo(categoriaBusqueda,busquedaUsuario).whereLessThan(categoriaBusqueda,busquedaMax);
+        query = datosUsuario.collection(idColeccionPacientes).whereGreaterThanOrEqualTo(categoriaBusqueda, busquedaUsuario).whereLessThan(categoriaBusqueda, busquedaMax);
 
         Log.d(TAG, "En getPAcientesPOrBusqueda");
-        if(categoriaBusqueda == "apellido"){
+        if (categoriaBusqueda == "apellido") {
             query.orderBy(categoriaBusqueda).orderBy("nombre");
         }
         return query;

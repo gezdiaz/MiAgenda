@@ -2,7 +2,6 @@ package frsf.isi.dam.gtm.miagenda.interfaces.drawerprincipal.miagenda;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,13 +23,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
-import java.util.TimeZone;
 
 import frsf.isi.dam.gtm.miagenda.R;
-import frsf.isi.dam.gtm.miagenda.datos.DatosFirestore;
 import frsf.isi.dam.gtm.miagenda.entidades.Paciente;
 import frsf.isi.dam.gtm.miagenda.entidades.Turno;
-import frsf.isi.dam.gtm.miagenda.interfaces.VerPacienteActivity;
 
 public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -260,10 +256,10 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     .setBackgroundTint(fragment.getResources().getColor(R.color.colorCancelar))
                     .show();
         }else{
-            Turno t = new Turno(descripcion, p.getApellido()+", "+p.getNombre(), p.getDni(), fechaTurno.getTime());
+            Turno t = new Turno(descripcion, p.getApellido()+", "+p.getNombre(), p.getId(), fechaTurno.getTime());
             t.setPosicion(turnoPos);
             t.setDisponible(false);
-            fragment.guardarTurno(t, p.getDni());
+            fragment.guardarTurno(t, p.getId());
         }
     }
 
@@ -348,7 +344,7 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 //                pruebaCalendario.set(1998, 4, 13);
 //                i1.putExtra("paciente", new Paciente("Intent ", "Ver paciente Btn", "OS", pruebaCalendario.getTime(), "40905", 123456789L, "Argentina", "Santa fe", "Escalada", "S/N", "493", "Sin dpto"));
 //                view.getContext().startActivity(i1);
-                fragment.verPaciente(turno.getDniPaciente());
+                fragment.verPaciente(turno.getIdPaciente());
             }
         });
 
