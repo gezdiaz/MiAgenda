@@ -83,7 +83,12 @@ public class Direccion implements Serializable {
     }
 
     public String getStringToShow(){
-        return calle+" "+numero+" Dpto: "+departamento+", "+ciudad;
+        if(this.departamento!=""){
+            return calle+" "+numero+" Dpto: "+departamento+", "+ciudad;
+        }else{
+            return calle+" "+numero+", "+ciudad;
+        }
+
     }
 
 }
