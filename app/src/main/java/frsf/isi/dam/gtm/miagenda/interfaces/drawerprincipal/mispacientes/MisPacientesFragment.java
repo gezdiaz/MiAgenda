@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -26,6 +27,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AlertDialogLayout;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -72,7 +74,7 @@ public class MisPacientesFragment extends Fragment {
     private Spinner buscarSpinner;
     private int posicionItemSpinerSeleccionada = 0;
     private String categoriaBusqueda;
-;
+
     private FirestoreRecyclerOptions<Paciente> firestoreRecyclerOptions;
 
     public MisPacientesFragment(){
@@ -93,14 +95,26 @@ public class MisPacientesFragment extends Fragment {
                                     .setQuery(DatosFirestore.getInstance().getAllPacientesQuery(),Paciente.class)
                                     .build();
 
+
         Log.d(TAG, "Arguments recibidos: "+getArguments());
 
+//        CoordinatorLayout.MarginLayoutParams marginLayoutParams = ((CoordinatorLayout.LayoutParams)recyclerView.getLayoutParams());
+//        marginLayoutParams.setMargins(0, 0, 0, 0);
+//
+//        Snackbar avisoSeleccion = ((PrincipalActivity) getActivity()).avisoSeleccion;
+//
+//        Log.d(TAG, "Heigth: " +String.valueOf(avisoSeleccion.getView().getMeasuredHeight()));
+//        Log.d(TAG, "Padding Top: " +String.valueOf(avisoSeleccion.getView().getPaddingTop()));
+//        Log.d(TAG, "Pading bottom: " +String.valueOf(avisoSeleccion.getView().getPaddingBottom()));
         boolean modoseleccionar = false;
         Bundle arguments = getArguments();
         if(arguments != null && arguments.getBoolean("seleccionarPaciente", false)){
             //Tiene que seleccionar un paciente
             modoseleccionar = true;
+//            marginLayoutParams.setMargins(0, 0, 0,  avisoSeleccion.getView().getMeasuredHeight());
         }
+
+       // recyclerView.setLayoutParams(marginLayoutParams);
 
         adapter = new MisPacientesAdapter(firestoreRecyclerOptions, modoseleccionar, this);
         adapter.notifyDataSetChanged();

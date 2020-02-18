@@ -71,9 +71,8 @@
                     android:layout_height="wrap_content"
                     android:inputType="textPersonName|textCapWords"
                     android:maxLength="15"
-                    android:maxLines="1" />
-                    android:importantForAutofill="no"
-                    />
+                    android:maxLines="1"
+                    android:importantForAutofill="no"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
