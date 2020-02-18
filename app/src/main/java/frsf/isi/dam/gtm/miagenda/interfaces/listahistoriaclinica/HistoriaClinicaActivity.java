@@ -213,21 +213,8 @@ public class HistoriaClinicaActivity extends AppCompatActivity {
 
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_opcion, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.cerrar_sesion_option_item: {
-                Intent i1 = new Intent(this, LoginActivity.class);
-                //Le digo a LogInActivity que cierre sesión
-                i1.putExtra(LoginActivity.SignOut, true);
-                startActivity(i1);
-                break;
-            }
             case android.R.id.home: {
                 onBackPressed();
                 break;
