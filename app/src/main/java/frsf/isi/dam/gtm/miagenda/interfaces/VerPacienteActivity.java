@@ -69,6 +69,7 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
     private Paciente p;
     private Intent intentLlamada;
     private ProgressDialog progressDialog;
+    private String idPaciente;
 
     private final Handler handler = new Handler(Looper.myLooper()) {
         @Override
@@ -106,12 +107,8 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ver_paciente);
-        String idPaciente = getIntent().getStringExtra("idPaciente");
-        if(idPaciente != null && !idPaciente.isEmpty()){
-            progressDialog = ProgressDialog.show(VerPacienteActivity.this, getString(R.string.por_favor_espere), getString(R.string.buscando_paciente));
-            progressDialog.setCancelable(false);
-            DatosFirestore.getInstance().getPacienteById(idPaciente,handler);
-        }
+        idPaciente = getIntent().getStringExtra("idPaciente");
+
 
         toolbar = findViewById(R.id.ver_paciente_toolbar);
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorTextSecondary));
@@ -170,7 +167,7 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
                 Intent editarPacienteIntent = new Intent(getApplicationContext(), NuevoPacienteActivity.class);
                 editarPacienteIntent.setAction(NuevoPacienteActivity.EDITAR_ACTION);
                 editarPacienteIntent.putExtra("paciente",p);
-                startActivityForResult(editarPacienteIntent,REQUESTEDITARPACIENTE);
+                startActivity(editarPacienteIntent);
                 break;
             }
         }
@@ -312,6 +309,15 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(idPaciente != null && !idPaciente.isEmpty()){
+            progressDialog = ProgressDialog.show(VerPacienteActivity.this, getString(R.string.por_favor_espere), getString(R.string.buscando_paciente));
+            progressDialog.setCancelable(false);
+            DatosFirestore.getInstance().getPacienteById(idPaciente, handler);
+        }
+    }
 }
 
 

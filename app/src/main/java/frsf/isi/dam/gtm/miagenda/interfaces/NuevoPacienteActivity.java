@@ -83,11 +83,11 @@ public class NuevoPacienteActivity extends AppCompatActivity {
                         if (progressDialog.isShowing()) {
                             progressDialog.cancel();
                         }
-                        if(Objects.equals(getIntent().getAction(), EDITAR_ACTION)){
-                            Intent resultado = new Intent();
-                            resultado.putExtra("paciente","6");
-                            setResult(VerPacienteActivity.REQUESTEDITARPACIENTE, resultado);
-                        }
+//                        if(Objects.equals(getIntent().getAction(), EDITAR_ACTION)){
+//                            Intent resultado = new Intent();
+//                            resultado.putExtra("paciente","6");
+//                            setResult(VerPacienteActivity.REQUESTEDITARPACIENTE, resultado);
+//                        }
                         finish();
                     }
 
@@ -106,11 +106,11 @@ public class NuevoPacienteActivity extends AppCompatActivity {
                     if (progressDialog.isShowing()) {
                         progressDialog.cancel();
                     }
-                    if(Objects.equals(getIntent().getAction(), EDITAR_ACTION)){
-                        Intent resultado = new Intent();
-                        resultado.putExtra("paciente","6");
-                        setResult(VerPacienteActivity.REQUESTEDITARPACIENTE, resultado);
-                    }
+//                    if(Objects.equals(getIntent().getAction(), EDITAR_ACTION)){
+//                        Intent resultado = new Intent();
+//                        resultado.putExtra("paciente","6");
+//                        setResult(VerPacienteActivity.REQUESTEDITARPACIENTE, resultado);
+//                    }
                     finish();
 
                     Log.d(TAG, "Se completo la carga de la imagen");
@@ -386,7 +386,6 @@ public class NuevoPacienteActivity extends AppCompatActivity {
                         ArchivosCloudStorage.getInstance().saveImageEnPaciente(p.getId(), imageBitmap, handler, getApplicationContext());
                         Log.d(TAG,"entra al if de imageBitmap");
                         debeActualizarImagen = true;
-                        ArchivosCloudStorage.getInstance().saveImageEnPaciente(p.getDni(), imageBitmap, handler, getApplicationContext());
                     }
                     // finish();
                 } else {
@@ -608,13 +607,13 @@ public class NuevoPacienteActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        if(Objects.equals(getIntent().getAction(), EDITAR_ACTION)){
-            Intent resultado = new Intent();
-            resultado.putExtra("paciente",pacienteEditado);
-            setResult(VerPacienteActivity.REQUESTEDITARPACIENTE, resultado);
-        }
-        finish();
-    }
+//    @Override
+//    public void onBackPressed() {
+//        if(Objects.equals(getIntent().getAction(), EDITAR_ACTION)){
+//            Intent resultado = new Intent();
+//            resultado.putExtra("paciente",pacienteEditado);
+//            setResult(VerPacienteActivity.REQUESTEDITARPACIENTE, resultado);
+//        }
+//        finish();
+//    }
 }
