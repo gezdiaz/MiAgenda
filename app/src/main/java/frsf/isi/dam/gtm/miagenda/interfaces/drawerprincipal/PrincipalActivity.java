@@ -80,7 +80,8 @@ public class PrincipalActivity extends AppCompatActivity {
     private Calendar horaTurnoPendiente;
     private Bundle datosGuardados;
     private AlertDialog dialogoReservar;
-    private Snackbar avisoSeleccion, avisoTurnoCancelado;
+    public Snackbar avisoSeleccion;
+    private Snackbar avisoTurnoCancelado;
     public FloatingActionButton fabPrincipal;
 
     @Override
@@ -126,9 +127,19 @@ public class PrincipalActivity extends AppCompatActivity {
 
             CoordinatorLayout coordinatorLayout = findViewById(R.id.coordinator_layout);
             avisoSeleccion = Snackbar.make(coordinatorLayout, R.string.seleccionando_paciente, Snackbar.LENGTH_INDEFINITE);
+            avisoSeleccion.setActionTextColor(getResources().getColor(R.color.colorCancelar));
+            avisoSeleccion.setAction(R.string.x, new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(avisoSeleccion.isShown()){
+                        avisoSeleccion.dismiss();
+                    }
+                }
+            });
 
             avisoTurnoCancelado = Snackbar.make(coordinatorLayout, R.string.aviso_sin_paciente, Snackbar.LENGTH_LONG);
             avisoTurnoCancelado.setBackgroundTint(getResources().getColor(R.color.colorCancelar));
+
 
             //Seteo el perfil del usuario logueado en el header del drawer
             View headerView = navigationView.getHeaderView(0);
