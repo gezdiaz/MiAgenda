@@ -68,7 +68,7 @@ public class NuevoPacienteActivity extends AppCompatActivity {
     private String TAG = "NuevoPacienteActivity";
     private String rutaImagen;
     private Paciente pacienteEditado;
-    private boolean teniaImagen = false, debeActualizarImagen = false, cambioImagen = false;
+    private boolean teniaImagen = false, debeActualizarImagen = false, cambioImagen = false, cambioNombre = false;
 
 
     private final Handler handler = new Handler(Looper.myLooper()) {
@@ -369,6 +369,10 @@ public class NuevoPacienteActivity extends AppCompatActivity {
                         }else{
                             p.setFotoURL(pacienteEditado.getFotoURL());
                         }
+
+                        if(!pacienteEditado.getNombre().equals(p.getNombre()) || !pacienteEditado.getApellido().equals(p.getApellido())){
+                            cambioNombre = true;
+                        }
                         pacienteEditado = p;
 
                     }
@@ -376,7 +380,7 @@ public class NuevoPacienteActivity extends AppCompatActivity {
                     progressDialog = ProgressDialog.show(NuevoPacienteActivity.this, getString(R.string.por_favor_espere), getString(R.string.guardando_paciente));
                     progressDialog.setCancelable(false);
 
-                    DatosFirestore.getInstance().guardarPaciente(p, handler);
+                    DatosFirestore.getInstance().guardarPaciente(p, cambioNombre,  handler);
 
                     if ( imageBitmap != null ) {
                         ArchivosCloudStorage.getInstance().saveImageEnPaciente(p.getId(), imageBitmap, handler, getApplicationContext());

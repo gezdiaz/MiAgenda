@@ -87,12 +87,12 @@ public class MiAgendaFragment extends Fragment {
                             .setBackgroundTint(getResources().getColor(R.color.colorCancelar))
                             .show();
                     break;
-                case DatosFirestore.GET_PACIENTE:
-                    //Obtuvo el paciente para mostrar
-                    Intent i = new Intent(getActivity(), VerPacienteActivity.class);
-                    i.putExtra("paciente", (Paciente) msg.obj);
-                    getActivity().startActivity(i);
-                    break;
+//                case DatosFirestore.GET_PACIENTE:
+//                    //Obtuvo el paciente para mostrar
+//                    Intent i = new Intent(getActivity(), VerPacienteActivity.class);
+//                    i.putExtra("paciente", (Paciente) msg.obj);
+//                    getActivity().startActivity(i);
+//                    break;
                 case DatosFirestore.ELIMINACION_TURNO:
                     Snackbar.make(getActivity().findViewById(R.id.coordinator_layout), R.string.elimino_turno, BaseTransientBottomBar.LENGTH_SHORT).show();
                     mostrarFechaSeleccionada(fechaMostrar);
@@ -275,14 +275,17 @@ public class MiAgendaFragment extends Fragment {
         ((PrincipalActivity) getActivity()).seleccionarPaciente(hora, datosAguardar, dialogoReservar);
     }
 
-    public void guardarTurno(Turno t, String dni) {
+    public void guardarTurno(Turno t, String idPaciente) {
         recyclerView.setVisibility(View.INVISIBLE);
         nuevoTurno = true;
-        DatosFirestore.getInstance().saveTurno(t, dni, handler);
+        DatosFirestore.getInstance().saveTurno(t, idPaciente, handler);
     }
 
-    public void verPaciente(String dniPaciente) {
-        DatosFirestore.getInstance().getPacienteById(dniPaciente, handler);
+    public void verPaciente(String idPaciente) {
+//        DatosFirestore.getInstance().getPacienteById(dniPaciente, handler);
+        Intent i = new Intent(getActivity(), VerPacienteActivity.class);
+        i.putExtra("idPaciente", idPaciente);
+        getActivity().startActivity(i);
     }
 
     public void borrarTurno(Turno turno) {

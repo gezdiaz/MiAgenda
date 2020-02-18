@@ -23,6 +23,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -244,20 +245,65 @@ public class DatosFirestore {
 //           }
 //    }
 
-    public void guardarPaciente(Paciente p, final Handler handler) {
-        CollectionReference collectionPacientes = datosUsuario.collection(idColeccionPacientes);
+    public void guardarPaciente(Paciente p, final boolean actualizarNombre, final Handler handler) {
+        final CollectionReference collectionPacientes = datosUsuario.collection(idColeccionPacientes);
 
         if (p.getId() == null || p.getId().isEmpty()) {
             p.setId(collectionPacientes.document().getId());
         }
-
-        collectionPacientes.document(p.getId()).set(p)
+        final String idPaciente = p.getId();
+        final String nombrePaciente = p.getApellido()+", "+p.getNombre();
+        collectionPacientes.document(idPaciente).set(p)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Message m = Message.obtain();
-                        m.what = SAVE_PACIENTE;
-                        handler.sendMessage(m);
+                        if(actualizarNombre) {
+                            final CollectionReference collectionTurnos = collectionPacientes.document(idPaciente).collection(idColeccionTurnos);
+                            collectionTurnos.get()
+                                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                            WriteBatch writeBatch = db.batch();
+                                            for (DocumentSnapshot document : queryDocumentSnapshots) {
+                                                DocumentReference documentTurno = collectionTurnos.document(document.getId());
+                                                Map<String, Object> updates = new HashMap<>();
+                                                updates.put("nombrePaciente", nombrePaciente);
+                                                writeBatch.update(documentTurno, updates);
+                                            }
+                                            writeBatch.commit()
+                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                        @Override
+                                                        public void onSuccess(Void aVoid) {
+                                                            Message m = Message.obtain();
+                                                            m.what = SAVE_PACIENTE;
+                                                            handler.sendMessage(m);
+                                                        }
+                                                    })
+                                                    .addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            Log.d(TAG, "guardarPaciente: Error al actualizar los turnos con el WriteBatch.", e);
+                                                            Message m = Message.obtain();
+                                                            m.what = ERROR_SAVE_PACIENTE;
+                                                            handler.sendMessage(m);
+                                                        }
+                                                    });
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.d(TAG, "guardarPaciente: Error obtener los turnos para actualizar.", e);
+                                            Message m = Message.obtain();
+                                            m.what = ERROR_SAVE_PACIENTE;
+                                            handler.sendMessage(m);
+                                        }
+                                    });
+                        }else{
+                            Message m = Message.obtain();
+                            m.what = SAVE_PACIENTE;
+                            handler.sendMessage(m);
+                        }
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
