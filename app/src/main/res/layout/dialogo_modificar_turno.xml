@@ -98,6 +98,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
+            android:inputType="text|textCapSentences"
+            android:importantForAutofill="no"
             android:hint="@string/descripcion_lbl"
             android:maxLength="150"
             android:lines="5"/>

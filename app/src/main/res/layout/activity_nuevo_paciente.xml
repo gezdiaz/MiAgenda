@@ -90,7 +90,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:focusable="false"
-                    android:inputType="date"
+                    android:inputType="date|textCapWords"
                     android:maxLines="1"
                     android:maxLength="11"
                     android:importantForAutofill="no"/>
@@ -157,7 +157,7 @@
                     android:id="@+id/obra_social_edit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="text"
+                    android:inputType="text|textCapWords"
                     android:maxLines="1"
                     android:maxLength="30"
                     android:importantForAutofill="no"/>
@@ -188,7 +188,7 @@
                     android:text="@string/pais_default"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPostalAddress"
+                    android:inputType="textPostalAddress|textCapWords"
                     android:maxLines="1"
                     android:maxLength="30"
                     android:importantForAutofill="no"/>
@@ -209,7 +209,7 @@
                     android:id="@+id/provincia_edit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPostalAddress"
+                    android:inputType="textPostalAddress|textCapWords"
                     android:maxLines="1"
                     android:maxLength="30"
                     android:importantForAutofill="no"/>
@@ -231,7 +231,7 @@
                     android:id="@+id/ciudad_edit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPostalAddress"
+                    android:inputType="textPostalAddress|textCapWords"
                     android:maxLines="1"
                     android:maxLength="30"
                     android:importantForAutofill="no"
@@ -253,7 +253,7 @@
                     android:id="@+id/calle_edit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPostalAddress"
+                    android:inputType="textPostalAddress|textCapWords"
                     android:maxLines="1"
                     android:maxLength="30"
                     android:importantForAutofill="no"/>
@@ -297,7 +297,7 @@
                     android:id="@+id/departamento_direccion_edit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="text"
+                    android:inputType="text|textCapWords"
                     android:maxLength="10"
                     android:maxLines="1"
                     android:importantForAutofill="no"/>

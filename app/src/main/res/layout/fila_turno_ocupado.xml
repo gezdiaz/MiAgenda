@@ -55,10 +55,9 @@
         android:id="@+id/nombre_paciente_turno_ocupado_lbl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Paciente NN"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/hora_turno_ocupado_txt"
-        app:layout_constraintTop_toBottomOf="@id/hora_turno_ocupado_txt"/>
+        app:layout_constraintTop_toBottomOf="@id/hora_turno_ocupado_txt" />
 
     <View
         android:id="@+id/view2"
