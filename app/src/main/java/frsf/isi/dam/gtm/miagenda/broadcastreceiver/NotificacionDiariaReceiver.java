@@ -69,7 +69,7 @@ public class NotificacionDiariaReceiver extends BroadcastReceiver {
             }
 
             default:{
-                Log.d(TAG, "Entro al default de NotificacionDriariaReceiver");
+                Log.d(TAG, "Entro al default de NotificacionDiariaReceiver");
                 break;
             }
         }

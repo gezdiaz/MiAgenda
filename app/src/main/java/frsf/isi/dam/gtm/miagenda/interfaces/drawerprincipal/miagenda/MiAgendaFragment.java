@@ -136,7 +136,7 @@ public class MiAgendaFragment extends Fragment {
 
         recyclerView = view.findViewById(R.id.recycler_turnos);
         progressBar = view.findViewById(R.id.mi_agenda_progress);
-        //TODO setear lista de turnos
+
         recyclerView.setVisibility(View.INVISIBLE);
         listTurnos = new ArrayList<>();
 
@@ -263,8 +263,8 @@ public class MiAgendaFragment extends Fragment {
         DatosFirestore.getInstance().getTurnosEnFecha(fechaSeleccionada.getTime(), handler);
     }
 
-    void seleccionarPaciente(Calendar hora, Bundle datosAguardar, AlertDialog dialogoReservar){
-        ((PrincipalActivity) getActivity()).seleccionarPaciente(hora, datosAguardar, dialogoReservar);
+    void seleccionarPaciente(Calendar hora, Bundle datosAguardar){
+        ((PrincipalActivity) getActivity()).seleccionarPaciente(hora, datosAguardar);
     }
 
     public void guardarTurno(Turno t, String idPaciente) {

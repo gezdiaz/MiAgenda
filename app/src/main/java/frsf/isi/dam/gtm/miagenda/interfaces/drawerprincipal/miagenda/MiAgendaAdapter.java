@@ -91,7 +91,7 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
         switch (getItemViewType(position)) {
             case TURNO_LIBRE: {
-                //TODO mostrar turno libre
+                //mostrar turno libre
                 TurnoLibreHolder turnoLibreHolder = (TurnoLibreHolder) holder;
                 turnoLibreHolder.turnoLibreConstraintLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -109,7 +109,7 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
 
             case TURNO_OCUPADO:
-                //TODO mostrar turno ocupado
+                //mostrar turno ocupado
                 TurnoOcupadoHolder turnoOcupadoHolder = (TurnoOcupadoHolder) holder;
                 turnoOcupadoHolder.turnoOcupadoConstraint.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -168,7 +168,7 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         builder.setPositiveButton(R.string.listo_option, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                //TODO Reservar turno
+                //Reservar turno
                 Calendar fechaTurno = (Calendar)fechaSeleccionada.clone();
                 fechaTurno.add(Calendar.MINUTE, MiAgendaFragment.tiempoTurno*turnoPos);
 
@@ -225,7 +225,7 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         seleccionarPacienteDialogBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO ir a pantalla para seleccionar paciente
+                //ir a pantalla para seleccionar paciente
                 String descripcionIngresada = descripcionEdit.getText().toString();
                 SimpleDateFormat sdf = new SimpleDateFormat("'Fecha: 'dd/MM/yyyy' - 'HH:mm' hs.'");
                 Calendar horaSeleccionada = Calendar.getInstance();
@@ -240,7 +240,7 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 Bundle guardar = new Bundle();
                 guardar.putSerializable("horaSeleccionada", horaSeleccionada);
                 guardar.putString("descripcionIngresada", descripcionIngresada);
-                fragment.seleccionarPaciente(horaSeleccionada, guardar, reservarDialogo);
+                fragment.seleccionarPaciente(horaSeleccionada, guardar);
                 reservarDialogo.dismiss();
             }
         });
@@ -274,7 +274,7 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         builder.setPositiveButton(R.string.listo_option, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                //TODO Modificar turno
+                //Modificar turno
                 String nuevaDescripcion = descripcionEdit.getText().toString();
                 if(!nuevaDescripcion.equals(turno.getDescripcion())){
                     turno.setDescripcion(nuevaDescripcion);
@@ -286,7 +286,7 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         builder.setNegativeButton(R.string.quitar_turno, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                //TODO quitar turno
+                //quitar turno
                 fragment.borrarTurno(turno);
             }
         });
@@ -335,8 +335,7 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         verPacienteDialogBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO ir a la pantallar para ver paciente
-
+                //ir a la pantallar para ver paciente
                 fragment.verPaciente(turno.getIdPaciente());
             }
         });

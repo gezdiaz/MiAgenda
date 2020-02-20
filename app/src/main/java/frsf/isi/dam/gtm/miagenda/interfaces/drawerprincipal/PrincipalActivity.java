@@ -64,7 +64,6 @@ public class PrincipalActivity extends AppCompatActivity {
     public boolean seleccionPacienteEnviada = false;
     private Calendar horaTurnoPendiente;
     private Bundle datosGuardados;
-    private AlertDialog dialogoReservar;
     public Snackbar avisoSeleccion;
     private Snackbar avisoTurnoCancelado;
     public FloatingActionButton fabPrincipal;
@@ -174,7 +173,7 @@ public class PrincipalActivity extends AppCompatActivity {
                             if (seleccionPacienteEnviada) {
 
                                 if (arguments == null || !arguments.getBoolean("respuestaPaciente", false)) {
-                                    //TODO Avisar que si cambia de pantalla se cancela la creación de turno
+                                    //Avisar que si cambia de pantalla se cancela la creación de turno
                                     avisoTurnoCancelado.show();
                                     Log.d(TAG, "Vuelve a MiAgenda sin seleccionar un paciente");
                                     seleccionPacienteEnviada = false;
@@ -232,21 +231,15 @@ public class PrincipalActivity extends AppCompatActivity {
 
     }
 
-    public void seleccionarPaciente(Calendar horaTurno, Bundle datosAGuardar, AlertDialog dialogoReservar) {
+    public void seleccionarPaciente(Calendar horaTurno, Bundle datosAGuardar) {
         seleccionPacienteEnviada = true;
         horaTurnoPendiente = horaTurno;
         datosGuardados = datosAGuardar;
-        this.dialogoReservar = dialogoReservar;
         Bundle args = new Bundle();
         args.putBoolean("seleccionarPaciente", true);
         navController.navigate(R.id.nav_mis_pacientes, args);
     }
 
-    public AlertDialog getDialogoReservar() {
-        AlertDialog d = dialogoReservar;
-        dialogoReservar = null;
-        return d;
-    }
 
     public void responderPaciente(Paciente p) {
         Log.d(TAG, "Respondió con paciente" + p);
@@ -315,7 +308,6 @@ public class PrincipalActivity extends AppCompatActivity {
 
         Calendar ahora = Calendar.getInstance();
         ahora.setTimeZone(TimeZone.getDefault());
-        //TODO usar las variables de los turnos
         Calendar horaAlarmaNotificacion = Calendar.getInstance();
         horaAlarmaNotificacion.setTimeZone(TimeZone.getDefault());
         horaAlarmaNotificacion.set(Calendar.HOUR_OF_DAY,6);

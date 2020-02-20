@@ -20,12 +20,7 @@ public class MisPacientesAdapter extends FirestoreRecyclerAdapter<Paciente, Paci
     private boolean modoSeleccionar;
     private MisPacientesFragment fragment;
 
-    /**
-     * Create a new RecyclerView adapter that listens to a Firestore Query.  See {@link
-     * FirestoreRecyclerOptions} for configuration options.
-     *
-     * @param options
-     */
+
     public MisPacientesAdapter(@NonNull FirestoreRecyclerOptions<Paciente> options, boolean modoSeleccionar, MisPacientesFragment fragment) {
         super(options);
         this.modoSeleccionar = modoSeleccionar;

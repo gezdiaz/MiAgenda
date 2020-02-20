@@ -73,7 +73,7 @@ public class NuevoPacienteActivity extends AppCompatActivity {
             switch (msg.what) {
                 case DatosFirestore.SAVE_PACIENTE:
                     Log.d(TAG, "Paciente guardado correctamente");
-                    //TODO si no tiene que guardar una nueva imagen , el fin de la actividad debe llevarse a cabo aca.
+                    //si no tiene que guardar una nueva imagen , el fin de la actividad debe llevarse a cabo aca.
                     Log.d(TAG, "debeActualizarImagen = " + debeActualizarImagen);
                     if(!debeActualizarImagen){
                         if (progressDialog.isShowing()) {
@@ -111,8 +111,6 @@ public class NuevoPacienteActivity extends AppCompatActivity {
             }
         }
     };
-
-    //TODO REVISAR LAS VALIDACIONES CUANDO SE UTILIZA TEXTO AUTOCOMPLETADO
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -316,7 +314,7 @@ public class NuevoPacienteActivity extends AppCompatActivity {
                     contadorWhile++;
                 }
                 if (datosValidos) {
-                    //TODO Registrar paciente
+                    //Registrar paciente
                     Paciente p;
                     if(fechaNacimiento != null){
                         p = new Paciente(
