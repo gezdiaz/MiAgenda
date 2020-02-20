@@ -101,7 +101,10 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 });
                 Calendar hora = (Calendar) fechaSeleccionada.clone();
                 hora.add(Calendar.MINUTE, MiAgendaFragment.tiempoTurno * position);
-                turnoLibreHolder.horaTurno.setText(hora.get(Calendar.HOUR_OF_DAY) + ":" + (hora.get(Calendar.MINUTE) == 0 ? "00" : hora.get(Calendar.MINUTE)) + " hs.");
+                turnoLibreHolder.horaTurno.setText(fragment.getString(R.string.hora_turno_miagenda,
+                        hora.get(Calendar.HOUR_OF_DAY),
+                        (hora.get(Calendar.MINUTE) == 0 ? "00" : hora.get(Calendar.MINUTE))));
+//                turnoLibreHolder.horaTurno.setText(hora.get(Calendar.HOUR_OF_DAY) + ":" + (hora.get(Calendar.MINUTE) == 0 ? "00" : hora.get(Calendar.MINUTE)) + " hs.");
                 break;
             }
 
@@ -117,7 +120,10 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 });
                 Calendar hora = Calendar.getInstance();
                 hora.setTime(listTurnos.get(position).getFecha());
-                turnoOcupadoHolder.horaTurno.setText(hora.get(Calendar.HOUR_OF_DAY) + ":" + (hora.get(Calendar.MINUTE) == 0 ? "00" : hora.get(Calendar.MINUTE)) + " hs.");
+                turnoOcupadoHolder.horaTurno.setText(fragment.getString(R.string.hora_turno_miagenda,
+                        hora.get(Calendar.HOUR_OF_DAY),
+                        (hora.get(Calendar.MINUTE) == 0 ? "00" : hora.get(Calendar.MINUTE))));
+//                turnoOcupadoHolder.horaTurno.setText(hora.get(Calendar.HOUR_OF_DAY) + ":" + (hora.get(Calendar.MINUTE) == 0 ? "00" : hora.get(Calendar.MINUTE)) + " hs.");
                 turnoOcupadoHolder.nombrePaciente.setText(listTurnos.get(position).getNombrePaciente());
                 break;
         }
@@ -188,7 +194,8 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         });
 
         reservarDialogo = builder.create();
-
+        TextView titulo = dialogView.findViewById(R.id.turno_tittle_txt);
+        titulo.setText(R.string.titulo_nuevo_turno);
         descripcionEdit = dialogView.findViewById(R.id.tuno_descripcion_edit_text);
         fechaTurnoTxt = dialogView.findViewById(R.id.fecha_turno_editado_txt);
         nombrePaceinteTxt = dialogView.findViewById(R.id.turno_nombre_paciente_txt);
@@ -203,13 +210,19 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         Calendar hora = (Calendar) fechaSeleccionada.clone();
         hora.add(Calendar.MINUTE, 30 * turnoPos);
-        fechaTurnoTxt.setText("Fecha: "
-                + hora.get(Calendar.DAY_OF_MONTH)
-                + "/" + (hora.get(Calendar.MONTH)+1)
-                + "/" + hora.get(Calendar.YEAR)
-                + " - " + hora.get(Calendar.HOUR_OF_DAY)
-                + ":" + (hora.get(Calendar.MINUTE) == 0 ? "00" : hora.get(Calendar.MINUTE))
-                + " hs.");
+        fechaTurnoTxt.setText(fragment.getString(R.string.fecha_turno_dialog,
+                hora.get(Calendar.DAY_OF_MONTH),
+                (hora.get(Calendar.MONTH)+1),
+                hora.get(Calendar.YEAR),
+                hora.get(Calendar.HOUR_OF_DAY),
+                (hora.get(Calendar.MINUTE) == 0 ? "00" : hora.get(Calendar.MINUTE))));
+//        fechaTurnoTxt.setText("Fecha: "
+//                + hora.get(Calendar.DAY_OF_MONTH)
+//                + "/" + (hora.get(Calendar.MONTH)+1)
+//                + "/" + hora.get(Calendar.YEAR)
+//                + " - " + hora.get(Calendar.HOUR_OF_DAY)
+//                + ":" + (hora.get(Calendar.MINUTE) == 0 ? "00" : hora.get(Calendar.MINUTE))
+//                + " hs.");
         hora = null;
 
         reservarDialogo.setOnShowListener(new DialogInterface.OnShowListener() {
@@ -302,6 +315,8 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         verTurnoDialogo = builder.create();
 
+        TextView titulo = dialogView.findViewById(R.id.turno_tittle_txt);
+        titulo.setText(R.string.titulo_ver_turno);
         descripcionEdit = dialogView.findViewById(R.id.tuno_descripcion_edit_text);
         nombrePaceinteTxt = dialogView.findViewById(R.id.turno_nombre_paciente_txt);
         fechaTurnoTxt = dialogView.findViewById(R.id.fecha_turno_editado_txt);
@@ -317,13 +332,19 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 //        fechaTurnoTxt.setText(sdf.format(listTurnos.get(turnoPos).getFecha()));
         Calendar hora = (Calendar) fechaSeleccionada.clone();
         hora.add(Calendar.MINUTE, 30 * turnoPos);
-        fechaTurnoTxt.setText("Fecha: "
-                + hora.get(Calendar.DAY_OF_MONTH)
-                + "/" + (hora.get(Calendar.MONTH)+1)
-                + "/" + hora.get(Calendar.YEAR)
-                + " - " + hora.get(Calendar.HOUR_OF_DAY)
-                + ":" + (hora.get(Calendar.MINUTE) == 0 ? "00" : hora.get(Calendar.MINUTE))
-                + " hs.");
+        fechaTurnoTxt.setText(fragment.getString(R.string.fecha_turno_dialog,
+                hora.get(Calendar.DAY_OF_MONTH),
+                (hora.get(Calendar.MONTH)+1),
+                hora.get(Calendar.YEAR),
+                hora.get(Calendar.HOUR_OF_DAY),
+                (hora.get(Calendar.MINUTE) == 0 ? "00" : hora.get(Calendar.MINUTE))));
+//        fechaTurnoTxt.setText("Fecha: "
+//                + hora.get(Calendar.DAY_OF_MONTH)
+//                + "/" + (hora.get(Calendar.MONTH)+1)
+//                + "/" + hora.get(Calendar.YEAR)
+//                + " - " + hora.get(Calendar.HOUR_OF_DAY)
+//                + ":" + (hora.get(Calendar.MINUTE) == 0 ? "00" : hora.get(Calendar.MINUTE))
+//                + " hs.");
         hora = null;
 
 

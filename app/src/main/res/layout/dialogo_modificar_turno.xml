@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
-        android:text="@string/turno"
+        android:text="@string/titulo_nuevo_turno"
         />
 
     <TextView
@@ -98,11 +98,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
-            android:inputType="text|textCapSentences"
-            android:importantForAutofill="no"
             android:hint="@string/descripcion_lbl"
-            android:maxLength="150"
-            android:lines="5"/>
+            android:importantForAutofill="no"
+            android:inputType="textMultiLine|text|textCapSentences"
+            android:lines="5"
+            android:maxLength="150" />
 
     </com.google.android.material.textfield.TextInputLayout>
 

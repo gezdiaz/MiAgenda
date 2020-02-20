@@ -425,7 +425,11 @@ public class NuevoPacienteActivity extends AppCompatActivity {
 
         nombrePacienteEdit.setText(p.getNombre());
         apellidoPacienteEdit.setText(p.getApellido());
-        fechaNacimientoEdit.setText(fechaNac.get(Calendar.DATE) + "/" +(fechaNac.get(Calendar.MONTH)+1) + "/" + fechaNac.get(Calendar.YEAR));
+        fechaNacimientoEdit.setText(getString(R.string.fecha_nacimiento,
+                fechaNac.get(Calendar.DATE),
+                (fechaNac.get(Calendar.MONTH)+1),
+                fechaNac.get(Calendar.YEAR)));
+//        fechaNacimientoEdit.setText(fechaNac.get(Calendar.DATE) + "/" +(fechaNac.get(Calendar.MONTH)+1) + "/" + fechaNac.get(Calendar.YEAR));
         dniEdit.setText(p.getDni());
         telefonoEdit.setText(String.valueOf(p.getTelefono()));
         provinciaEdit.setText(p.getDireccion().getProvincia());
@@ -506,8 +510,12 @@ public class NuevoPacienteActivity extends AppCompatActivity {
             public void onPositiveButtonClick(Long aLong) {
                 fechaNacimiento = Calendar.getInstance(TimeZone.getDefault());
                 fechaNacimiento.setTimeInMillis(aLong-TimeZone.getDefault().getRawOffset());
-                String fechaSeleccionada = (fechaNacimiento.get(Calendar.DATE)) + "/" + (fechaNacimiento.get(Calendar.MONTH) + 1) + "/" + fechaNacimiento.get(Calendar.YEAR);
-                fechaNacimientoEdit.setText(fechaSeleccionada);
+                fechaNacimientoEdit.setText(getString(R.string.fecha_nacimiento,
+                        fechaNacimiento.get(Calendar.DATE),
+                        (fechaNacimiento.get(Calendar.MONTH)+1),
+                        fechaNacimiento.get(Calendar.YEAR)));
+//                String fechaSeleccionada = (fechaNacimiento.get(Calendar.DATE)) + "/" + (fechaNacimiento.get(Calendar.MONTH) + 1) + "/" + fechaNacimiento.get(Calendar.YEAR);
+//                fechaNacimientoEdit.setText(fechaSeleccionada);
                 fechaNacimientoEdit.setError(null);
                 Log.d(TAG,"TimeZone: " + fechaNacimiento.getTimeZone().getRawOffset());
 

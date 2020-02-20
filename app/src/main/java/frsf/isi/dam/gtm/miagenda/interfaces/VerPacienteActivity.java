@@ -140,7 +140,7 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
             }
             case R.id.llamada_option_item:{
                 intentLlamada = new Intent(Intent.ACTION_CALL);
-                intentLlamada.setData(Uri.parse("tel:" + String.valueOf(p.getTelefono())));
+                intentLlamada.setData(Uri.parse("tel:" + p.getTelefono()));
                 //Esto lo pongo porque necesita API 23 y estamos usando 22
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     if (checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
@@ -219,7 +219,6 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
         googleMap = gMap;
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)  != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},9999);
-            return;
         }
         else{
             inicializarMapa();
@@ -229,7 +228,7 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case 9999:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -281,7 +280,7 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
         }
 
 
-        if(addressList.size() != 0) {
+        if(addressList != null && addressList.size() != 0) {
 
             masInfoMapaLbl.setText(R.string.mapa_mas_info);
 
@@ -289,7 +288,7 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
 
             LatLng pacienteUbicacionLatLng = new LatLng(pacienteAddress.getLatitude(),pacienteAddress.getLongitude());
 
-            Marker marker = googleMap.addMarker(new MarkerOptions()
+            googleMap.addMarker(new MarkerOptions()
                     .position(pacienteUbicacionLatLng)
                     .title((p.getDireccion().getStringToShow()).toUpperCase()));
 
@@ -303,7 +302,7 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
 
         }
         else{
-            masInfoMapaLbl.setText(getString(R.string.ubicacion_no_encontrada)+"\n" + p.getDireccion().getStringToShow()) ;
+            masInfoMapaLbl.setText(getString(R.string.ubicacion_no_encontrada, p.getDireccion().getStringToShow()));
             masInfoMapaLbl.setTextColor(Color.RED);
         }
 

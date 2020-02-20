@@ -117,7 +117,15 @@ public class MiAgendaFragment extends Fragment {
         adapter.setListaTurnos(listTurnos);
         adapter.setFecha(fechaMostrar);
         adapter.notifyDataSetChanged();
-        fechaTxt.setText(fechaMostrar.get(Calendar.DATE) + " de " + fechaMostrar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault()) + " de " + fechaMostrar.get(Calendar.YEAR));
+        fechaTxt.setText(getString(R.string.fecha_miagenda,
+                fechaMostrar.get(Calendar.DATE),
+                fechaMostrar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault()),
+                fechaMostrar.get(Calendar.YEAR)));
+//        fechaTxt.setText(fechaMostrar.get(Calendar.DATE) +
+//                " de " +
+//                fechaMostrar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault()) +
+//                " de " +
+//                fechaMostrar.get(Calendar.YEAR));
         recyclerView.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.GONE);
     }
