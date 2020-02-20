@@ -67,15 +67,6 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
-        <service
-            android:name = ".broadcastreceiver.NotificacionDiariaService"
-            android:label = "@string/app_name">
-        <intent-filter>
-            <action
-                android:name = "frsf.isi.dam.gtm.miagenda.broadcastreceiver.NotificacionDiariaService" />
-            <category android:name= "android.intent.category.DEFAULT" />
-        </intent-filter>
-        </service>
     </application>
 
 </manifest>
