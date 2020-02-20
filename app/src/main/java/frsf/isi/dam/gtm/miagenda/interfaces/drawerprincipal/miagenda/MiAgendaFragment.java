@@ -73,7 +73,6 @@ public class MiAgendaFragment extends Fragment {
                     break;
                 case DatosFirestore.SAVE_TURNO:
                     Log.d(TAG, "Se gaurdó el turno");
-//                    mostrarFechaSeleccionada(fechaMostrar);
                     if(nuevoTurno) {
                         nuevoTurno = false;
                         ((PrincipalActivity) getActivity()).recargarFragment(MiAgendaFragment.this, fechaMostrar);
@@ -87,12 +86,7 @@ public class MiAgendaFragment extends Fragment {
                             .setBackgroundTint(getResources().getColor(R.color.colorCancelar))
                             .show();
                     break;
-//                case DatosFirestore.GET_PACIENTE:
-//                    //Obtuvo el paciente para mostrar
-//                    Intent i = new Intent(getActivity(), VerPacienteActivity.class);
-//                    i.putExtra("paciente", (Paciente) msg.obj);
-//                    getActivity().startActivity(i);
-//                    break;
+
                 case DatosFirestore.ELIMINACION_TURNO:
                     Snackbar.make(getActivity().findViewById(R.id.coordinator_layout), R.string.elimino_turno, BaseTransientBottomBar.LENGTH_SHORT).show();
                     mostrarFechaSeleccionada(fechaMostrar);
@@ -113,7 +107,6 @@ public class MiAgendaFragment extends Fragment {
         for (Turno t : turnos) {
             listTurnos.set(t.getPosicion(), t);
         }
-//        Log.d(TAG, "Turnos actualizados " + listTurnos);
         adapter.setListaTurnos(listTurnos);
         adapter.setFecha(fechaMostrar);
         adapter.notifyDataSetChanged();
@@ -121,11 +114,7 @@ public class MiAgendaFragment extends Fragment {
                 fechaMostrar.get(Calendar.DATE),
                 fechaMostrar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault()),
                 fechaMostrar.get(Calendar.YEAR)));
-//        fechaTxt.setText(fechaMostrar.get(Calendar.DATE) +
-//                " de " +
-//                fechaMostrar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault()) +
-//                " de " +
-//                fechaMostrar.get(Calendar.YEAR));
+
         recyclerView.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.GONE);
     }
@@ -179,9 +168,7 @@ public class MiAgendaFragment extends Fragment {
                         actualizoLista = true;
                     }
                     Log.d(TAG, "Datos guardados recibidos: " + arguments.getBundle("datos"));
-//            adapter.setPacienteSeleccionado(p);
-//            AlertDialog dialogoGuardado = ((PrincipalActivity) getActivity()).getDialogoReservar();
-//            dialogoGuardado.show();
+
                     //"consumo" la selección del paciente
                     ((PrincipalActivity) getActivity()).seleccionPacienteEnviada = false;
                     adapter.setFecha(fechaMostrar);
@@ -290,7 +277,6 @@ public class MiAgendaFragment extends Fragment {
     }
 
     public void verPaciente(String idPaciente) {
-//        DatosFirestore.getInstance().getPacienteById(dniPaciente, handler);
         Intent i = new Intent(getActivity(), VerPacienteActivity.class);
         i.putExtra("idPaciente", idPaciente);
         getActivity().startActivity(i);

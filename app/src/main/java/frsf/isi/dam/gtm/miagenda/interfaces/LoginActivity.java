@@ -105,13 +105,6 @@ public class LoginActivity extends AppCompatActivity {
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
 
-        //Verificar si ya hay una cuenta iniciada.
-//        FirebaseUser user = mAuth.getCurrentUser();
-//        if (user != null) {
-//            Log.d(TAG, "Cuenta ya inicada: " + user.getEmail());
-//            startActivity(new Intent(this, PrincipalActivity.class));
-//            finish();
-//        }
 
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -187,9 +180,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
-//                            Snackbar s = Snackbar.make(findViewById(R.id.login_activity_layout), R.string.exito_inicio_sesion, Snackbar.LENGTH_LONG);
-//                            s.setBackgroundTint(getResources().getColor(R.color.colorAceptar));
-//                            s.show();
+
                             Intent i = new Intent(LoginActivity.this, PrincipalActivity.class);
                             i.putExtra(PrincipalActivity.LOGIN, true);
                             iniciarSesionProgress.setVisibility(View.INVISIBLE);

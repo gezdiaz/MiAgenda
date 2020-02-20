@@ -1,7 +1,6 @@
 package frsf.isi.dam.gtm.miagenda.interfaces.listahistoriaclinica;
 
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
@@ -10,12 +9,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
-import android.app.DownloadManager;
-import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -27,48 +23,34 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.os.StrictMode;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textview.MaterialTextView;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 import java.util.TimeZone;
 
 import frsf.isi.dam.gtm.miagenda.R;
 import frsf.isi.dam.gtm.miagenda.datos.DatosFirestore;
 import frsf.isi.dam.gtm.miagenda.entidades.Paciente;
-import frsf.isi.dam.gtm.miagenda.interfaces.LoginActivity;
-import frsf.isi.dam.gtm.miagenda.interfaces.drawerprincipal.mispacientes.MisPacientesAdapter;
 
 public class HistoriaClinicaActivity extends AppCompatActivity {
 
     public static final String TAG  = "HistoriaClinicaActivity";
 
-    private List<Turno> mockTurnos;
     private Paciente p;
     private View contextView;
     private RecyclerView historiaClinicaRecyclerView;
@@ -322,7 +304,7 @@ public class HistoriaClinicaActivity extends AppCompatActivity {
     private void crearNuevaPagina() {
         margenX = 25;
         margenY = 45;
-        //documentoPdf.finishPage(contenidoPagina);
+
         //Informacion del diseño de la pagina: ancho, largo y numero de pagina
         paginaDocumento = new PdfDocument.PageInfo.Builder(anchoPagina, largoPagina, numeroPagina).create();
 
@@ -350,11 +332,10 @@ public class HistoriaClinicaActivity extends AppCompatActivity {
 
     private void cortarString(String linea, ArrayList<String> lineasARetornar) {
 
-        Log.d(TAG,linea);
+
         //Este metodo es para aquellos casos en que un string deba mostrarse en mas de un renglon.
 
         if (linea.length() > maxCantCaracteresXRenglon) {
-            //lineasARetornar.add(linea.substring(0, 50));
             String lineaCortada = (linea.substring(0, maxCantCaracteresXRenglon));
             if(lineaCortada.lastIndexOf(' ') == 0){
                 lineaCortada = lineaCortada.substring(1);

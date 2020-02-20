@@ -7,25 +7,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.solver.widgets.Snapshot;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.squareup.okhttp.internal.DiskLruCache;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-
 import frsf.isi.dam.gtm.miagenda.R;
 import frsf.isi.dam.gtm.miagenda.entidades.Paciente;
 import frsf.isi.dam.gtm.miagenda.interfaces.VerPacienteActivity;
 
 public class MisPacientesAdapter extends FirestoreRecyclerAdapter<Paciente, PacienteHolder> {
 
-    private boolean modoSeleccionar = false;
+    private boolean modoSeleccionar;
     private MisPacientesFragment fragment;
 
     /**
@@ -78,10 +70,6 @@ public class MisPacientesAdapter extends FirestoreRecyclerAdapter<Paciente, Paci
                 }else{
                     //Ir a ver paciente;
                     Intent i = new Intent(view.getContext(), VerPacienteActivity.class);
-//                Calendar pruebaCalendario = Calendar.getInstance();
-//                pruebaCalendario.set(1997, 8,6);
-//                i.putExtra("paciente", new Paciente("Intent ", "Ver paciente Btn", "Sancor Seguros", pruebaCalendario.getTime(), 40905, 123456789L, "Argentina", "Santa fe","Escalada", "S/N", "493", "Sin dpto"));
-
                     //TODO mostrar datos de paciente
                     i.putExtra("idPaciente",paciente.getId());
                     view.getContext().startActivity(i);

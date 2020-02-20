@@ -1,28 +1,18 @@
 package frsf.isi.dam.gtm.miagenda.broadcastreceiver;
 
-import android.app.AlarmManager;
+
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Build;
-import android.os.IBinder;
 import android.util.Log;
-import android.widget.Toast;
-
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-
-import java.util.Calendar;
-import java.util.TimeZone;
-
 import frsf.isi.dam.gtm.miagenda.R;
 import frsf.isi.dam.gtm.miagenda.interfaces.drawerprincipal.PrincipalActivity;
 

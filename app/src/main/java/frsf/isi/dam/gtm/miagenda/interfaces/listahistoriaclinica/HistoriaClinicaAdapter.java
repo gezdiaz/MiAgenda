@@ -6,22 +6,18 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.Calendar;
-import java.util.List;
 import java.util.TimeZone;
 
 import frsf.isi.dam.gtm.miagenda.R;
-import frsf.isi.dam.gtm.miagenda.interfaces.drawerprincipal.miagenda.TurnoLibreHolder;
 
 public class HistoriaClinicaAdapter extends FirestoreRecyclerAdapter<frsf.isi.dam.gtm.miagenda.entidades.Turno, HistoriaClinicaHolder> {
 
-    private List<Turno> listaHistoriaClinica;
 
     /**
      * Create a new RecyclerView adapter that listens to a Firestore Query.  See {@link

@@ -1,17 +1,10 @@
 package frsf.isi.dam.gtm.miagenda.entidades;
 
-import android.os.Parcelable;
-
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
 import java.util.TimeZone;
-import java.util.Map;
 
-import io.opencensus.internal.StringUtils;
 
 public class Paciente implements Serializable {
 
@@ -26,7 +19,6 @@ public class Paciente implements Serializable {
     private Direccion direccion;
     //El paciente no tiene una lista de turnos porque se guardan en una colección turnos dentro de cada documento paciente
     //Entonces para obtener los turnos de un paciente hay que hacer una consulta a Firestore.
-    //private List<Turno> turnos;
 
     public Paciente() {
     }
@@ -114,13 +106,6 @@ public class Paciente implements Serializable {
         this.direccion = direccion;
     }
 
-//    public List<Turno> getTurnos() {
-//        return turnos;
-//    }
-//
-//    public void setTurnos(List<Turno> turnos) {
-//        this.turnos = turnos;
-//    }
 
     @Override
     public String toString() {
@@ -147,12 +132,4 @@ public class Paciente implements Serializable {
         return String.valueOf(edad);
     }
 
-//    Agregar y quitar turnos también se hace en firestore
-//    public boolean addTurno(Turno turno){
-//        return this.turnos.add(turno);
-//    }
-//
-//    public boolean removeTurno(Turno turno){
-//        return this.turnos.remove(turno);
-//    }
 }

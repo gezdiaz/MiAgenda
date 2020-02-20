@@ -65,7 +65,6 @@
         <receiver android:name=".broadcastreceiver.NotificacionDiariaReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"></action>
-                <action android:name="android.intent.action.SCREEN_ON"></action>
             </intent-filter>
         </receiver>
         <service

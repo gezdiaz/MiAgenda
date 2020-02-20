@@ -33,6 +33,7 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public static final int TURNO_LIBRE = 0;
     public static final int TURNO_OCUPADO = 1;
 
+    //Para que la cruz no aparezca muy en el medio del dialogo.
     private final String cancelarDialogo = "x       ";
 
     private MiAgendaFragment fragment;
@@ -104,7 +105,6 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 turnoLibreHolder.horaTurno.setText(fragment.getString(R.string.hora_turno_miagenda,
                         hora.get(Calendar.HOUR_OF_DAY),
                         (hora.get(Calendar.MINUTE) == 0 ? "00" : hora.get(Calendar.MINUTE))));
-//                turnoLibreHolder.horaTurno.setText(hora.get(Calendar.HOUR_OF_DAY) + ":" + (hora.get(Calendar.MINUTE) == 0 ? "00" : hora.get(Calendar.MINUTE)) + " hs.");
                 break;
             }
 
@@ -123,7 +123,6 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 turnoOcupadoHolder.horaTurno.setText(fragment.getString(R.string.hora_turno_miagenda,
                         hora.get(Calendar.HOUR_OF_DAY),
                         (hora.get(Calendar.MINUTE) == 0 ? "00" : hora.get(Calendar.MINUTE))));
-//                turnoOcupadoHolder.horaTurno.setText(hora.get(Calendar.HOUR_OF_DAY) + ":" + (hora.get(Calendar.MINUTE) == 0 ? "00" : hora.get(Calendar.MINUTE)) + " hs.");
                 turnoOcupadoHolder.nombrePaciente.setText(listTurnos.get(position).getNombrePaciente());
                 break;
         }
@@ -144,9 +143,7 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     private int getPosicionDeHora(Calendar horaSeleccionada) {
-        //hora = horaInicio + (pos*timepoTurno minutos)
-        //hora = horaInicio + (pos*timepoTurno minutos)/60 horas
-        //pos = (hora - horaInicio)*60/tiempoTurno
+
         Calendar inicio = (Calendar) horaSeleccionada.clone();
         inicio.set(Calendar.HOUR_OF_DAY, MiAgendaFragment.horaInicio);
         inicio.set(Calendar.MINUTE, 0);
@@ -172,17 +169,12 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 //TODO Reservar turno
-                //Paciente falso para probar
-//                Paciente p = new Paciente("Gastón", "Díaz", "OSECAC", new Date(), "40267721", 155046210l, "Argentina", "fdgeg", "sgerg", "sfger", "fdbe", "fge");
                 Calendar fechaTurno = (Calendar)fechaSeleccionada.clone();
                 fechaTurno.add(Calendar.MINUTE, MiAgendaFragment.tiempoTurno*turnoPos);
-//                Turno t = new Turno(descripcionEdit.getText().toString(), p.getApellido()+", "+p.getNombre(), fechaTurno.getTime());
-//                t.setDisponible(false);
-//                t.setPosicion(turnoPos);
-//                DatosFirestore.getInstance().saveTurno(t, p.getDni(), fragment.handler);
+
                 String descripcion = descripcionEdit.getText().toString();
                 guardarTurno(turnoPos, descripcion, fechaTurno, pacienteSeleccionado);
-//                fragment.recargarFragment();
+
             }
         });
 
@@ -216,13 +208,6 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 hora.get(Calendar.YEAR),
                 hora.get(Calendar.HOUR_OF_DAY),
                 (hora.get(Calendar.MINUTE) == 0 ? "00" : hora.get(Calendar.MINUTE))));
-//        fechaTurnoTxt.setText("Fecha: "
-//                + hora.get(Calendar.DAY_OF_MONTH)
-//                + "/" + (hora.get(Calendar.MONTH)+1)
-//                + "/" + hora.get(Calendar.YEAR)
-//                + " - " + hora.get(Calendar.HOUR_OF_DAY)
-//                + ":" + (hora.get(Calendar.MINUTE) == 0 ? "00" : hora.get(Calendar.MINUTE))
-//                + " hs.");
         hora = null;
 
         reservarDialogo.setOnShowListener(new DialogInterface.OnShowListener() {
@@ -327,9 +312,7 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         descripcionEdit.setText(turno.getDescripcion());
         nombrePaceinteTxt.setText(turno.getNombrePaciente());
-        //No puedo usar la fecha del turno porque se guarda mal la hora ¯\_(ツ)_/¯
-//        SimpleDateFormat sdf = new SimpleDateFormat("'Fecha: 'dd/MM/yy' - 'HH:MM' hs.'");
-//        fechaTurnoTxt.setText(sdf.format(listTurnos.get(turnoPos).getFecha()));
+
         Calendar hora = (Calendar) fechaSeleccionada.clone();
         hora.add(Calendar.MINUTE, 30 * turnoPos);
         fechaTurnoTxt.setText(fragment.getString(R.string.fecha_turno_dialog,
@@ -338,13 +321,6 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 hora.get(Calendar.YEAR),
                 hora.get(Calendar.HOUR_OF_DAY),
                 (hora.get(Calendar.MINUTE) == 0 ? "00" : hora.get(Calendar.MINUTE))));
-//        fechaTurnoTxt.setText("Fecha: "
-//                + hora.get(Calendar.DAY_OF_MONTH)
-//                + "/" + (hora.get(Calendar.MONTH)+1)
-//                + "/" + hora.get(Calendar.YEAR)
-//                + " - " + hora.get(Calendar.HOUR_OF_DAY)
-//                + ":" + (hora.get(Calendar.MINUTE) == 0 ? "00" : hora.get(Calendar.MINUTE))
-//                + " hs.");
         hora = null;
 
 
@@ -360,11 +336,7 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             @Override
             public void onClick(View view) {
                 //TODO ir a la pantallar para ver paciente
-//                Intent i1 = new Intent(view.getContext(), VerPacienteActivity.class);
-//                Calendar pruebaCalendario = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-//                pruebaCalendario.set(1998, 4, 13);
-//                i1.putExtra("paciente", new Paciente("Intent ", "Ver paciente Btn", "OS", pruebaCalendario.getTime(), "40905", 123456789L, "Argentina", "Santa fe", "Escalada", "S/N", "493", "Sin dpto"));
-//                view.getContext().startActivity(i1);
+
                 fragment.verPaciente(turno.getIdPaciente());
             }
         });

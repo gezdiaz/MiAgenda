@@ -16,7 +16,6 @@ import android.os.Message;
 import android.os.Parcel;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -26,14 +25,12 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.datepicker.CalendarConstraints;
-import com.google.android.material.datepicker.DateValidatorPointForward;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 
-import java.time.Month;
 import java.util.Calendar;
 import java.util.Objects;
 import java.util.TimeZone;
@@ -66,7 +63,6 @@ public class NuevoPacienteActivity extends AppCompatActivity {
 
     private Bitmap imageBitmap;
     private String TAG = "NuevoPacienteActivity";
-    private String rutaImagen;
     private Paciente pacienteEditado;
     private boolean teniaImagen = false, debeActualizarImagen = false, cambioImagen = false, cambioNombre = false;
 
@@ -83,11 +79,6 @@ public class NuevoPacienteActivity extends AppCompatActivity {
                         if (progressDialog.isShowing()) {
                             progressDialog.cancel();
                         }
-//                        if(Objects.equals(getIntent().getAction(), EDITAR_ACTION)){
-//                            Intent resultado = new Intent();
-//                            resultado.putExtra("paciente","6");
-//                            setResult(VerPacienteActivity.REQUESTEDITARPACIENTE, resultado);
-//                        }
                         finish();
                     }
 
@@ -106,11 +97,7 @@ public class NuevoPacienteActivity extends AppCompatActivity {
                     if (progressDialog.isShowing()) {
                         progressDialog.cancel();
                     }
-//                    if(Objects.equals(getIntent().getAction(), EDITAR_ACTION)){
-//                        Intent resultado = new Intent();
-//                        resultado.putExtra("paciente","6");
-//                        setResult(VerPacienteActivity.REQUESTEDITARPACIENTE, resultado);
-//                    }
+
                     finish();
 
                     Log.d(TAG, "Se completo la carga de la imagen");
@@ -387,7 +374,7 @@ public class NuevoPacienteActivity extends AppCompatActivity {
                         Log.d(TAG,"entra al if de imageBitmap");
                         debeActualizarImagen = true;
                     }
-                    // finish();
+
                 } else {
                     Snackbar s = Snackbar.make(findViewById(R.id.nuevo_paciente_linear_lay), R.string.datos_paciente_no_validos, BaseTransientBottomBar.LENGTH_LONG);
                     s.setBackgroundTint(getResources().getColor(R.color.colorCancelar));
@@ -429,7 +416,6 @@ public class NuevoPacienteActivity extends AppCompatActivity {
                 fechaNac.get(Calendar.DATE),
                 (fechaNac.get(Calendar.MONTH)+1),
                 fechaNac.get(Calendar.YEAR)));
-//        fechaNacimientoEdit.setText(fechaNac.get(Calendar.DATE) + "/" +(fechaNac.get(Calendar.MONTH)+1) + "/" + fechaNac.get(Calendar.YEAR));
         dniEdit.setText(p.getDni());
         telefonoEdit.setText(String.valueOf(p.getTelefono()));
         provinciaEdit.setText(p.getDireccion().getProvincia());
@@ -503,7 +489,6 @@ public class NuevoPacienteActivity extends AppCompatActivity {
         };
         constraintsBuilder.setValidator(dateValidator);
         builder.setCalendarConstraints(constraintsBuilder.build());
-        //builder.setSelection(Calendar.getInstance().getTimeInMillis());
         datePicker = builder.build();
         datePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
             @Override
@@ -514,8 +499,6 @@ public class NuevoPacienteActivity extends AppCompatActivity {
                         fechaNacimiento.get(Calendar.DATE),
                         (fechaNacimiento.get(Calendar.MONTH)+1),
                         fechaNacimiento.get(Calendar.YEAR)));
-//                String fechaSeleccionada = (fechaNacimiento.get(Calendar.DATE)) + "/" + (fechaNacimiento.get(Calendar.MONTH) + 1) + "/" + fechaNacimiento.get(Calendar.YEAR);
-//                fechaNacimientoEdit.setText(fechaSeleccionada);
                 fechaNacimientoEdit.setError(null);
                 Log.d(TAG,"TimeZone: " + fechaNacimiento.getTimeZone().getRawOffset());
 
@@ -543,51 +526,9 @@ public class NuevoPacienteActivity extends AppCompatActivity {
             Bundle extras = data.getExtras();
             //Muestro la miniatura pero después cargo la imagen completa
             actualizarImagen((Bitmap) extras.get("data"));
-            //imageBitmap = (Bitmap) extras.get("data");
-//            new Thread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    try {
-//                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(NuevoPacienteActivity.this.getContentResolver(), Uri.parse("file:" + rutaImagen));
-//                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//                        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
-//                        bitmap = null;
-//                        byte[] bytes = baos.toByteArray();
-//                        baos = null;
-//                        bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-//                        bytes = null;
-//                        Message m = Message.obtain();
-//                        m.what = IMAGEN_LISTA;
-//                        m.obj = bitmap;
-//                        handler.sendMessage(m);
-//                    } catch (IOException e) {
-//                        Log.e(TAG, "Error al obtener la imagen desde archivo", e);
-//                    }
-//                }
-//            }).run();
-
         }
     }
 
-//    private File createImageFile() throws IOException {
-//        // Create an image file name
-//        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-//        String imageFileName = "JPEG_" + timeStamp + "_";
-//        File storageDir = new File(Environment.getExternalStorageDirectory() + "/MiAgendaTemp/");
-//        if (!storageDir.exists()) {
-//            storageDir.mkdir();
-//        }
-//        File image = File.createTempFile(
-//                imageFileName,  /* prefix */
-//                ".jpg",         /* suffix */
-//                storageDir      /* directory */
-//        );
-////        File image = new File(storageDir+"/"+imageFileName+".jpg");
-//
-//        // Save a file: path for use with ACTION_VIEW intents
-//        rutaImagen = image.getAbsolutePath();
-//        return image;
-//    }
 
     private void actualizarImagen(Bitmap bitmap) {
         imageBitmap = bitmap;
@@ -603,13 +544,4 @@ public class NuevoPacienteActivity extends AppCompatActivity {
         }
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        if(Objects.equals(getIntent().getAction(), EDITAR_ACTION)){
-//            Intent resultado = new Intent();
-//            resultado.putExtra("paciente",pacienteEditado);
-//            setResult(VerPacienteActivity.REQUESTEDITARPACIENTE, resultado);
-//        }
-//        finish();
-//    }
 }

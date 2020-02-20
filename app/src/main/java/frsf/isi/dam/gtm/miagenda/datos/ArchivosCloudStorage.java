@@ -14,7 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -27,10 +26,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+
 
 import frsf.isi.dam.gtm.miagenda.R;
 
@@ -38,8 +34,6 @@ public class ArchivosCloudStorage {
 
     public static final int CARGA_IMAGEN = 1;
     public static final int ERROR_CARGA_IMAGEN = -1;
-    private static final int ELIMINAR_IMAGEN = 2;
-    private static final int ERROR_ELIMINAR_IMAGEN = -2;
 
 
     private static final String TAG = "ArchivosCloudStorage";
@@ -69,37 +63,6 @@ public class ArchivosCloudStorage {
         instance = null;
     }
 
-    public void saveImageEnPaciente(final String dniPaciente, File imagen, final Handler handler){
-        FileInputStream fileInputStream;
-
-        try {
-            fileInputStream = new FileInputStream(imagen);
-        } catch (FileNotFoundException e) {
-            Log.e(TAG, "No se encontró la imagen a cargar", e);
-            return;
-        }
-        StorageReference carpetaPaciente = archivosUsuario.child(dniPaciente);
-        StorageReference rutaImagen = carpetaPaciente.child(imagenPerfilString);
-        rutaImagen.putStream(fileInputStream)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Log.d(TAG, "Se cargó la imagen correctamente en el paciente con dni: "+dniPaciente);
-                        Message m = Message.obtain();
-                        m.what = CARGA_IMAGEN;
-                        handler.sendMessage(m);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "Error al cargar la imagen en el paciente con dni: "+dniPaciente, e);
-                        Message m = Message.obtain();
-                        m.what = ERROR_CARGA_IMAGEN;
-                        handler.sendMessage(m);
-                    }
-                });
-    }
     public void saveImageEnPaciente(final String dniPaciente, Bitmap imagen, final Handler handler, Context context){
 
         final NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
@@ -148,7 +111,7 @@ public class ArchivosCloudStorage {
                                 .setProgress(0,0,false)
                                 .setOngoing(false);
                         notificationManager.notify(notificationID, notificationBuilder.build());
-                       // handler.sendMessage(m);
+
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

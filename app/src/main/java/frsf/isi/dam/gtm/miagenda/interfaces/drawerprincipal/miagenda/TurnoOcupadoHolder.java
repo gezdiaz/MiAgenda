@@ -7,8 +7,6 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.button.MaterialButton;
-
 import frsf.isi.dam.gtm.miagenda.R;
 
 public class TurnoOcupadoHolder extends RecyclerView.ViewHolder {

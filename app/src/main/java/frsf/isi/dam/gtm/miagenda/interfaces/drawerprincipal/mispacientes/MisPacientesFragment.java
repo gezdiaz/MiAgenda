@@ -3,56 +3,28 @@ package frsf.isi.dam.gtm.miagenda.interfaces.drawerprincipal.mispacientes;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.AlertDialogLayout;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.BaseTransientBottomBar;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
 import frsf.isi.dam.gtm.miagenda.R;
 import frsf.isi.dam.gtm.miagenda.datos.DatosFirestore;
 import frsf.isi.dam.gtm.miagenda.entidades.Paciente;
@@ -60,16 +32,12 @@ import frsf.isi.dam.gtm.miagenda.interfaces.LoginActivity;
 import frsf.isi.dam.gtm.miagenda.interfaces.NuevoPacienteActivity;
 import frsf.isi.dam.gtm.miagenda.interfaces.drawerprincipal.PrincipalActivity;
 
-import static androidx.constraintlayout.widget.Constraints.TAG;
-
 public class MisPacientesFragment extends Fragment {
     private static final String TAG = "MisPacientesFragment";
 
     private RecyclerView recyclerView;
     private MisPacientesAdapter adapter;
     private FloatingActionButton fabMisPacientes;
-    private ProgressBar progressBar;
-    private Snackbar avisoSeleccion;
     private TextInputEditText buscarEdit;
     private Spinner buscarSpinner;
     private int posicionItemSpinerSeleccionada = 0;
@@ -98,29 +66,19 @@ public class MisPacientesFragment extends Fragment {
 
         Log.d(TAG, "Arguments recibidos: "+getArguments());
 
-//        CoordinatorLayout.MarginLayoutParams marginLayoutParams = ((CoordinatorLayout.LayoutParams)recyclerView.getLayoutParams());
-//        marginLayoutParams.setMargins(0, 0, 0, 0);
-//
-//        Snackbar avisoSeleccion = ((PrincipalActivity) getActivity()).avisoSeleccion;
-//
-//        Log.d(TAG, "Heigth: " +String.valueOf(avisoSeleccion.getView().getMeasuredHeight()));
-//        Log.d(TAG, "Padding Top: " +String.valueOf(avisoSeleccion.getView().getPaddingTop()));
-//        Log.d(TAG, "Pading bottom: " +String.valueOf(avisoSeleccion.getView().getPaddingBottom()));
+
         boolean modoseleccionar = false;
         Bundle arguments = getArguments();
         if(arguments != null && arguments.getBoolean("seleccionarPaciente", false)){
             //Tiene que seleccionar un paciente
             modoseleccionar = true;
-//            marginLayoutParams.setMargins(0, 0, 0,  avisoSeleccion.getView().getMeasuredHeight());
         }
-
-       // recyclerView.setLayoutParams(marginLayoutParams);
 
         adapter = new MisPacientesAdapter(firestoreRecyclerOptions, modoseleccionar, this);
         adapter.notifyDataSetChanged();
         recyclerView.setAdapter(adapter);
 
-        fabMisPacientes = ((PrincipalActivity) getActivity()).fabPrincipal;//view.findViewById(R.id.fab_mis_pacientes);
+        fabMisPacientes = ((PrincipalActivity) getActivity()).fabPrincipal;
         fabMisPacientes.setColorFilter(getResources().getColor(R.color.colorTextSecondary));
         fabMisPacientes.setImageDrawable(getActivity().getDrawable(R.drawable.ic_add_24px));
         fabMisPacientes.setOnClickListener(new View.OnClickListener() {
@@ -268,12 +226,6 @@ public class MisPacientesFragment extends Fragment {
     }
 
     private void mostrarListaPaciente(String categoriaBusqueda, String busquedaUsuario, String busquedaMax) {
-
-        if(busquedaUsuario!=null){
-            Log.d(TAG,"lo que el usuario escribio: " +  busquedaUsuario);
-            Log.d(TAG, "categoria busqueda: " +categoriaBusqueda);
-            Log.d(TAG,"hasta donde tiene que buscar: " +  busquedaMax);
-        }
 
         if(categoriaBusqueda == null && busquedaUsuario == null && busquedaMax == null){
 

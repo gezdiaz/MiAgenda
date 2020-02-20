@@ -12,7 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
@@ -23,7 +22,6 @@ import androidx.navigation.ui.NavigationUI;
 import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -33,30 +31,19 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.TimeZone;
-import java.util.logging.LogRecord;
 
 import frsf.isi.dam.gtm.miagenda.R;
 import frsf.isi.dam.gtm.miagenda.broadcastreceiver.NotificacionDiariaReceiver;
-import frsf.isi.dam.gtm.miagenda.broadcastreceiver.NotificacionDiariaService;
-import frsf.isi.dam.gtm.miagenda.datos.DatosFirestore;
 import frsf.isi.dam.gtm.miagenda.entidades.Paciente;
-import frsf.isi.dam.gtm.miagenda.entidades.Turno;
 import frsf.isi.dam.gtm.miagenda.interfaces.LoginActivity;
 import frsf.isi.dam.gtm.miagenda.interfaces.drawerprincipal.miagenda.MiAgendaFragment;
 
@@ -66,8 +53,6 @@ public class PrincipalActivity extends AppCompatActivity {
     public static final String LOGINGOOGLE = "loginGoogle";
     public static final String NEWUSER = "newUser";
     private static final String TAG = "PrincipalActivity";
-
-    protected static String comunicado;
 
     private AppBarConfiguration mAppBarConfiguration;
     private FirebaseAuth mAuth;
@@ -87,7 +72,6 @@ public class PrincipalActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-//        DatosFirestore.getInstance().reestucturarBaseDeDatos();
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_principal);
@@ -104,17 +88,14 @@ public class PrincipalActivity extends AppCompatActivity {
             finish();
         } else {
 
-            //Registrar Notificacion diaria Receiver
+            //Registrar NotificacionDiariaReceiver
 
             NotificacionDiariaReceiver br = new NotificacionDiariaReceiver();
             IntentFilter filtro = new IntentFilter();
             filtro.addAction(NotificacionDiariaReceiver.ALARMNOTIFICATION);
-//            IntentFilter filtro2 = new IntentFilter();
-//            filtro2.addAction(NotificacionDiariaReceiver.SCREENONNOTIFICATION);
             IntentFilter filtro3 = new IntentFilter();
             filtro3.addAction(NotificacionDiariaReceiver.BOOTNOTIFICATION);
             getApplication().getApplicationContext().registerReceiver(br, filtro);
-//            getApplication().getApplicationContext().registerReceiver(br, filtro2);
             getApplication().getApplicationContext().registerReceiver(br,filtro3);
 
             //Inicializar alarma
@@ -182,10 +163,6 @@ public class PrincipalActivity extends AppCompatActivity {
                 @Override
                 public void onDestinationChanged(@NonNull NavController controller, @NonNull NavDestination destination, @Nullable Bundle arguments) {
                     Log.d(TAG, "Llama a onDestinationChanged");
-//                    Log.d(TAG, "NavDestination: "+destination);
-//                    Log.d(TAG, "NavAction: "+destination.getId());
-//                    Log.d(TAG, "MiAgendaId: "+R.id.nav_mi_agenda);
-//                    Log.d(TAG, "MisPacientesId: "+R.id.nav_mis_pacientes);
                     Log.d(TAG, "args: " + arguments);
                     Log.d(TAG, "SeleccionPacienteEnviada es: "+seleccionPacienteEnviada);
                     switch (destination.getId()) {
@@ -261,10 +238,8 @@ public class PrincipalActivity extends AppCompatActivity {
         datosGuardados = datosAGuardar;
         this.dialogoReservar = dialogoReservar;
         Bundle args = new Bundle();
-//        args.putString("prueba", "String enviado desde PrincipalActivity");
         args.putBoolean("seleccionarPaciente", true);
         navController.navigate(R.id.nav_mis_pacientes, args);
-//        Log.d(TAG, "Current destination: " + navController.getCurrentDestination());
     }
 
     public AlertDialog getDialogoReservar() {

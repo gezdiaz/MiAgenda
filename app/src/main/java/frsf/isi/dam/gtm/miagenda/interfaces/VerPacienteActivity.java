@@ -6,17 +6,14 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -31,19 +28,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textview.MaterialTextView;
 
@@ -63,8 +54,6 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
     private TextView masInfoMapaLbl;
     private MaterialButton verHistoriaClinicaBtn;
     private GoogleMap googleMap;
-    //Variables para probar los datos del pacientes
-    private String dni = "40905305", edad = "21", obraSocial = "IAPOS", telefono = "15431193", provincia = "Santa fe", ciudad = "San justo", calle = "Belgrano", numero = "200";
     private boolean permisoLocalizacionAceptado;
     private Paciente p;
     private Intent intentLlamada;
@@ -114,7 +103,6 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorTextSecondary));
         setSupportActionBar(toolbar);
 
-        //getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_arrow);// set drawable icon
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
@@ -127,13 +115,7 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-//            case R.id.cerrar_sesion_option_item:{
-//                Intent i1 = new Intent(this, LoginActivity.class);
-//                //Le digo a LogInActivity que cierre sesión
-//                i1.putExtra(LoginActivity.SignOut, true);
-//                startActivity(i1);
-//                break;
-//            }
+
             case android.R.id.home: {
                 onBackPressed();
                 break;
@@ -144,16 +126,8 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
                 //Esto lo pongo porque necesita API 23 y estamos usando 22
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     if (checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                        // TODO: Consider calling
-                        //    Activity#requestPermissions
-                        // here to request the missing permissions, and then overriding
-                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                        //                                          int[] grantResults)
-                        // to handle the case where the user grants the permission. See the documentation
-                        // for Activity#requestPermissions for more details.
                         ActivityCompat.requestPermissions(VerPacienteActivity.this, new String[]{Manifest.permission.CALL_PHONE}, 8888);
                         Log.d(TAG, "Necesita Permisos");
-                        //return;
                     }
                     else{
                         startActivity(intentLlamada);
@@ -179,7 +153,6 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == REQUESTEDITARPACIENTE){
            DatosFirestore.getInstance().getPacienteById(getIntent().getStringExtra("idPaciente"),handler);
-//            Log.d(TAG, "Paciente: " + p.toString());
         }
     }
 
@@ -236,20 +209,6 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
                 }
                 else{
                    permisoLocalizacionAceptado = false;
-//                    if (ActivityCompat.shouldShowRequestPermissionRationale(VerPacienteActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-//                        //Show permission explanation dialog...
-//                        MaterialAlertDialogBuilder alertDialogBuilder = new MaterialAlertDialogBuilder(VerPacienteActivity.this);
-//                        alertDialogBuilder.setMessage(R.string.peticion_permiso_localizacion);
-//                        alertDialogBuilder.setPositiveButton(R.string.ok_option, new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialogInterface, int i) {
-//                                ActivityCompat.requestPermissions(VerPacienteActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},9999);
-//                            }
-//                        });
-//                    }else{
-//                        //Never ask again selected, or device policy prohibits the app from having that permission.
-//                        //So, disable that feature, or fall back to another situation...
-//                    }
                 }
                 inicializarMapa();
                 break;
@@ -266,6 +225,7 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
         }
         googleMap.getUiSettings().setMyLocationButtonEnabled(false);
         googleMap.getUiSettings().setAllGesturesEnabled(false);
+
 
         Geocoder geocoder = new Geocoder(this);
         List<Address> addressList = null;
