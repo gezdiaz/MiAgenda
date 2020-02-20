@@ -26,6 +26,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
 
 import frsf.isi.dam.gtm.miagenda.R;
+import frsf.isi.dam.gtm.miagenda.datos.ArchivosCloudStorage;
 import frsf.isi.dam.gtm.miagenda.datos.DatosFirestore;
 import frsf.isi.dam.gtm.miagenda.interfaces.drawerprincipal.PrincipalActivity;
 
@@ -64,7 +65,6 @@ public class LoginActivity extends AppCompatActivity {
                     s.setBackgroundTint(getResources().getColor(R.color.colorCancelar));
                     s.show();
                 } else {
-                    Intent i1 = new Intent(getApplicationContext(), PrincipalActivity.class);
                     //iniciar sesión con mail y contraseña
                     iniciarSesion(email, clave);
                 }
@@ -117,6 +117,7 @@ public class LoginActivity extends AppCompatActivity {
             mAuth.signOut();
             mGoogleSignInClient.signOut();
             DatosFirestore.resetInstance();
+            ArchivosCloudStorage.resetIntance();
         }
 
     }

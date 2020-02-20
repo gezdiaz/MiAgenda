@@ -82,37 +82,6 @@ public class DatosFirestore {
         }
     }
 
-
-    public void getAllPacientes(final Handler handler) {
-        //obtiene todos los pacientes del usuario actual
-        CollectionReference pacientesCollection = datosUsuario.collection(idColeccionPacientes);
-        pacientesCollection.get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        ArrayList<Paciente> listaPacientes = new ArrayList<>();
-                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                            Paciente p = document.toObject(Paciente.class);
-                            listaPacientes.add(p);
-                            Log.d(TAG, "Paciente obtenido: " + p.toString());
-                        }
-                        Message m = Message.obtain();
-                        m.what = GETALL_PACIENTES;
-                        m.obj = listaPacientes;
-                        handler.sendMessage(m);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error al obtener los pacientes.", e);
-                        Message m = Message.obtain();
-                        m.what = ERROR_GETALL_PACIENTES;
-                        handler.sendMessage(m);
-                    }
-                });
-    }
-
     public void getPacienteById(String idPaciente, final Handler handler) {
         //Obtiene un paciente específico dado su id
         final CollectionReference pacientesCollection = datosUsuario.collection(idColeccionPacientes);
@@ -210,39 +179,6 @@ public class DatosFirestore {
                         handler.sendMessage(m);
                     }
                 });
-    }
-
-    public void getAllTurnosDePaciente(String idPaciente, final Handler handler) {
-        //Obtiene todos los turnos de un paciente específico;
-        final DocumentReference documentPaciente = datosUsuario.collection(idColeccionPacientes).document(idPaciente);
-        final CollectionReference collectionTurnos = documentPaciente.collection(idColeccionTurnos);
-
-        collectionTurnos.get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        ArrayList<Turno> listaTurnos = new ArrayList<>();
-                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                            Turno t = document.toObject(Turno.class);
-                            listaTurnos.add(t);
-                            Log.d(TAG, "getAllTurnosDePaciente: Turno obtenido: " + t.toString());
-                        }
-                        Message m = Message.obtain();
-                        m.what = GET_TURNOS_PACIENTE;
-                        m.obj = listaTurnos;
-                        handler.sendMessage(m);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "getAllTurnosDePaciente: Error", e);
-                        Message m = Message.obtain();
-                        m.what = ERROR_GET_TURNOS_PACIENTE;
-                        handler.sendMessage(m);
-                    }
-                });
-
     }
 
     public void saveTurno(Turno t, String idPaciente, final Handler handler) {
@@ -381,9 +317,7 @@ public class DatosFirestore {
 
     public Query getAllPacientesQuery() {
 
-        Query query = datosUsuario.collection(idColeccionPacientes).orderBy("apellido", Query.Direction.ASCENDING).orderBy("nombre", Query.Direction.ASCENDING);
-
-        return query;
+        return datosUsuario.collection(idColeccionPacientes).orderBy("apellido", Query.Direction.ASCENDING).orderBy("nombre", Query.Direction.ASCENDING);
     }
 
     public Query getPacientesPorBusqueda(String categoriaBusqueda, String busquedaUsuario, String busquedaMax) {

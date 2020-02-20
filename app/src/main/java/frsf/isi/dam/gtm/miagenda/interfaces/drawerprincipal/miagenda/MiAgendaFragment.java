@@ -145,8 +145,6 @@ public class MiAgendaFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
 
-        boolean respuestaPaciente = false;
-
         Bundle arguments = getArguments();
         boolean seleccionEnviada = ((PrincipalActivity) getActivity()).seleccionPacienteEnviada;
         Log.d(TAG, "Arguments recibidos en MiAgenda: " + arguments);
@@ -157,7 +155,6 @@ public class MiAgendaFragment extends Fragment {
 
                     Paciente p = (Paciente) getArguments().get("paciente");
                     Calendar hora = (Calendar) getArguments().get("horaTurno");
-                    respuestaPaciente = true;
                     if (!estaMostrandoFecha(hora)) {
                         fechaMostrar = (Calendar) hora.clone();
                         fechaMostrar.set(Calendar.HOUR_OF_DAY, horaInicio);

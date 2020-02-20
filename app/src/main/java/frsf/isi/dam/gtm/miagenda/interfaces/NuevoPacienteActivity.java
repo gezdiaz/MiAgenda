@@ -412,7 +412,7 @@ public class NuevoPacienteActivity extends AppCompatActivity {
 
         nombrePacienteEdit.setText(p.getNombre());
         apellidoPacienteEdit.setText(p.getApellido());
-        fechaNacimientoEdit.setText(getString(R.string.fecha_nacimiento,
+        fechaNacimientoEdit.setText(getString(R.string.fecha_estandar,
                 fechaNac.get(Calendar.DATE),
                 (fechaNac.get(Calendar.MONTH)+1),
                 fechaNac.get(Calendar.YEAR)));
@@ -446,7 +446,6 @@ public class NuevoPacienteActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-
             case android.R.id.home: {
                 onBackPressed();
                 break;
@@ -481,10 +480,7 @@ public class NuevoPacienteActivity extends AppCompatActivity {
 
             @Override
             public boolean isValid(long date) {
-                if(hoy.getTimeInMillis()>=date){
-                    return true;
-                }
-                return false;
+                return hoy.getTimeInMillis() >= date;
             }
         };
         constraintsBuilder.setValidator(dateValidator);
@@ -495,7 +491,7 @@ public class NuevoPacienteActivity extends AppCompatActivity {
             public void onPositiveButtonClick(Long aLong) {
                 fechaNacimiento = Calendar.getInstance(TimeZone.getDefault());
                 fechaNacimiento.setTimeInMillis(aLong-TimeZone.getDefault().getRawOffset());
-                fechaNacimientoEdit.setText(getString(R.string.fecha_nacimiento,
+                fechaNacimientoEdit.setText(getString(R.string.fecha_estandar,
                         fechaNacimiento.get(Calendar.DATE),
                         (fechaNacimiento.get(Calendar.MONTH)+1),
                         fechaNacimiento.get(Calendar.YEAR)));

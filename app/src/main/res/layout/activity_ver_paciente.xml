@@ -40,7 +40,7 @@
 
                 <LinearLayout
                     android:id="@+id/linear_layout_ver_pacente_inside"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="5dp"
                     android:layout_marginBottom="5dp"
@@ -160,17 +160,11 @@
 
             </RelativeLayout>
 
-            <LinearLayout
-                android:id="@+id/ver_paciente_botones_linear_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
                 <com.google.android.material.button.MaterialButton
 
                     android:id="@+id/ver_historia_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
                     android:layout_marginStart="35dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="35dp"
@@ -181,8 +175,6 @@
                     android:textColor="@color/colorTextSecondary"
                     app:cornerRadius="@dimen/buttons_radius" />
 
-
-            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 

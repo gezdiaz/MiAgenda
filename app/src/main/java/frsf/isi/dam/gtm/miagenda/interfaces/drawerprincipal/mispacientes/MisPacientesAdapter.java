@@ -59,18 +59,18 @@ public class MisPacientesAdapter extends FirestoreRecyclerAdapter<Paciente, Paci
             holder.pacienteImg.setImageResource(R.drawable.perfil_default);
         }
 
-        holder.nombrePacienteTxt.setText( paciente.getApellido() + " " + paciente.getNombre());
+        holder.nombrePacienteTxt.setText( fragment.getString(R.string.apellido_espacio_nombre, paciente.getApellido(), paciente.getNombre()));
 
         holder.itemCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(modoSeleccionar){
-                    //TODO Seleccionar un paciente y volver a mi agenda
+                    //Seleccionar un paciente y volver a mi agenda
                     fragment.responderPaciente(paciente);
                 }else{
                     //Ir a ver paciente;
                     Intent i = new Intent(view.getContext(), VerPacienteActivity.class);
-                    //TODO mostrar datos de paciente
+                    //mostrar datos de paciente
                     i.putExtra("idPaciente",paciente.getId());
                     view.getContext().startActivity(i);
                 }

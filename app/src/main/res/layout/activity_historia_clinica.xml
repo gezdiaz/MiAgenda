@@ -45,9 +45,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignEnd="@id/generar_pdf_btn"
-            android:layout_alignParentLeft="false"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="false"
             android:layout_alignParentBottom="true"
             android:layout_centerVertical="true"
             android:layout_marginStart="0dp"
@@ -59,7 +57,8 @@
             android:id="@+id/historia_clinica_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="65dp">
+            android:layout_marginBottom="65dp"
+            tools:listitem="@layout/fila_historia_clinica">
 
         </androidx.recyclerview.widget.RecyclerView>
 

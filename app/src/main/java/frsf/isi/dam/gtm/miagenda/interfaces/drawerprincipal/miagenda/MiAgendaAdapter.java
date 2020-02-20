@@ -219,7 +219,7 @@ public class MiAgendaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         if(pacienteSeleccionado != null){
             seleccionarPacienteDialogBtn.setText(R.string.cambiar_paciente);
-            nombrePaceinteTxt.setText(pacienteSeleccionado.getApellido()+", "+pacienteSeleccionado.getNombre());
+            nombrePaceinteTxt.setText(fragment.getString(R.string.apellido_coma_nombre, pacienteSeleccionado.getApellido(), pacienteSeleccionado.getNombre()));
         }
 
         seleccionarPacienteDialogBtn.setOnClickListener(new View.OnClickListener() {

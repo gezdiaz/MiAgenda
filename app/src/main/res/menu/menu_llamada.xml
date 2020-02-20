@@ -7,13 +7,13 @@
         android:orderInCategory="100"
         android:icon="@drawable/ic_call_24px"
         android:title="@string/llamada_item_option"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/editar_option_item"
         android:orderInCategory="100"
         android:icon="@drawable/ic_edit_24px"
         android:title="@string/editar_item_option"
-        app:showAsAction="always"/>
+        app:showAsAction="ifRoom"/>
 
 
 </menu>

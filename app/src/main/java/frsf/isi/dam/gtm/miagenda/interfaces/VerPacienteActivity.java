@@ -206,12 +206,7 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case 9999:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    permisoLocalizacionAceptado = true;
-                }
-                else{
-                   permisoLocalizacionAceptado = false;
-                }
+                permisoLocalizacionAceptado = grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED;
                 inicializarMapa();
                 break;
             case 8888:

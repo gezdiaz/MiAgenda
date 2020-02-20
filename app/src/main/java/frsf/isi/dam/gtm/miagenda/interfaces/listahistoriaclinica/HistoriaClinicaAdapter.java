@@ -15,17 +15,12 @@ import java.util.Calendar;
 import java.util.TimeZone;
 
 import frsf.isi.dam.gtm.miagenda.R;
+import frsf.isi.dam.gtm.miagenda.entidades.Turno;
 
-public class HistoriaClinicaAdapter extends FirestoreRecyclerAdapter<frsf.isi.dam.gtm.miagenda.entidades.Turno, HistoriaClinicaHolder> {
+public class HistoriaClinicaAdapter extends FirestoreRecyclerAdapter<Turno, HistoriaClinicaHolder> {
 
 
-    /**
-     * Create a new RecyclerView adapter that listens to a Firestore Query.  See {@link
-     * FirestoreRecyclerOptions} for configuration options.
-     *
-     * @param options
-     */
-    public HistoriaClinicaAdapter(@NonNull FirestoreRecyclerOptions<frsf.isi.dam.gtm.miagenda.entidades.Turno> options) {
+    public HistoriaClinicaAdapter(@NonNull FirestoreRecyclerOptions<Turno> options) {
         super(options);
 
     }
@@ -33,21 +28,22 @@ public class HistoriaClinicaAdapter extends FirestoreRecyclerAdapter<frsf.isi.da
     @NonNull
     @Override
     public HistoriaClinicaHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = (View) LayoutInflater.from(parent.getContext()).inflate(R.layout.fila_historia_clinica, parent, false);
-        HistoriaClinicaHolder historiaClinicaHolder = new HistoriaClinicaHolder(v);
-        return historiaClinicaHolder;
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.fila_historia_clinica, parent, false);
+        return new HistoriaClinicaHolder(v);
     }
 
 
     @Override
-    protected void onBindViewHolder(@NonNull HistoriaClinicaHolder historiaClinicaHolder, int position, @NonNull final frsf.isi.dam.gtm.miagenda.entidades.Turno turno) {
+    protected void onBindViewHolder(@NonNull HistoriaClinicaHolder historiaClinicaHolder, int position, @NonNull final Turno turno) {
        Log.d(HistoriaClinicaActivity.TAG, turno.toString());
 
         final Calendar cal = Calendar.getInstance();
         cal.setTimeZone(TimeZone.getDefault());
         cal.setTime(turno.getFecha());
-        historiaClinicaHolder.fechaLbl.setText("Fecha: " + cal.get(Calendar.DATE) + "/" + (cal.get(Calendar.MONTH)+1) + "/" + cal.get(Calendar.YEAR));
-        historiaClinicaHolder.descripcionLbl.setText("Descripcion: " + turno.getDescripcion());
+        String fecha = historiaClinicaHolder.fechaLbl.getContext().getString(R.string.fecha_estandar, cal.get(Calendar.DATE), (cal.get(Calendar.MONTH)+1), cal.get(Calendar.YEAR));
+        historiaClinicaHolder.fechaLbl.setText(fecha);
+        historiaClinicaHolder.descripcionLbl.setText(R.string.descripcion_lbl);
+        historiaClinicaHolder.descripcionLbl.append(": "+turno.getDescripcion());
         historiaClinicaHolder.historiaClinicaCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
