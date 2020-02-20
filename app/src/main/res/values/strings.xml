@@ -121,4 +121,5 @@
     <string name="fecha_miagenda">%1$d de %2$s de %3$d</string>
     <string name="hora_turno_miagenda">%1$d:%2$s hs.</string>
     <string name="fecha_nacimiento">%1$d/%2$d/%3$d</string>
+    <string name="editar_item_option">Editar</string>
 </resources>

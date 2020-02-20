@@ -69,6 +69,7 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
 
                     p = (Paciente) msg.obj;
 
+                    Log.d(TAG, String.valueOf(progressDialog.isShowing()));
                     if (progressDialog.isShowing()) {
                         progressDialog.cancel();
                     }
@@ -104,6 +105,7 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
     }
 
     @Override
@@ -215,6 +217,7 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
             case 8888:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     startActivity(intentLlamada);
+                    Log.d(TAG, "Permiso dado");
                 }
         }
     }
@@ -269,8 +272,8 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onStart() {
+        super.onStart();
         if(idPaciente != null && !idPaciente.isEmpty()){
             progressDialog = ProgressDialog.show(VerPacienteActivity.this, getString(R.string.por_favor_espere), getString(R.string.buscando_paciente));
             progressDialog.setCancelable(false);
