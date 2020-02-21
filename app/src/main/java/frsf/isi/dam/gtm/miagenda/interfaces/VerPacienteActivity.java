@@ -217,7 +217,7 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
         }
     }
     private void inicializarMapa(){
-
+        googleMap.clear();
         if(permisoLocalizacionAceptado){
             googleMap.setMyLocationEnabled(true);
         }
@@ -236,8 +236,6 @@ public class VerPacienteActivity extends AppCompatActivity implements OnMapReady
             Toast t = Toast.makeText(VerPacienteActivity.this, getString(R.string.ubicacion_no_encontrada),Toast.LENGTH_LONG);
             t.show();
         }
-
-
         if(addressList != null && addressList.size() != 0) {
 
             masInfoMapaLbl.setText(R.string.mapa_mas_info);
