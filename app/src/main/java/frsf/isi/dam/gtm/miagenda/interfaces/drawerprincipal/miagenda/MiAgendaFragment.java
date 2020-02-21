@@ -234,7 +234,7 @@ public class MiAgendaFragment extends Fragment {
         builder = MaterialDatePicker.Builder.datePicker();
         builder.setInputMode(MaterialDatePicker.INPUT_MODE_CALENDAR);
         builder.setTitleText(R.string.fecha_ver_turno);
-        builder.setSelection(Calendar.getInstance().getTimeInMillis());
+        builder.setSelection(Calendar.getInstance().getTimeInMillis() + TimeZone.getDefault().getRawOffset());
         datePicker = builder.build();
         datePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
             @Override
