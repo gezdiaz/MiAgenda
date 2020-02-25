@@ -10,7 +10,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
@@ -275,7 +274,6 @@ public class PrincipalActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.cerrar_sesion_option_item: {
 
-//                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
                 alarmManager.cancel(broadcastPendingIntent);
 
                 Intent i1 = new Intent(this, LoginActivity.class);
