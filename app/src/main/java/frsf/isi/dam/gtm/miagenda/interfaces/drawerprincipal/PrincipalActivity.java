@@ -59,6 +59,8 @@ public class PrincipalActivity extends AppCompatActivity {
     private TextView userNameTxt, userEmailTxt;
     private ImageView userImageView;
     public static AlarmManager alarmManager;
+    private static Intent broadcastIntent;
+    private static PendingIntent broadcastPendingIntent;
 
     private NavController navController;
     public boolean seleccionPacienteEnviada = false;
@@ -273,10 +275,8 @@ public class PrincipalActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.cerrar_sesion_option_item: {
 
-                Intent intent = new Intent(this, NotificacionDiariaReceiver.class);
-                PendingIntent sender = PendingIntent.getBroadcast(this, 1, intent, 0);
-                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-                alarmManager.cancel(sender);
+//                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                alarmManager.cancel(broadcastPendingIntent);
 
                 Intent i1 = new Intent(this, LoginActivity.class);
                 //Le digo a LogInActivity que cierre sesión
@@ -302,9 +302,9 @@ public class PrincipalActivity extends AppCompatActivity {
 
     public static void iniciarNotificacionesDiarias(Context context){
         //Crear notificacion diaria
-        Intent broadcastIntent = new Intent(context, NotificacionDiariaReceiver.class);
+        broadcastIntent = new Intent(context, NotificacionDiariaReceiver.class);
         broadcastIntent.setAction(NotificacionDiariaReceiver.ALARMNOTIFICATION);
-        PendingIntent broadcastPendingIntent = PendingIntent.getBroadcast(context,1,broadcastIntent,0);
+        broadcastPendingIntent = PendingIntent.getBroadcast(context,1,broadcastIntent,0);
 
         Calendar ahora = Calendar.getInstance();
         ahora.setTimeZone(TimeZone.getDefault());
@@ -316,7 +316,7 @@ public class PrincipalActivity extends AppCompatActivity {
 
 
         if(horaAlarmaNotificacion.getTimeInMillis()< ahora.getTimeInMillis()){
-            horaAlarmaNotificacion.set(Calendar.DATE, horaAlarmaNotificacion.get(Calendar.DATE)+1);
+            horaAlarmaNotificacion.add(Calendar.DATE,1);
         }
 
         alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
