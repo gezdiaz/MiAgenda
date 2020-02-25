@@ -101,13 +101,6 @@ public class MisPacientesFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch(item.getItemId()){
-            case R.id.cerrar_sesion_option_item:{
-                Intent i1 = new Intent(getContext(), LoginActivity.class);
-                i1.putExtra(LoginActivity.SignOut, true);
-                startActivity(i1);
-                //aca iria el finish
-                break;
-            }
             case R.id.search_option_item:{
 
                 AlertDialog buscarDialog = buildBuscarDialog();
